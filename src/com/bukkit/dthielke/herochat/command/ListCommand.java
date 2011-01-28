@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerChatEvent;
 import com.bukkit.dthielke.herochat.Channel;
 import com.bukkit.dthielke.herochat.HeroChatPlugin;
 import com.bukkit.dthielke.herochat.HeroChatPlugin.ChatColor;
+import com.bukkit.dthielke.herochat.HeroChatPlugin.PluginPermission;
 
 public class ListCommand extends Command {
 
@@ -32,10 +33,17 @@ public class ListCommand extends Command {
         
         String playerList = "Currently in " + c.getColoredName() + ChatColor.WHITE.format() + ": ";
         for (Player p : players) {
+            String name = p.getName();
+            
+            if (plugin.hasPermission(sender, PluginPermission.ADMIN))
+                name = "@" + name;
+            
             if (c.isModerator(p))
-                playerList += p.getName() + "*, ";
-            else
-                playerList += p.getName() + ", ";
+                name += "*";
+            
+            name += ", ";
+                
+            playerList += name;
         }
         playerList = playerList.substring(0, playerList.length() - 2);
         
