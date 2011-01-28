@@ -75,9 +75,18 @@ public class MessageFormatter {
         String suffix = "";
 
         if (usePermissions) {
+            prefix = Permissions.Security.getUserPermissionString(sender, "users." + sender + ".prefix");
+            suffix = Permissions.Security.getUserPermissionString(sender, "users." + sender + ".suffix");
+            
+            //System.out.println(sender + " Prefix:'" + prefix + "'");
+            //System.out.println(sender + " Suffix:'" + suffix + "'");
+            
             String group = Permissions.Security.getGroup(sender);
-            prefix = Permissions.Security.getGroupPrefix(group);
-            suffix = Permissions.Security.getGroupSuffix(group);
+            if (prefix.equals(""))
+                prefix = Permissions.Security.getGroupPrefix(group);
+            
+            if (suffix.equals(""))
+                suffix = Permissions.Security.getGroupSuffix(group);
         }
 
         if (prefix == null) {

@@ -83,7 +83,7 @@ public class Channel {
             }
         }
         
-        plugin.log(logFormatter.formatMessage(this, sender.getName(), msg, plugin.isUsingPermissions()));
+        plugin.log(logFormatter.formatMessage(this, sender.getName(), msg, false));
     }
 
     public boolean hasPlayer(Player player) {

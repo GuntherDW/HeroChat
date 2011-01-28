@@ -41,7 +41,7 @@ public class LocalChannel extends Channel {
         if (!heard)
             sender.sendMessage(ChatColor.GRAY.format() + "No one hears you.");
         
-        plugin.log(logFormatter.formatMessage(this, senderName, msg, plugin.isUsingPermissions()));
+        plugin.log(logFormatter.formatMessage(this, senderName, msg, false));
     }
 
     public static void setDistance(int distance) {
