@@ -18,9 +18,9 @@ public class FocusCommand extends Command {
 
     @Override
     public void execute(PlayerChatEvent event, Player sender, String[] args) {
-        
+
         event.setCancelled(true);
-        
+
         if (args[0].isEmpty()) {
             sender.sendMessage(ChatColor.ROSE.format() + "Usage: /ch <channel>");
             return;

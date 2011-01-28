@@ -8,14 +8,14 @@ import com.bukkit.dthielke.herochat.HeroChatPlugin;
 public abstract class Command implements Executable {
 
     protected HeroChatPlugin plugin;
-    
+
     protected String name;
     protected String identifier;
 
     public Command(HeroChatPlugin plugin) {
         this.plugin = plugin;
     }
-    
+
     public String getName() {
         return name;
     }

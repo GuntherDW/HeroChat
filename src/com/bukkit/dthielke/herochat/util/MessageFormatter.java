@@ -25,13 +25,13 @@ public class MessageFormatter {
 
     public MessageFormatter() {
         createFontMetrics();
-        
+
         this.format = DEFAULT_FORMAT;
     }
-    
+
     public MessageFormatter(String format) {
         createFontMetrics();
-        
+
         this.format = format;
     }
 
@@ -54,7 +54,7 @@ public class MessageFormatter {
 
     public List<String> formatMessageWrapped(Channel channel, String sender, String msg, boolean usePermissions) {
         String leader = createLeader(channel, sender, msg, usePermissions);
-        
+
         List<String> msgLines = wrapMessage(leader + msg, fontMetrics);
         List<String> coloredLines = new ArrayList<String>();
         for (int i = 0; i < msgLines.size(); i++) {
@@ -63,13 +63,13 @@ public class MessageFormatter {
 
         return coloredLines;
     }
-    
+
     public String formatMessage(Channel channel, String sender, String msg, boolean usePermissions) {
         String leader = createLeader(channel, sender, msg, usePermissions);
 
         return leader + msg;
     }
-    
+
     private String createLeader(Channel channel, String sender, String msg, boolean usePermissions) {
         String prefix = "";
         String suffix = "";
@@ -77,14 +77,14 @@ public class MessageFormatter {
         if (usePermissions) {
             prefix = Permissions.Security.getUserPermissionString(sender, "users." + sender + ".prefix");
             suffix = Permissions.Security.getUserPermissionString(sender, "users." + sender + ".suffix");
-            
-            //System.out.println(sender + " Prefix:'" + prefix + "'");
-            //System.out.println(sender + " Suffix:'" + suffix + "'");
-            
+
+            // System.out.println(sender + " Prefix:'" + prefix + "'");
+            // System.out.println(sender + " Suffix:'" + suffix + "'");
+
             String group = Permissions.Security.getGroup(sender);
             if (prefix.equals(""))
                 prefix = Permissions.Security.getGroupPrefix(group);
-            
+
             if (suffix.equals(""))
                 suffix = Permissions.Security.getGroupSuffix(group);
         }
@@ -100,28 +100,27 @@ public class MessageFormatter {
         } else {
             suffix = suffix.replace("&", "\u00a7");
         }
-        
+
         return applyFormat(channel, prefix, suffix, sender);
     }
-    
+
     private String applyFormat(Channel channel, String prefix, String suffix, String sender) {
         String leader = format;
-        
+
         leader = leader.replaceAll("\\{nick\\}", channel.getNick());
         leader = leader.replaceAll("\\{name\\}", channel.getName());
         leader = leader.replaceAll("\\{prefix\\}", prefix);
         leader = leader.replaceAll("\\{suffix\\}", suffix);
         leader = leader.replaceAll("\\{player\\}", sender);
         leader = leader.replaceAll("\\{color.CHANNEL\\}", channel.getColorString());
-        
-        
+
         Matcher matcher = Pattern.compile("\\{color.[a-zA-Z]+\\}").matcher(leader);
         while (matcher.find()) {
             String match = matcher.group();
             String colorString = match.substring(7, match.length() - 1);
             leader = leader.replaceAll("\\Q" + match + "\\E", ChatColor.valueOf(colorString).format());
         }
-        
+
         return leader;
     }
 

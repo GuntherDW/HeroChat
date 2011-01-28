@@ -102,7 +102,7 @@ public class HeroChatPlugin extends JavaPlugin {
     private MessageFormatter localMsgFormatter;
 
     private Logger logger;
-    
+
     public HeroChatPlugin(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
         super(pluginLoader, instance, desc, folder, plugin, cLoader);
     }
@@ -124,9 +124,9 @@ public class HeroChatPlugin extends JavaPlugin {
 
         ignoreMap = new HashMap<Player, List<String>>();
         activeChannelMap = new HashMap<Player, Channel>();
-        
+
         logger = Logger.getLogger("Minecraft");
-        
+
         PluginDescriptionFile desc = getDescription();
         logger.log(Level.INFO, desc.getName() + " version " + desc.getVersion() + " enabled.");
     }
@@ -244,9 +244,9 @@ public class HeroChatPlugin extends JavaPlugin {
 
         defaultChannel = getChannel(config.defaultChannel);
     }
-    
+
     public void log(String log) {
-        logger.log(Level.INFO, "[HEROCHAT] "+ log);
+        logger.log(Level.INFO, "[HEROCHAT] " + log);
     }
 
     public List<Command> getCommands() {

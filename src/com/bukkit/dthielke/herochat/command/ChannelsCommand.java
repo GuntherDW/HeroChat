@@ -26,7 +26,7 @@ public class ChannelsCommand extends Command {
             sender.sendMessage(ChatColor.ROSE.format() + "Usage: /ch channels");
             return;
         }
-        
+
         sender.sendMessage("HeroChat: Channel list");
 
         List<Channel> channels = plugin.getChannels();
@@ -38,7 +38,7 @@ public class ChannelsCommand extends Command {
                 if (c.hasPlayer(sender)) {
                     msg = msg.concat(" *");
                 }
-                
+
                 sender.sendMessage(msg);
 
             }

@@ -18,7 +18,7 @@ public class Channel {
         PLAYER_NOT_FOUND,
         SUCCESS
     }
-    
+
     public enum BanResult {
         NO_PERMISSION,
         PLAYER_IS_MODERATOR,
@@ -27,7 +27,7 @@ public class Channel {
         PLAYER_ALREADY_BANNED,
         SUCCESS
     }
-    
+
     public static final String logFormat = "[{nick}] {player}: ";
 
     protected HeroChatPlugin plugin;
@@ -82,7 +82,7 @@ public class Channel {
                 }
             }
         }
-        
+
         plugin.log(logFormatter.formatMessage(this, sender.getName(), msg, false));
     }
 
@@ -137,27 +137,27 @@ public class Channel {
     public BanResult banPlayer(Player sender, String name) {
         if (isBanned(name))
             return BanResult.PLAYER_ALREADY_BANNED;
-        
+
         KickResult result = kickPlayer(sender, name);
 
         if (result == KickResult.SUCCESS)
             banList.add(name);
-        
+
         return BanResult.valueOf(result.toString());
     }
-    
+
     public BanResult unbanPlayer(Player sender, String name) {
         if (!isModerator(sender) && !plugin.hasPermission(sender, PluginPermission.ADMIN)) {
             return BanResult.NO_PERMISSION;
         }
-        
+
         for (String s : banList) {
             if (s.equalsIgnoreCase(name)) {
                 banList.remove(s);
                 return BanResult.SUCCESS;
             }
         }
-        
+
         return BanResult.PLAYER_NOT_FOUND;
     }
 
@@ -248,11 +248,11 @@ public class Channel {
     public void setPlayers(List<Player> players) {
         this.players = players;
     }
-    
+
     public void addModerator(Player player) {
         addModerator(player.getName());
     }
-    
+
     public void addModerator(String name) {
         if (!isModerator(name))
             moderators.add(name);

@@ -21,7 +21,7 @@ public class BanCommand extends Command {
 
     @Override
     public void execute(PlayerChatEvent event, Player sender, String[] args) {
-        
+
         event.setCancelled(true);
 
         if (args.length > 2 || args[0].isEmpty()) {
@@ -33,42 +33,42 @@ public class BanCommand extends Command {
 
         if (c != null) {
             List<String> banList = c.getBanList();
-            
+
             if (args.length == 1)
                 displayBanList(sender, banList, c);
             else
                 toggleBan(sender, args[1], c);
-            
+
         } else {
             sender.sendMessage("HeroChat: Channel not found");
         }
 
     }
-    
+
     private void displayBanList(Player sender, List<String> banList, Channel channel) {
         String banListMsg;
-        
+
         if (banList.isEmpty()) {
             banListMsg = "No one is currently banned from " + channel.getColoredName();
         } else {
             banListMsg = "Currently banned from " + channel.getColoredName() + ChatColor.WHITE.format() + ": ";
-            
+
             for (String s : banList) {
                 banListMsg += s + ",";
             }
             banListMsg = banListMsg.substring(0, banListMsg.length() - 1);
         }
-        
+
         sender.sendMessage(banListMsg);
     }
-    
+
     private void toggleBan(Player sender, String name, Channel channel) {
         if (!channel.isBanned(name))
             ban(sender, name, channel);
         else
             unban(sender, name, channel);
     }
-    
+
     private void ban(Player sender, String name, Channel channel) {
         BanResult result = channel.banPlayer(sender, name);
 
@@ -91,7 +91,7 @@ public class BanCommand extends Command {
                     .sendMessage("HeroChat: Banned from " + channel.getColoredName() + ChatColor.WHITE.format() + " by " + sender.getName());
         }
     }
-    
+
     private void unban(Player sender, String name, Channel channel) {
         BanResult result = channel.unbanPlayer(sender, name);
 

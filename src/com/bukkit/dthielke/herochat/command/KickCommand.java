@@ -21,7 +21,7 @@ public class KickCommand extends Command {
     public void execute(PlayerChatEvent event, Player sender, String[] args) {
 
         event.setCancelled(true);
-        
+
         if (args.length != 2) {
             sender.sendMessage(ChatColor.ROSE.format() + "Usage: /ch kick <channel> <player>");
             return;
