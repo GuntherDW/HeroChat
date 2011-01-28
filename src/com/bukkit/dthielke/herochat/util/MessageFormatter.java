@@ -52,7 +52,25 @@ public class MessageFormatter {
 
     }
 
-    public List<String> formatMessage(Channel channel, String sender, String msg, boolean usePermissions) {
+    public List<String> formatMessageWrapped(Channel channel, String sender, String msg, boolean usePermissions) {
+        String leader = createLeader(channel, sender, msg, usePermissions);
+        
+        List<String> msgLines = wrapMessage(leader + msg, fontMetrics);
+        List<String> coloredLines = new ArrayList<String>();
+        for (int i = 0; i < msgLines.size(); i++) {
+            coloredLines.add(channel.getColorString() + msgLines.get(i));
+        }
+
+        return coloredLines;
+    }
+    
+    public String formatMessage(Channel channel, String sender, String msg, boolean usePermissions) {
+        String leader = createLeader(channel, sender, msg, usePermissions);
+
+        return leader + msg;
+    }
+    
+    private String createLeader(Channel channel, String sender, String msg, boolean usePermissions) {
         String prefix = "";
         String suffix = "";
 
@@ -73,17 +91,8 @@ public class MessageFormatter {
         } else {
             suffix = suffix.replace("&", "\u00a7");
         }
-
-        String channelColor = channel.getColorString();
-        String leader = applyFormat(channel, prefix, suffix, sender);
         
-        List<String> msgLines = wrapMessage(leader + msg, fontMetrics);
-        List<String> coloredLines = new ArrayList<String>();
-        for (int i = 0; i < msgLines.size(); i++) {
-            coloredLines.add(channelColor + msgLines.get(i));
-        }
-
-        return coloredLines;
+        return applyFormat(channel, prefix, suffix, sender);
     }
     
     private String applyFormat(Channel channel, String prefix, String suffix, String sender) {

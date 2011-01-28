@@ -11,7 +11,7 @@ public class LocalChannel extends Channel {
     
     public static final int DEFAULT_DISTANCE = 100;
     
-    private static int distance = DEFAULT_DISTANCE;
+    protected static int distance = DEFAULT_DISTANCE;
     
     public LocalChannel(HeroChatPlugin plugin) {
         super(plugin);
@@ -19,7 +19,7 @@ public class LocalChannel extends Channel {
     
     @Override
     public void sendMessage(Player sender, String msg) {
-        List<String> msgLines = formatter.formatMessage(this, sender.getName(), msg, plugin.isUsingPermissions());
+        List<String> msgLines = formatter.formatMessageWrapped(this, sender.getName(), msg, plugin.isUsingPermissions());
 
         boolean heard = false;
         
@@ -40,6 +40,8 @@ public class LocalChannel extends Channel {
         
         if (!heard)
             sender.sendMessage(ChatColor.GRAY.format() + "No one hears you.");
+        
+        plugin.log(logFormatter.formatMessage(this, senderName, msg, plugin.isUsingPermissions()));
     }
 
     public static void setDistance(int distance) {

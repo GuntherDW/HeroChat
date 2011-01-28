@@ -27,9 +27,12 @@ public class Channel {
         PLAYER_ALREADY_BANNED,
         SUCCESS
     }
+    
+    public static final String logFormat = "[{nick}] {player}: ";
 
     protected HeroChatPlugin plugin;
     protected MessageFormatter formatter;
+    protected MessageFormatter logFormatter;
 
     protected String name;
     protected String nick;
@@ -49,7 +52,8 @@ public class Channel {
 
     public Channel(HeroChatPlugin plugin) {
         this.plugin = plugin;
-        this.formatter = new MessageFormatter();
+        formatter = new MessageFormatter();
+        logFormatter = new MessageFormatter(logFormat);
 
         name = "default";
         nick = "def";
@@ -69,7 +73,7 @@ public class Channel {
     }
 
     public void sendMessage(Player sender, String msg) {
-        List<String> msgLines = formatter.formatMessage(this, sender.getName(), msg, plugin.isUsingPermissions());
+        List<String> msgLines = formatter.formatMessageWrapped(this, sender.getName(), msg, plugin.isUsingPermissions());
 
         for (Player p : players) {
             if (!plugin.getIgnoreList(p).contains(sender.getName())) {
@@ -78,6 +82,8 @@ public class Channel {
                 }
             }
         }
+        
+        plugin.log(logFormatter.formatMessage(this, sender.getName(), msg, plugin.isUsingPermissions()));
     }
 
     public boolean hasPlayer(Player player) {

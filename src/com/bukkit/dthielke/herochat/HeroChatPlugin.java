@@ -244,6 +244,10 @@ public class HeroChatPlugin extends JavaPlugin {
 
         defaultChannel = getChannel(config.defaultChannel);
     }
+    
+    public void log(String log) {
+        logger.log(Level.INFO, "[HEROCHAT] "+ log);
+    }
 
     public List<Command> getCommands() {
         return commands;
