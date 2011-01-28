@@ -1,0 +1,3 @@
+name: HeroChat
+version: 2.0
+main: com.bukkit.dthielke.herochat.HeroChatPlugin
