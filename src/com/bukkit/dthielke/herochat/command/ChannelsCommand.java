@@ -32,7 +32,7 @@ public class ChannelsCommand extends Command {
         List<Channel> channels = plugin.getChannels();
 
         for (Channel c : channels) {
-            if (!c.isHidden() || c.hasPlayer(sender)) {
+            if (!c.isHidden()) {
 
                 String msg = c.getColorString() + "[" + c.getNick() + "] " + c.getName();
                 if (c.hasPlayer(sender)) {

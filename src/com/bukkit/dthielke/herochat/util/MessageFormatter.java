@@ -53,8 +53,6 @@ public class MessageFormatter {
     }
 
     public List<String> formatMessage(Channel channel, String sender, String msg, boolean usePermissions) {
-        format = "{color.CHANNEL}[{nick}] {color.WHITE}{prefix}{player}{suffix}{color.CHANNEL}: ";
-        
         String prefix = "";
         String suffix = "";
 
@@ -79,9 +77,6 @@ public class MessageFormatter {
         String channelColor = channel.getColorString();
         String leader = applyFormat(channel, prefix, suffix, sender);
         
-        //msg = "[" + channel.getNick() + "] " + prefix + sender + channelColor + suffix + channelColor + ": " + msg;
-        
-        
         List<String> msgLines = wrapMessage(leader + msg, fontMetrics);
         List<String> coloredLines = new ArrayList<String>();
         for (int i = 0; i < msgLines.size(); i++) {
@@ -93,12 +88,14 @@ public class MessageFormatter {
     
     private String applyFormat(Channel channel, String prefix, String suffix, String sender) {
         String leader = format;
+        
         leader = leader.replaceAll("\\{nick\\}", channel.getNick());
         leader = leader.replaceAll("\\{name\\}", channel.getName());
         leader = leader.replaceAll("\\{prefix\\}", prefix);
         leader = leader.replaceAll("\\{suffix\\}", suffix);
         leader = leader.replaceAll("\\{player\\}", sender);
         leader = leader.replaceAll("\\{color.CHANNEL\\}", channel.getColorString());
+        
         
         Matcher matcher = Pattern.compile("\\{color.[a-zA-Z]+\\}").matcher(leader);
         while (matcher.find()) {
