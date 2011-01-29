@@ -5,6 +5,7 @@ import org.bukkit.event.player.PlayerChatEvent;
 
 import com.bukkit.dthielke.herochat.Channel;
 import com.bukkit.dthielke.herochat.HeroChatPlugin;
+import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class QuickMsgCommand extends Command {
 
@@ -27,6 +28,15 @@ public class QuickMsgCommand extends Command {
 
         event.setCancelled(true);
 
+        if (plugin.isUsingPermissions() && !c.getWhiteList().isEmpty()) {
+            String group = Permissions.Security.getGroup(sender.getName());
+            
+            if (!c.getWhiteList().contains(group)) {
+                sender.sendMessage("HeroChat: You are not allowed to join this channel");
+                return;
+            }
+        }
+        
         boolean joined = c.addPlayer(sender);
         if (joined)
             sender.sendMessage("HeroChat: Joined channel " + c.getColoredName());

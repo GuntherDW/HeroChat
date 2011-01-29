@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.yaml.snakeyaml.DumperOptions;
-import org.yaml.snakeyaml.DumperOptions.FlowStyle;
 import org.yaml.snakeyaml.TypeDescription;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -80,7 +79,7 @@ public class Configuration {
         representer.addClassTag(Configuration.class, new Tag("configuration"));
 
         DumperOptions options = new DumperOptions();
-        options.setDefaultFlowStyle(FlowStyle.BLOCK);
+        options.setWidth(300);
         options.setIndent(4);
 
         Yaml yaml = new Yaml(representer, options);

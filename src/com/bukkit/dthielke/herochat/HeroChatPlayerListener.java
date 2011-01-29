@@ -8,6 +8,7 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
 
 import com.bukkit.dthielke.herochat.command.Command;
+import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class HeroChatPlayerListener extends PlayerListener {
 
@@ -57,6 +58,13 @@ public class HeroChatPlayerListener extends PlayerListener {
         Player joiner = event.getPlayer();
 
         for (Channel c : plugin.getChannels()) {
+            if (plugin.isUsingPermissions() && !c.getWhiteList().isEmpty()) {
+                String group = Permissions.Security.getGroup(joiner.getName());
+                
+                if (!c.getWhiteList().contains(group))
+                    continue;
+            }
+            
             if (c.isAutomaticallyJoined())
                 c.addPlayer(joiner);
         }

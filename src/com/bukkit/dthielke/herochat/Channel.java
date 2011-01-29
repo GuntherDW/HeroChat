@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import com.bukkit.dthielke.herochat.HeroChatPlugin.ChatColor;
 import com.bukkit.dthielke.herochat.HeroChatPlugin.PluginPermission;
 import com.bukkit.dthielke.herochat.util.MessageFormatter;
+import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class Channel {
 
@@ -79,6 +80,15 @@ public class Channel {
     }
 
     public void sendMessage(Player sender, String msg) {
+        if (plugin.isUsingPermissions() && !voiceList.isEmpty()) {
+            String group = Permissions.Security.getGroup(sender.getName());
+            
+            if (!voiceList.contains(group)) {
+                sender.sendMessage("HeroChat: You cannot speak in this channel");
+                return;
+            }
+        }
+        
         List<String> msgLines = formatter.formatMessageWrapped(this, sender.getName(), msg, plugin.isUsingPermissions());
 
         for (Player p : players) {

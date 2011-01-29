@@ -6,6 +6,7 @@ import org.bukkit.event.player.PlayerChatEvent;
 import com.bukkit.dthielke.herochat.Channel;
 import com.bukkit.dthielke.herochat.HeroChatPlugin;
 import com.bukkit.dthielke.herochat.HeroChatPlugin.ChatColor;
+import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class JoinCommand extends Command {
 
@@ -32,6 +33,15 @@ public class JoinCommand extends Command {
             if (c.isBanned(sender)) {
                 sender.sendMessage("HeroChat: You are banned from " + c.getColoredName());
                 return;
+            }
+            
+            if (plugin.isUsingPermissions() && !c.getWhiteList().isEmpty()) {
+                String group = Permissions.Security.getGroup(sender.getName());
+                
+                if (!c.getWhiteList().contains(group)) {
+                    sender.sendMessage("HeroChat: You are not allowed to join this channel");
+                    return;
+                }
             }
 
             boolean success = c.addPlayer(sender);
