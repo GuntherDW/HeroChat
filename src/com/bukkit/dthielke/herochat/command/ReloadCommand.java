@@ -6,6 +6,7 @@ import org.bukkit.event.player.PlayerChatEvent;
 import com.bukkit.dthielke.herochat.Channel;
 import com.bukkit.dthielke.herochat.HeroChatPlugin;
 import com.bukkit.dthielke.herochat.HeroChatPlugin.PluginPermission;
+import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class ReloadCommand extends Command {
 
@@ -31,9 +32,15 @@ public class ReloadCommand extends Command {
         for (Channel c : plugin.getChannels()) {
             if (c.isAutomaticallyJoined()) {
                 for (Player p : plugin.getServer().getOnlinePlayers()) {
-                    c.addPlayer(p);
+                    if (plugin.isUsingPermissions() && !c.getWhiteList().isEmpty()) {
+                        String group = Permissions.Security.getGroup(sender.getName());
+                        
+                        if (c.getWhiteList().contains(group)) {
+                            c.addPlayer(p);
 
-                    p.sendMessage("HeroChat: Joined channel " + c.getColoredName());
+                            p.sendMessage("HeroChat: Joined channel " + c.getColoredName());
+                        }
+                    }
                 }
             }
         }
