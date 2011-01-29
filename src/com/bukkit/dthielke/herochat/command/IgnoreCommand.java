@@ -15,7 +15,8 @@ public class IgnoreCommand extends Command {
         super(plugin);
 
         this.name = "ignore";
-        this.identifier = "/ignore";
+        this.identifiers.add("/ch ignore");
+        this.identifiers.add("/ignore");
     }
 
     @Override

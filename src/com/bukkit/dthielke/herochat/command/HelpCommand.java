@@ -32,7 +32,7 @@ public class HelpCommand extends Command {
         super(plugin);
 
         this.name = "help";
-        this.identifier = "/ch help";
+        this.identifiers.add("/ch help");
     }
 
     @Override

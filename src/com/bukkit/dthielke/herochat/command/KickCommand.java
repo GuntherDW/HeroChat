@@ -14,7 +14,7 @@ public class KickCommand extends Command {
         super(plugin);
 
         this.name = "kick";
-        this.identifier = "/ch kick";
+        this.identifiers.add("/ch kick");
     }
 
     @Override

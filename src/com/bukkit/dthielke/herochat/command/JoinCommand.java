@@ -14,7 +14,8 @@ public class JoinCommand extends Command {
         super(plugin);
 
         this.name = "join";
-        this.identifier = "/join";
+        this.identifiers.add("/ch join");
+        this.identifiers.add("/join");
     }
 
     @Override

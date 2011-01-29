@@ -29,7 +29,7 @@ public class LocalChannel extends Channel {
             }
         }
         
-        List<String> msgLines = formatter.formatMessageWrapped(this, sender.getName(), msg, plugin.isUsingPermissions());
+        List<String> msgLines = formatter.formatMessageWrapped(this, sender.getDisplayName(), msg, plugin.isUsingPermissions());
 
         boolean heard = false;
 

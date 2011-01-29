@@ -16,7 +16,7 @@ public class BanCommand extends Command {
         super(plugin);
 
         this.name = "ban";
-        this.identifier = "/ch ban";
+        this.identifiers.add("/ch ban");
     }
 
     @Override

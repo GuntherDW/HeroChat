@@ -13,7 +13,8 @@ public class LeaveCommand extends Command {
         super(plugin);
 
         this.name = "leave";
-        this.identifier = "/leave";
+        this.identifiers.add("/ch leave");
+        this.identifiers.add("/leave");
     }
 
     @Override

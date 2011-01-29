@@ -18,7 +18,7 @@ public class ChannelsCommand extends Command {
         super(plugin);
 
         this.name = "channels";
-        this.identifier = "/ch channels";
+        this.identifiers.add("/ch channels");
     }
 
     @Override

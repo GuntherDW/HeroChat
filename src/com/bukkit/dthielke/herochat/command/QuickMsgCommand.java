@@ -13,7 +13,7 @@ public class QuickMsgCommand extends Command {
         super(plugin);
 
         this.name = "quickmsg";
-        this.identifier = "/";
+        this.identifiers.add("/");
     }
 
     @Override

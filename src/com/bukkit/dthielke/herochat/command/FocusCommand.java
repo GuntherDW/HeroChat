@@ -14,7 +14,7 @@ public class FocusCommand extends Command {
         super(plugin);
 
         this.name = "focus";
-        this.identifier = "/ch";
+        this.identifiers.add("/ch");
     }
 
     @Override

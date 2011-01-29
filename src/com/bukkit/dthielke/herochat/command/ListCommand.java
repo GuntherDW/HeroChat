@@ -16,7 +16,7 @@ public class ListCommand extends Command {
         super(plugin);
 
         this.name = "list";
-        this.identifier = "/ch list";
+        this.identifiers.add("/ch list");
     }
 
     @Override

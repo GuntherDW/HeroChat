@@ -15,7 +15,7 @@ public class CreateCommand extends Command {
         super(plugin);
 
         this.name = "create";
-        this.identifier = "/ch create";
+        this.identifiers.add("/ch create");
     }
 
     @Override

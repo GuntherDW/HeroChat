@@ -14,7 +14,7 @@ public class ModCommand extends Command {
         super(plugin);
 
         this.name = "mod";
-        this.identifier = "/ch mod";
+        this.identifiers.add("/ch mod");
     }
 
     @Override

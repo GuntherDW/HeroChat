@@ -24,18 +24,24 @@ public class HeroChatPlayerListener extends PlayerListener {
 
         List<Command> commands = plugin.getCommands();
         Command bestMatch = null;
-
+        int valid = -1;
+        
         for (Command c : commands) {
-            if (c.validate(message)) {
-                if (bestMatch == null)
+            int tmpValid = c.validate(message);
+            
+            if (tmpValid != -1) {
+                if (bestMatch == null) {
                     bestMatch = c;
-                else if (c.getIdentifier().length() > bestMatch.getIdentifier().length())
+                    valid = tmpValid;
+                } else if (c.getIdentifiers().get(tmpValid).length() > bestMatch.getIdentifiers().get(valid).length()) {
                     bestMatch = c;
+                    valid = tmpValid;
+                }
             }
         }
 
         if (bestMatch != null) {
-            String[] args = message.substring(bestMatch.getIdentifier().length()).trim().split(" ");
+            String[] args = message.substring(bestMatch.getIdentifiers().get(valid).length()).trim().split(" ");
 
             bestMatch.execute(event, sender, args);
         }

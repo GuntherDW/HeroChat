@@ -14,7 +14,7 @@ public class RemoveCommand extends Command {
         super(plugin);
 
         this.name = "remove";
-        this.identifier = "/ch remove";
+        this.identifiers.add("/ch remove");
     }
 
     @Override

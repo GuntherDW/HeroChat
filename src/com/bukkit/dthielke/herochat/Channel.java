@@ -89,7 +89,7 @@ public class Channel {
             }
         }
         
-        List<String> msgLines = formatter.formatMessageWrapped(this, sender.getName(), msg, plugin.isUsingPermissions());
+        List<String> msgLines = formatter.formatMessageWrapped(this, sender.getDisplayName(), msg, plugin.isUsingPermissions());
 
         for (Player p : players) {
             if (!plugin.getIgnoreList(p).contains(sender.getName())) {

@@ -1,5 +1,8 @@
 package com.bukkit.dthielke.herochat.command;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 
@@ -10,22 +13,34 @@ public abstract class Command implements Executable {
     protected HeroChatPlugin plugin;
 
     protected String name;
-    protected String identifier;
+    protected List<String> identifiers;
 
     public Command(HeroChatPlugin plugin) {
         this.plugin = plugin;
+        
+        identifiers = new ArrayList<String>();
     }
 
     public String getName() {
         return name;
     }
 
-    public String getIdentifier() {
-        return identifier;
+    public List<String> getIdentifiers() {
+        return identifiers;
     }
 
-    public boolean validate(String cmd) {
-        return cmd.toLowerCase().startsWith(identifier);
+    public int validate(String cmd) {
+        int valid = -1;
+        
+        cmd = cmd.toLowerCase();
+        
+        for (int i = 0; i < identifiers.size(); i++) {
+            if (cmd.startsWith(identifiers.get(i).toLowerCase())) {
+                valid = i;
+            }
+        }
+        
+        return valid;
     }
 
     public abstract void execute(PlayerChatEvent event, Player sender, String[] args);

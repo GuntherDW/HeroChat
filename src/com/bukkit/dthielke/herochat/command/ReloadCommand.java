@@ -14,7 +14,7 @@ public class ReloadCommand extends Command {
         super(plugin);
 
         this.name = "reload";
-        this.identifier = "/ch reload";
+        this.identifiers.add("/ch reload");
     }
 
     @Override
@@ -33,13 +33,17 @@ public class ReloadCommand extends Command {
             if (c.isAutomaticallyJoined()) {
                 for (Player p : plugin.getServer().getOnlinePlayers()) {
                     if (plugin.isUsingPermissions() && !c.getWhiteList().isEmpty()) {
-                        String group = Permissions.Security.getGroup(sender.getName());
+                        String group = Permissions.Security.getGroup(p.getName());
                         
-                        if (c.getWhiteList().contains(group)) {
+                        if (c.getWhiteList().contains(group)) {                            
                             c.addPlayer(p);
 
                             p.sendMessage("HeroChat: Joined channel " + c.getColoredName());
                         }
+                    } else {
+                        c.addPlayer(p);
+
+                        p.sendMessage("HeroChat: Joined channel " + c.getColoredName());
                     }
                 }
             }
