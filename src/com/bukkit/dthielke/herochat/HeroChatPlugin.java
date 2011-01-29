@@ -98,9 +98,6 @@ public class HeroChatPlugin extends JavaPlugin {
     private HashMap<Player, Channel> activeChannelMap;
     private HashMap<Player, List<String>> ignoreMap;
 
-    private MessageFormatter regMsgFormatter;
-    private MessageFormatter localMsgFormatter;
-
     private Logger logger;
 
     public HeroChatPlugin(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
@@ -121,6 +118,8 @@ public class HeroChatPlugin extends JavaPlugin {
         setupPermissions();
 
         loadConfig();
+        
+        saveConfig();
 
         ignoreMap = new HashMap<Player, List<String>>();
         activeChannelMap = new HashMap<Player, Channel>();
@@ -173,10 +172,9 @@ public class HeroChatPlugin extends JavaPlugin {
     public void saveConfig() {
         Configuration config = new Configuration();
 
-        config.messageFormats.put("local", "{color.WHITE}{prefix}{player}{suffix}{color.CHANNEL}: ");
-        config.messageFormats.put("regular", "{color.CHANNEL}[{nick}] {color.WHITE}{prefix}{player}{suffix}{color.CHANNEL}: ");
         config.localDistance = LocalChannel.getDistance();
         config.defaultChannel = defaultChannel.getName();
+        config.defaultMessageFormat = MessageFormatter.getDefaultMessageFormat();
 
         for (Channel c : channels) {
             if (!c.isSaved())
@@ -188,6 +186,7 @@ public class HeroChatPlugin extends JavaPlugin {
             prop.identifiers.put("name", c.getName());
             prop.identifiers.put("nick", c.getNick());
             prop.color = c.getColor();
+            prop.messageFormat = c.getFormatter().getFormat();
             prop.options.put("local", c instanceof LocalChannel);
             prop.options.put("forced", c.isForced());
             prop.options.put("hidden", c.isHidden());
@@ -196,6 +195,8 @@ public class HeroChatPlugin extends JavaPlugin {
             prop.options.put("quickMessagable", c.isQuickMessagable());
             prop.lists.put("moderators", c.getModerators());
             prop.lists.put("bans", c.getBanList());
+            prop.permissions.put("join", c.getWhiteList());
+            prop.permissions.put("speak", c.getVoiceList());
 
             config.channels.add(wrapper);
         }
@@ -210,8 +211,7 @@ public class HeroChatPlugin extends JavaPlugin {
 
         LocalChannel.setDistance(config.localDistance);
 
-        regMsgFormatter = new MessageFormatter(config.messageFormats.get("regular"));
-        localMsgFormatter = new MessageFormatter(config.messageFormats.get("local"));
+        MessageFormatter.setDefaultMessageFormat(config.defaultMessageFormat);
 
         channels = new ArrayList<Channel>();
 
@@ -219,13 +219,12 @@ public class HeroChatPlugin extends JavaPlugin {
             ChannelProperties prop = wrapper.channel;
 
             Channel channel;
-            if (prop.options.get("local")) {
+            if (prop.options.get("local"))
                 channel = new LocalChannel(this);
-                channel.setFormatter(localMsgFormatter);
-            } else {
+            else
                 channel = new Channel(this);
-                channel.setFormatter(regMsgFormatter);
-            }
+            
+            channel.setFormatter(new MessageFormatter(prop.messageFormat));
 
             channel.setName(prop.identifiers.get("name"));
             channel.setNick(prop.identifiers.get("nick"));
@@ -238,7 +237,12 @@ public class HeroChatPlugin extends JavaPlugin {
             channel.setQuickMessagable(prop.options.get("quickMessagable"));
             channel.setModerators(prop.lists.get("moderators"));
             channel.setBanList(prop.lists.get("bans"));
+            
+            channel.setWhiteList(prop.permissions.get("join"));
+            channel.setVoiceList(prop.permissions.get("speak"));
 
+            channel.setSaved(true);
+            
             channels.add(channel);
         }
 
@@ -302,14 +306,6 @@ public class HeroChatPlugin extends JavaPlugin {
 
     public HashMap<Player, List<String>> getIgnoreMap() {
         return ignoreMap;
-    }
-
-    public MessageFormatter getRegularMessageFormatter() {
-        return regMsgFormatter;
-    }
-
-    public MessageFormatter getLocalMessageFormatter() {
-        return localMsgFormatter;
     }
 
     public boolean hasPermission(String name, PluginPermission permission) {

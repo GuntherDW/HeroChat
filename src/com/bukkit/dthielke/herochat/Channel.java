@@ -49,6 +49,9 @@ public class Channel {
     protected List<Player> players;
     protected List<String> moderators;
     protected List<String> banList;
+    
+    protected List<String> voiceList;
+    protected List<String> whiteList;
 
     public Channel(HeroChatPlugin plugin) {
         this.plugin = plugin;
@@ -70,6 +73,9 @@ public class Channel {
         players = new ArrayList<Player>();
         moderators = new ArrayList<String>();
         banList = new ArrayList<String>();
+        
+        voiceList = new ArrayList<String>();
+        whiteList = new ArrayList<String>();
     }
 
     public void sendMessage(Player sender, String msg) {
@@ -302,6 +308,22 @@ public class Channel {
 
     public void setFormatter(MessageFormatter formatter) {
         this.formatter = formatter;
+    }
+
+    public List<String> getVoiceList() {
+        return voiceList;
+    }
+
+    public void setVoiceList(List<String> voiceList) {
+        this.voiceList = voiceList;
+    }
+
+    public List<String> getWhiteList() {
+        return whiteList;
+    }
+
+    public void setWhiteList(List<String> whiteList) {
+        this.whiteList = whiteList;
     }
 
 }

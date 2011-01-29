@@ -21,9 +21,9 @@ import com.bukkit.dthielke.herochat.HeroChatPlugin.ChatColor;
 
 public class Configuration {
 
-    public HashMap<String, String> messageFormats;
     public int localDistance;
     public String defaultChannel;
+    public String defaultMessageFormat;
     public List<ChannelWrapper> channels;
 
     public static class ChannelWrapper {
@@ -33,6 +33,10 @@ public class Configuration {
             public HashMap<String, String> identifiers;
             public HashMap<String, Boolean> options;
             public HashMap<String, List<String>> lists;
+            public HashMap<String, List<String>> permissions;
+            
+            
+            public String messageFormat;
 
             public ChatColor color;
 
@@ -40,6 +44,7 @@ public class Configuration {
                 identifiers = new HashMap<String, String>();
                 options = new HashMap<String, Boolean>();
                 lists = new HashMap<String, List<String>>();
+                permissions = new HashMap<String, List<String>>();
             }
         }
 
@@ -52,10 +57,8 @@ public class Configuration {
     }
 
     public Configuration() {
-        messageFormats = new HashMap<String, String>();
         localDistance = 0;
         channels = new ArrayList<ChannelWrapper>();
-
     }
 
     public static Configuration loadConfig(File file) {

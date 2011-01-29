@@ -19,6 +19,8 @@ public class MessageFormatter {
     private static final String DEFAULT_FORMAT = "{color.CHANNEL}[{nick}] {color.WHITE}{prefix}{player}{suffix}{color.CHANNEL}: ";
     private static final String FONT_NAME = "minecraft.ttf";
     private static final int CHAT_LINE_LENGTH = 940;
+    
+    private static String defaultMessageFormat = "";
 
     private FontMetrics fontMetrics;
     private String format;
@@ -106,6 +108,8 @@ public class MessageFormatter {
 
     private String applyFormat(Channel channel, String prefix, String suffix, String sender) {
         String leader = format;
+        
+        leader = leader.replaceAll("\\{default\\}", defaultMessageFormat);
 
         leader = leader.replaceAll("\\{nick\\}", channel.getNick());
         leader = leader.replaceAll("\\{name\\}", channel.getName());
@@ -159,5 +163,23 @@ public class MessageFormatter {
     public static String colorToString(ChatColor color) {
         return "\u00a7" + Integer.toHexString(color.ordinal());
     }
+
+    public String getFormat() {
+        return format;
+    }
+
+    public void setFormat(String format) {
+        this.format = format;
+    }
+
+    public static String getDefaultMessageFormat() {
+        return defaultMessageFormat;
+    }
+
+    public static void setDefaultMessageFormat(String defaultMessageFormat) {
+        MessageFormatter.defaultMessageFormat = defaultMessageFormat;
+    }
+    
+    
 
 }

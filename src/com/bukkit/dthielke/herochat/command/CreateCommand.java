@@ -7,6 +7,7 @@ import com.bukkit.dthielke.herochat.Channel;
 import com.bukkit.dthielke.herochat.HeroChatPlugin;
 import com.bukkit.dthielke.herochat.HeroChatPlugin.ChatColor;
 import com.bukkit.dthielke.herochat.HeroChatPlugin.PluginPermission;
+import com.bukkit.dthielke.herochat.util.MessageFormatter;
 
 public class CreateCommand extends Command {
 
@@ -96,7 +97,7 @@ public class CreateCommand extends Command {
             }
         }
 
-        c.setFormatter(plugin.getRegularMessageFormatter());
+        c.setFormatter(new MessageFormatter("\\{default\\}"));
 
         return c;
     }
