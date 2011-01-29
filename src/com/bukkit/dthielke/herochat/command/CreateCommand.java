@@ -72,6 +72,9 @@ public class CreateCommand extends Command {
 
         c.addPlayer(sender);
         sender.sendMessage("HeroChat: Joined channel " + c.getColoredName());
+        
+        if (c.isSaved())
+            plugin.saveConfig();
     }
 
     private Channel createChannel(String[] args) {
@@ -97,7 +100,7 @@ public class CreateCommand extends Command {
             }
         }
 
-        c.setFormatter(new MessageFormatter("\\{default\\}"));
+        c.setFormatter(new MessageFormatter("{default}"));
 
         return c;
     }

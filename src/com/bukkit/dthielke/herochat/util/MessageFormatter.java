@@ -16,7 +16,7 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class MessageFormatter {
 
-    private static final String DEFAULT_FORMAT = "{color.CHANNEL}[{nick}] {color.WHITE}{prefix}{player}{suffix}{color.CHANNEL}: ";
+    private static final String DEFAULT_FORMAT = "{default}";
     private static final String FONT_NAME = "minecraft.ttf";
     private static final int CHAT_LINE_LENGTH = 940;
     

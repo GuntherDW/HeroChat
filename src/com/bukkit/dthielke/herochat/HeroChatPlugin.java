@@ -118,8 +118,6 @@ public class HeroChatPlugin extends JavaPlugin {
         setupPermissions();
 
         loadConfig();
-        
-        saveConfig();
 
         ignoreMap = new HashMap<Player, List<String>>();
         activeChannelMap = new HashMap<Player, Channel>();
@@ -170,13 +168,15 @@ public class HeroChatPlugin extends JavaPlugin {
     }
 
     public void saveConfig() {
+        log("Saving...");
+        
         Configuration config = new Configuration();
 
         config.localDistance = LocalChannel.getDistance();
         config.defaultChannel = defaultChannel.getName();
         config.defaultMessageFormat = MessageFormatter.getDefaultMessageFormat();
 
-        for (Channel c : channels) {
+        for (Channel c : channels) {            
             if (!c.isSaved())
                 continue;
 
@@ -203,6 +203,8 @@ public class HeroChatPlugin extends JavaPlugin {
 
         File file = new File(getDataFolder(), "data.yml");
         Configuration.saveConfig(file, config);
+        
+        log("Save completed.");
     }
 
     public void loadConfig() {
