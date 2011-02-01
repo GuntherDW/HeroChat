@@ -29,7 +29,7 @@ public class LocalChannel extends Channel {
             }
         }
         
-        List<String> msgLines = formatter.formatMessageWrapped(this, sender.getDisplayName(), msg, plugin.isUsingPermissions());
+        List<String> msgLines = formatter.formatMessageWrapped(this, sender.getName(), sender.getDisplayName(), msg, plugin.isUsingPermissions());
 
         boolean heard = false;
 
@@ -51,7 +51,7 @@ public class LocalChannel extends Channel {
         if (!heard)
             sender.sendMessage(ChatColor.GRAY.format() + "No one hears you.");
 
-        plugin.log(logFormatter.formatMessage(this, senderName, msg, false));
+        plugin.log(logFormatter.formatMessage(this, senderName, sender.getDisplayName(), msg, false));
     }
 
     public static void setDistance(int distance) {

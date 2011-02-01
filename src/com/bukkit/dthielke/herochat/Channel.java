@@ -89,7 +89,7 @@ public class Channel {
             }
         }
         
-        List<String> msgLines = formatter.formatMessageWrapped(this, sender.getDisplayName(), msg, plugin.isUsingPermissions());
+        List<String> msgLines = formatter.formatMessageWrapped(this, sender.getName(), sender.getDisplayName(), msg, plugin.isUsingPermissions());
 
         for (Player p : players) {
             if (!plugin.getIgnoreList(p).contains(sender.getName())) {
@@ -99,7 +99,7 @@ public class Channel {
             }
         }
 
-        plugin.log(logFormatter.formatMessage(this, sender.getName(), msg, false));
+        plugin.log(logFormatter.formatMessage(this, sender.getName(), sender.getDisplayName(), msg, false));
     }
 
     public boolean hasPlayer(Player player) {
