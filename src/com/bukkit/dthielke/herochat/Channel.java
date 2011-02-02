@@ -12,20 +12,20 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class Channel {
 
-    public enum KickResult {
-        NO_PERMISSION,
-        PLAYER_IS_MODERATOR,
-        PLAYER_IS_ADMIN,
-        PLAYER_NOT_FOUND,
-        SUCCESS
-    }
-
     public enum BanResult {
         NO_PERMISSION,
         PLAYER_IS_MODERATOR,
         PLAYER_IS_ADMIN,
         PLAYER_NOT_FOUND,
         PLAYER_ALREADY_BANNED,
+        SUCCESS
+    }
+
+    public enum KickResult {
+        NO_PERMISSION,
+        PLAYER_IS_MODERATOR,
+        PLAYER_IS_ADMIN,
+        PLAYER_NOT_FOUND,
         SUCCESS
     }
 
@@ -78,6 +78,165 @@ public class Channel {
         whiteList = new ArrayList<String>();
     }
 
+    public void addModerator(Player player) {
+        addModerator(player.getName());
+    }
+
+    public void addModerator(String name) {
+        if (!isModerator(name))
+            moderators.add(name);
+    }
+
+    public boolean addPlayer(Player player) {
+        if (players.contains(player) || banList.contains(player.getName()))
+            return false;
+
+        players.add(player);
+        return true;
+    }
+
+    public BanResult banPlayer(Player sender, String name) {
+        if (isBanned(name))
+            return BanResult.PLAYER_ALREADY_BANNED;
+
+        KickResult result = kickPlayer(sender, name);
+
+        if (result == KickResult.SUCCESS)
+            banList.add(name);
+
+        return BanResult.valueOf(result.toString());
+    }
+
+    public List<String> getBanList() {
+        return banList;
+    }
+
+    public ChatColor getColor() {
+        return color;
+    }
+
+    public String getColoredName() {
+        return getColorString() + name;
+    }
+
+    public String getColorString() {
+        return color.format();
+    }
+
+    public MessageFormatter getFormatter() {
+        return formatter;
+    }
+
+    public List<String> getModerators() {
+        return moderators;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getNick() {
+        return nick;
+    }
+
+    public List<Player> getPlayers() {
+        return players;
+    }
+
+    public List<String> getVoiceList() {
+        return voiceList;
+    }
+
+    public List<String> getWhiteList() {
+        return whiteList;
+    }
+
+    public boolean hasPlayer(Player player) {
+        return players.contains(player);
+    }
+
+    public boolean hasPlayer(String name) {
+        for (Player p : players)
+            if (p.getName().equalsIgnoreCase(name))
+                return true;
+        return false;
+    }
+
+    public boolean isAutomaticallyJoined() {
+        return automaticallyJoined;
+    }
+
+    public boolean isBanned(Player player) {
+        return isBanned(player.getName());
+    }
+
+    public boolean isBanned(String name) {
+        for (String player : banList)
+            if (player.equalsIgnoreCase(name))
+                return true;
+        return false;
+    }
+
+    public boolean isForced() {
+        return forced;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
+    public boolean isModerator(Player player) {
+        return isModerator(player.getName());
+    }
+
+    public boolean isModerator(String name) {
+        for (String mod : moderators)
+            if (mod.equalsIgnoreCase(name))
+                return true;
+        return false;
+    }
+
+    public boolean isPermanent() {
+        return permanent;
+    }
+
+    public boolean isQuickMessagable() {
+        return quickMessagable;
+    }
+
+    public boolean isSaved() {
+        return saved;
+    }
+
+    public KickResult kickPlayer(Player sender, String name) {
+        if (!isModerator(sender) && !plugin.hasPermission(sender, PluginPermission.ADMIN)) {
+            return KickResult.NO_PERMISSION;
+        }
+
+        if (isModerator(name))
+            return KickResult.PLAYER_IS_MODERATOR;
+
+        if (plugin.hasPermission(name, PluginPermission.ADMIN))
+            return KickResult.PLAYER_IS_ADMIN;
+
+        for (Player p : players) {
+            if (p.getName().equalsIgnoreCase(name)) {
+                players.remove(p);
+                return KickResult.SUCCESS;
+            }
+        }
+
+        return KickResult.PLAYER_NOT_FOUND;
+    }
+
+    public boolean removePlayer(Player player) {
+        if (!players.contains(player))
+            return false;
+
+        players.remove(player);
+        return true;
+    }
+
     public void sendMessage(Player sender, String msg) {
         if (plugin.isUsingPermissions() && !voiceList.isEmpty()) {
             String group = Permissions.Security.getGroup(sender.getName());
@@ -103,64 +262,64 @@ public class Channel {
         plugin.log(LOG_FORMATTER.formatMessage(this, sender.getName(), sender.getDisplayName(), msg, plugin.getHealthBar(sender), false));
     }
 
-    public boolean hasPlayer(Player player) {
-        return players.contains(player);
+    public void setAutomaticallyJoined(boolean automaticallyJoined) {
+        this.automaticallyJoined = automaticallyJoined;
     }
 
-    public boolean hasPlayer(String name) {
-        for (Player p : players)
-            if (p.getName().equalsIgnoreCase(name))
-                return true;
-        return false;
+    public void setBanList(List<String> banList) {
+        this.banList = banList;
     }
 
-    public boolean addPlayer(Player player) {
-        if (players.contains(player) || banList.contains(player.getName()))
-            return false;
-
-        players.add(player);
-        return true;
+    public void setColor(ChatColor color) {
+        this.color = color;
     }
 
-    public boolean removePlayer(Player player) {
-        if (!players.contains(player))
-            return false;
-
-        players.remove(player);
-        return true;
+    public void setForced(boolean forced) {
+        this.forced = forced;
     }
 
-    public KickResult kickPlayer(Player sender, String name) {
-        if (!isModerator(sender) && !plugin.hasPermission(sender, PluginPermission.ADMIN)) {
-            return KickResult.NO_PERMISSION;
-        }
-
-        if (isModerator(name))
-            return KickResult.PLAYER_IS_MODERATOR;
-
-        if (plugin.hasPermission(name, PluginPermission.ADMIN))
-            return KickResult.PLAYER_IS_ADMIN;
-
-        for (Player p : players) {
-            if (p.getName().equalsIgnoreCase(name)) {
-                players.remove(p);
-                return KickResult.SUCCESS;
-            }
-        }
-
-        return KickResult.PLAYER_NOT_FOUND;
+    public void setFormatter(MessageFormatter formatter) {
+        this.formatter = formatter;
     }
 
-    public BanResult banPlayer(Player sender, String name) {
-        if (isBanned(name))
-            return BanResult.PLAYER_ALREADY_BANNED;
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
 
-        KickResult result = kickPlayer(sender, name);
+    public void setModerators(List<String> moderators) {
+        this.moderators = moderators;
+    }
 
-        if (result == KickResult.SUCCESS)
-            banList.add(name);
+    public void setName(String name) {
+        this.name = name;
+    }
 
-        return BanResult.valueOf(result.toString());
+    public void setNick(String nick) {
+        this.nick = nick;
+    }
+
+    public void setPermanent(boolean permanent) {
+        this.permanent = permanent;
+    }
+
+    public void setPlayers(List<Player> players) {
+        this.players = players;
+    }
+
+    public void setQuickMessagable(boolean quickMessagable) {
+        this.quickMessagable = quickMessagable;
+    }
+
+    public void setSaved(boolean saved) {
+        this.saved = saved;
+    }
+
+    public void setVoiceList(List<String> voiceList) {
+        this.voiceList = voiceList;
+    }
+
+    public void setWhiteList(List<String> whiteList) {
+        this.whiteList = whiteList;
     }
 
     public BanResult unbanPlayer(Player sender, String name) {
@@ -176,165 +335,6 @@ public class Channel {
         }
 
         return BanResult.PLAYER_NOT_FOUND;
-    }
-
-    public String getColorString() {
-        return color.format();
-    }
-
-    public String getColoredName() {
-        return getColorString() + name;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getNick() {
-        return nick;
-    }
-
-    public void setNick(String nick) {
-        this.nick = nick;
-    }
-
-    public boolean isForced() {
-        return forced;
-    }
-
-    public void setForced(boolean forced) {
-        this.forced = forced;
-    }
-
-    public boolean isHidden() {
-        return hidden;
-    }
-
-    public void setHidden(boolean hidden) {
-        this.hidden = hidden;
-    }
-
-    public boolean isAutomaticallyJoined() {
-        return automaticallyJoined;
-    }
-
-    public void setAutomaticallyJoined(boolean automaticallyJoined) {
-        this.automaticallyJoined = automaticallyJoined;
-    }
-
-    public boolean isSaved() {
-        return saved;
-    }
-
-    public void setSaved(boolean saved) {
-        this.saved = saved;
-    }
-
-    public boolean isPermanent() {
-        return permanent;
-    }
-
-    public void setPermanent(boolean permanent) {
-        this.permanent = permanent;
-    }
-
-    public boolean isQuickMessagable() {
-        return quickMessagable;
-    }
-
-    public void setQuickMessagable(boolean quickMessagable) {
-        this.quickMessagable = quickMessagable;
-    }
-
-    public ChatColor getColor() {
-        return color;
-    }
-
-    public void setColor(ChatColor color) {
-        this.color = color;
-    }
-
-    public List<Player> getPlayers() {
-        return players;
-    }
-
-    public void setPlayers(List<Player> players) {
-        this.players = players;
-    }
-
-    public void addModerator(Player player) {
-        addModerator(player.getName());
-    }
-
-    public void addModerator(String name) {
-        if (!isModerator(name))
-            moderators.add(name);
-    }
-
-    public boolean isModerator(Player player) {
-        return isModerator(player.getName());
-    }
-
-    public boolean isModerator(String name) {
-        for (String mod : moderators)
-            if (mod.equalsIgnoreCase(name))
-                return true;
-        return false;
-    }
-
-    public List<String> getModerators() {
-        return moderators;
-    }
-
-    public void setModerators(List<String> moderators) {
-        this.moderators = moderators;
-    }
-
-    public boolean isBanned(Player player) {
-        return isBanned(player.getName());
-    }
-
-    public boolean isBanned(String name) {
-        for (String player : banList)
-            if (player.equalsIgnoreCase(name))
-                return true;
-        return false;
-    }
-
-    public List<String> getBanList() {
-        return banList;
-    }
-
-    public void setBanList(List<String> banList) {
-        this.banList = banList;
-    }
-
-    public MessageFormatter getFormatter() {
-        return formatter;
-    }
-
-    public void setFormatter(MessageFormatter formatter) {
-        this.formatter = formatter;
-    }
-
-    public List<String> getVoiceList() {
-        return voiceList;
-    }
-
-    public void setVoiceList(List<String> voiceList) {
-        this.voiceList = voiceList;
-    }
-
-    public List<String> getWhiteList() {
-        return whiteList;
-    }
-
-    public void setWhiteList(List<String> whiteList) {
-        this.whiteList = whiteList;
     }
 
 }

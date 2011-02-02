@@ -35,10 +35,10 @@ public class JoinCommand extends Command {
                 sender.sendMessage("HeroChat: You are banned from " + c.getColoredName());
                 return;
             }
-            
+
             if (plugin.isUsingPermissions() && !c.getWhiteList().isEmpty()) {
                 String group = Permissions.Security.getGroup(sender.getName());
-                
+
                 if (!c.getWhiteList().contains(group)) {
                     sender.sendMessage("HeroChat: You are not allowed to join this channel");
                     return;

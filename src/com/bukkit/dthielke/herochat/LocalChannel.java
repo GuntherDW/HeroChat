@@ -14,6 +14,14 @@ public class LocalChannel extends Channel {
 
     protected static int distance = DEFAULT_DISTANCE;
 
+    public static int getDistance() {
+        return distance;
+    }
+
+    public static void setDistance(int distance) {
+        LocalChannel.distance = distance;
+    }
+
     public LocalChannel(HeroChatPlugin plugin) {
         super(plugin);
     }
@@ -22,15 +30,15 @@ public class LocalChannel extends Channel {
     public void sendMessage(Player sender, String msg) {
         if (plugin.isUsingPermissions() && !voiceList.isEmpty()) {
             String group = Permissions.Security.getGroup(sender.getName());
-            
+
             if (!voiceList.contains(group)) {
                 sender.sendMessage("HeroChat: You cannot speak in this channel");
                 return;
             }
         }
-        
+
         msg = plugin.censor(msg);
-        
+
         List<String> msgLines = formatter.formatMessageWrapped(this, sender.getName(), sender.getDisplayName(), msg, plugin.getHealthBar(sender), plugin.isUsingPermissions());
 
         boolean heard = false;
@@ -54,13 +62,5 @@ public class LocalChannel extends Channel {
             sender.sendMessage(ChatColor.GRAY.format() + "No one hears you.");
 
         plugin.log(LOG_FORMATTER.formatMessage(this, senderName, sender.getDisplayName(), msg, plugin.getHealthBar(sender), false));
-    }
-
-    public static void setDistance(int distance) {
-        LocalChannel.distance = distance;
-    }
-
-    public static int getDistance() {
-        return distance;
     }
 }

@@ -41,7 +41,7 @@ public class RemoveCommand extends Command {
             }
 
             plugin.getChannels().remove(c);
-            
+
             if (c.isSaved())
                 plugin.saveConfig();
 

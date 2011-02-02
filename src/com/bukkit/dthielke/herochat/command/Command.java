@@ -17,32 +17,32 @@ public abstract class Command implements Executable {
 
     public Command(HeroChatPlugin plugin) {
         this.plugin = plugin;
-        
+
         identifiers = new ArrayList<String>();
+    }
+
+    public abstract void execute(PlayerChatEvent event, Player sender, String[] args);
+
+    public List<String> getIdentifiers() {
+        return identifiers;
     }
 
     public String getName() {
         return name;
     }
 
-    public List<String> getIdentifiers() {
-        return identifiers;
-    }
-
     public int validate(String cmd) {
         int valid = -1;
-        
+
         cmd = cmd.toLowerCase();
-        
+
         for (int i = 0; i < identifiers.size(); i++) {
             if (cmd.startsWith(identifiers.get(i).toLowerCase())) {
                 valid = i;
             }
         }
-        
+
         return valid;
     }
-
-    public abstract void execute(PlayerChatEvent event, Player sender, String[] args);
 
 }

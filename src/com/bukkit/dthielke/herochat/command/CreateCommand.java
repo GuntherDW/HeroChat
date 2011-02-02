@@ -18,6 +18,34 @@ public class CreateCommand extends Command {
         this.identifiers.add("/ch create");
     }
 
+    private Channel createChannel(String[] args) {
+        Channel c = new Channel(plugin);
+
+        c.setName(args[0]);
+        c.setNick(args[1]);
+
+        for (int i = 2; i < args.length; i++) {
+            String tmp = args[i].toLowerCase();
+
+            if (tmp.startsWith("color:")) {
+                try {
+                    int color = Integer.parseInt(tmp.substring(6));
+                    c.setColor(ChatColor.values()[color]);
+                } catch (NumberFormatException e) {
+                    return null;
+                }
+            } else if (tmp.equals("hidden")) {
+                c.setHidden(true);
+            } else if (tmp.equals("saved")) {
+                c.setSaved(true);
+            }
+        }
+
+        c.setFormatter(new MessageFormatter("{default}"));
+
+        return c;
+    }
+
     @Override
     public void execute(PlayerChatEvent event, Player sender, String[] args) {
         event.setCancelled(true);
@@ -72,37 +100,9 @@ public class CreateCommand extends Command {
 
         c.addPlayer(sender);
         sender.sendMessage("HeroChat: Joined channel " + c.getColoredName());
-        
+
         if (c.isSaved())
             plugin.saveConfig();
-    }
-
-    private Channel createChannel(String[] args) {
-        Channel c = new Channel(plugin);
-
-        c.setName(args[0]);
-        c.setNick(args[1]);
-
-        for (int i = 2; i < args.length; i++) {
-            String tmp = args[i].toLowerCase();
-
-            if (tmp.startsWith("color:")) {
-                try {
-                    int color = Integer.parseInt(tmp.substring(6));
-                    c.setColor(ChatColor.values()[color]);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            } else if (tmp.equals("hidden")) {
-                c.setHidden(true);
-            } else if (tmp.equals("saved")) {
-                c.setSaved(true);
-            }
-        }
-
-        c.setFormatter(new MessageFormatter("{default}"));
-
-        return c;
     }
 
 }

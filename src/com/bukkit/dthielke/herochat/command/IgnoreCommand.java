@@ -19,6 +19,23 @@ public class IgnoreCommand extends Command {
         this.identifiers.add("/ignore");
     }
 
+    private void displayIgnoreList(Player sender, List<String> ignoreList) {
+        String ignoreListMsg;
+
+        if (ignoreList.isEmpty()) {
+            ignoreListMsg = "Currently ignoring no one.";
+        } else {
+            ignoreListMsg = "Currently ignoring: ";
+
+            for (String s : ignoreList) {
+                ignoreListMsg += s + ",";
+            }
+            ignoreListMsg = ignoreListMsg.substring(0, ignoreListMsg.length() - 1);
+        }
+
+        sender.sendMessage(ignoreListMsg);
+    }
+
     @Override
     public void execute(PlayerChatEvent event, Player sender, String[] args) {
         event.setCancelled(true);
@@ -39,23 +56,6 @@ public class IgnoreCommand extends Command {
             displayIgnoreList(sender, ignoreList);
         else
             toggleIgnore(sender, args[0].toLowerCase(), ignoreList);
-    }
-
-    private void displayIgnoreList(Player sender, List<String> ignoreList) {
-        String ignoreListMsg;
-
-        if (ignoreList.isEmpty()) {
-            ignoreListMsg = "Currently ignoring no one.";
-        } else {
-            ignoreListMsg = "Currently ignoring: ";
-
-            for (String s : ignoreList) {
-                ignoreListMsg += s + ",";
-            }
-            ignoreListMsg = ignoreListMsg.substring(0, ignoreListMsg.length() - 1);
-        }
-
-        sender.sendMessage(ignoreListMsg);
     }
 
     private void toggleIgnore(Player sender, String name, List<String> ignoreList) {

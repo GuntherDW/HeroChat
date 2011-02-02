@@ -32,13 +32,13 @@ public class FocusCommand extends Command {
         if (c != null) {
             if (plugin.isUsingPermissions() && !c.getWhiteList().isEmpty()) {
                 String group = Permissions.Security.getGroup(sender.getName());
-                
+
                 if (!c.getWhiteList().contains(group)) {
                     sender.sendMessage("HeroChat: You are not allowed to join this channel");
                     return;
                 }
             }
-            
+
             boolean joined = c.addPlayer(sender);
             if (joined)
                 sender.sendMessage("HeroChat: Joined channel " + c.getColoredName());

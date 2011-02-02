@@ -19,6 +19,46 @@ public class BanCommand extends Command {
         this.identifiers.add("/ch ban");
     }
 
+    private void ban(Player sender, String name, Channel channel) {
+        BanResult result = channel.banPlayer(sender, name);
+
+        switch (result) {
+        case NO_PERMISSION:
+            sender.sendMessage("HeroChat: You are not a moderator of this channel");
+            break;
+        case PLAYER_IS_ADMIN:
+            sender.sendMessage("HeroChat: You cannot kick admins");
+            break;
+        case PLAYER_IS_MODERATOR:
+            sender.sendMessage("HeroChat: You cannot kick moderators");
+            break;
+        case PLAYER_NOT_FOUND:
+            sender.sendMessage("HeroChat: Player not found");
+            break;
+        case SUCCESS:
+            sender.sendMessage("HeroChat: Banned player " + name + " from " + channel.getColoredName());
+            plugin.getServer().getPlayer(name)
+                    .sendMessage("HeroChat: Banned from " + channel.getColoredName() + ChatColor.WHITE.format() + " by " + sender.getName());
+        }
+    }
+
+    private void displayBanList(Player sender, List<String> banList, Channel channel) {
+        String banListMsg;
+
+        if (banList.isEmpty()) {
+            banListMsg = "No one is currently banned from " + channel.getColoredName();
+        } else {
+            banListMsg = "Currently banned from " + channel.getColoredName() + ChatColor.WHITE.format() + ": ";
+
+            for (String s : banList) {
+                banListMsg += s + ",";
+            }
+            banListMsg = banListMsg.substring(0, banListMsg.length() - 1);
+        }
+
+        sender.sendMessage(banListMsg);
+    }
+
     @Override
     public void execute(PlayerChatEvent event, Player sender, String[] args) {
 
@@ -45,51 +85,11 @@ public class BanCommand extends Command {
 
     }
 
-    private void displayBanList(Player sender, List<String> banList, Channel channel) {
-        String banListMsg;
-
-        if (banList.isEmpty()) {
-            banListMsg = "No one is currently banned from " + channel.getColoredName();
-        } else {
-            banListMsg = "Currently banned from " + channel.getColoredName() + ChatColor.WHITE.format() + ": ";
-
-            for (String s : banList) {
-                banListMsg += s + ",";
-            }
-            banListMsg = banListMsg.substring(0, banListMsg.length() - 1);
-        }
-
-        sender.sendMessage(banListMsg);
-    }
-
     private void toggleBan(Player sender, String name, Channel channel) {
         if (!channel.isBanned(name))
             ban(sender, name, channel);
         else
             unban(sender, name, channel);
-    }
-
-    private void ban(Player sender, String name, Channel channel) {
-        BanResult result = channel.banPlayer(sender, name);
-
-        switch (result) {
-        case NO_PERMISSION:
-            sender.sendMessage("HeroChat: You are not a moderator of this channel");
-            break;
-        case PLAYER_IS_ADMIN:
-            sender.sendMessage("HeroChat: You cannot kick admins");
-            break;
-        case PLAYER_IS_MODERATOR:
-            sender.sendMessage("HeroChat: You cannot kick moderators");
-            break;
-        case PLAYER_NOT_FOUND:
-            sender.sendMessage("HeroChat: Player not found");
-            break;
-        case SUCCESS:
-            sender.sendMessage("HeroChat: Banned player " + name + " from " + channel.getColoredName());
-            plugin.getServer().getPlayer(name)
-                    .sendMessage("HeroChat: Banned from " + channel.getColoredName() + ChatColor.WHITE.format() + " by " + sender.getName());
-        }
     }
 
     private void unban(Player sender, String name, Channel channel) {

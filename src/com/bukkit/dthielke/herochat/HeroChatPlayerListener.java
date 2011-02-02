@@ -18,6 +18,19 @@ public class HeroChatPlayerListener extends PlayerListener {
         this.plugin = plugin;
     }
 
+    public void onPlayerChat(PlayerChatEvent event) {
+        Player sender = event.getPlayer();
+
+        Channel c = plugin.getActiveChannel(sender);
+
+        if (c == null)
+            c = plugin.getDefaultChannel();
+
+        c.sendMessage(sender, event.getMessage());
+
+        event.setCancelled(true);
+    }
+
     public void onPlayerCommand(PlayerChatEvent event) {
         Player sender = event.getPlayer();
         String message = event.getMessage();
@@ -25,10 +38,10 @@ public class HeroChatPlayerListener extends PlayerListener {
         List<Command> commands = plugin.getCommands();
         Command bestMatch = null;
         int valid = -1;
-        
+
         for (Command c : commands) {
             int tmpValid = c.validate(message);
-            
+
             if (tmpValid != -1) {
                 if (bestMatch == null) {
                     bestMatch = c;
@@ -47,30 +60,17 @@ public class HeroChatPlayerListener extends PlayerListener {
         }
     }
 
-    public void onPlayerChat(PlayerChatEvent event) {
-        Player sender = event.getPlayer();
-
-        Channel c = plugin.getActiveChannel(sender);
-
-        if (c == null)
-            c = plugin.getDefaultChannel();
-
-        c.sendMessage(sender, event.getMessage());
-
-        event.setCancelled(true);
-    }
-
     public void onPlayerJoin(PlayerEvent event) {
         Player joiner = event.getPlayer();
 
         for (Channel c : plugin.getChannels()) {
             if (plugin.isUsingPermissions() && !c.getWhiteList().isEmpty()) {
                 String group = Permissions.Security.getGroup(joiner.getName());
-                
+
                 if (!c.getWhiteList().contains(group))
                     continue;
             }
-            
+
             if (c.isAutomaticallyJoined() || plugin.checkPlayerAutoJoinChannel(joiner.getName(), c))
                 c.addPlayer(joiner);
         }

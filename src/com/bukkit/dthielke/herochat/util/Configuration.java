@@ -20,12 +20,6 @@ import com.bukkit.dthielke.herochat.HeroChatPlugin.ChatColor;
 
 public class Configuration {
 
-    public int localDistance;
-    public String defaultChannel;
-    public String defaultMessageFormat;
-    public List<ChannelWrapper> channels;
-    public HashMap<String, List<String>> autojoin;
-
     public static class ChannelWrapper {
 
         public static class ChannelProperties {
@@ -34,8 +28,7 @@ public class Configuration {
             public HashMap<String, Boolean> options;
             public HashMap<String, List<String>> lists;
             public HashMap<String, List<String>> permissions;
-            
-            
+
             public String messageFormat;
 
             public ChatColor color;
@@ -54,12 +47,6 @@ public class Configuration {
             channel = new ChannelProperties();
         }
 
-    }
-
-    public Configuration() {
-        localDistance = 0;
-        channels = new ArrayList<ChannelWrapper>();
-        autojoin = new HashMap<String, List<String>>();
     }
 
     public static Configuration loadConfig(File file) {
@@ -91,6 +78,20 @@ public class Configuration {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public int localDistance;
+    public String defaultChannel;
+    public String defaultMessageFormat;
+
+    public List<ChannelWrapper> channels;
+
+    public HashMap<String, List<String>> autojoin;
+
+    public Configuration() {
+        localDistance = 0;
+        channels = new ArrayList<ChannelWrapper>();
+        autojoin = new HashMap<String, List<String>>();
     }
 
 }
