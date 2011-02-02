@@ -54,8 +54,8 @@ public class MessageFormatter {
 
     }
 
-    public List<String> formatMessageWrapped(Channel channel, String name, String displayName, String msg, boolean usePermissions) {
-        String leader = createLeader(channel, name, displayName, msg, usePermissions);
+    public List<String> formatMessageWrapped(Channel channel, String name, String displayName, String msg, String healthBar, boolean usePermissions) {
+        String leader = createLeader(channel, name, displayName, msg, healthBar, usePermissions);
 
         List<String> msgLines = wrapMessage(leader + msg, fontMetrics);
         List<String> coloredLines = new ArrayList<String>();
@@ -66,13 +66,13 @@ public class MessageFormatter {
         return coloredLines;
     }
 
-    public String formatMessage(Channel channel, String name, String displayName, String msg, boolean usePermissions) {
-        String leader = createLeader(channel, name, displayName, msg, usePermissions);
+    public String formatMessage(Channel channel, String name, String displayName, String msg, String healthBar, boolean usePermissions) {
+        String leader = createLeader(channel, name, displayName, msg, healthBar, usePermissions);
 
         return leader + msg;
     }
 
-    private String createLeader(Channel channel, String name, String displayName, String msg, boolean usePermissions) {
+    private String createLeader(Channel channel, String name, String displayName, String msg, String healthBar, boolean usePermissions) {
         String prefix = "";
         String suffix = "";
 
@@ -100,10 +100,12 @@ public class MessageFormatter {
             suffix = suffix.replace("&", "\u00a7");
         }
 
-        return applyFormat(channel, prefix, suffix, displayName);
+        return applyFormat(channel, prefix, suffix, displayName, healthBar);
     }
 
-    private String applyFormat(Channel channel, String prefix, String suffix, String displayName) {
+    private String applyFormat(Channel channel, String prefix, String suffix, String displayName, String healthBar) {
+        healthBar = healthBar.replaceAll("&", "\u00a7");
+        
         String leader = format;
         
         leader = leader.replaceAll("\\{default\\}", defaultMessageFormat);
@@ -113,6 +115,7 @@ public class MessageFormatter {
         leader = leader.replaceAll("\\{prefix\\}", prefix);
         leader = leader.replaceAll("\\{suffix\\}", suffix);
         leader = leader.replaceAll("\\{player\\}", displayName);
+        leader = leader.replaceAll("\\{healthbar\\}", healthBar);
         leader = leader.replaceAll("\\{color.CHANNEL\\}", channel.getColorString());
 
         Matcher matcher = Pattern.compile("\\{color.[a-zA-Z]+\\}").matcher(leader);

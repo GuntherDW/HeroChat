@@ -35,6 +35,7 @@ import com.bukkit.dthielke.herochat.util.MessageFormatter;
 import com.bukkit.dthielke.herochat.util.Configuration.ChannelWrapper;
 import com.bukkit.dthielke.herochat.util.Configuration.ChannelWrapper.ChannelProperties;
 import com.nijikokun.bukkit.Permissions.Permissions;
+import com.nijikokun.bukkit.iChat.iChat;
 
 public class HeroChatPlugin extends JavaPlugin {
 
@@ -99,6 +100,8 @@ public class HeroChatPlugin extends JavaPlugin {
     private HashMap<Player, List<String>> ignoreMap;
 
     private Logger logger;
+    
+    private iChat iChatPlugin;
 
     public HeroChatPlugin(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
         super(pluginLoader, instance, desc, folder, plugin, cLoader);
@@ -111,7 +114,7 @@ public class HeroChatPlugin extends JavaPlugin {
     }
 
     @Override
-    public void onEnable() {
+    public void onEnable() {        
         registerEvents();
         registerCommands();
 
@@ -126,6 +129,13 @@ public class HeroChatPlugin extends JavaPlugin {
 
         PluginDescriptionFile desc = getDescription();
         logger.log(Level.INFO, desc.getName() + " version " + desc.getVersion() + " enabled.");
+        
+        Plugin iChatTest = this.getServer().getPluginManager().getPlugin("iChat");
+        
+        if (iChatTest != null)
+            iChatPlugin = (com.nijikokun.bukkit.iChat.iChat)iChatTest;
+        else
+            iChatPlugin = null;
     }
 
     private void registerEvents() {
@@ -325,6 +335,13 @@ public class HeroChatPlugin extends JavaPlugin {
 
     public boolean isUsingPermissions() {
         return usingPermissions;
+    }
+    
+    public String getHealthBar(Player player) {
+        if (iChatPlugin == null)
+            return "";
+        
+        return iChatPlugin.healthBar(player, false);
     }
 
 }
