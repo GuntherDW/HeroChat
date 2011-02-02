@@ -58,9 +58,14 @@ public class MessageFormatter {
         String leader = createLeader(channel, name, displayName, msg, healthBar, usePermissions);
 
         List<String> msgLines = wrapMessage(leader + msg, fontMetrics);
+        
+        String firstLine = msgLines.get(0);
+        int colorIndex = firstLine.lastIndexOf("\u00a7");
+        String lastColor = firstLine.substring(colorIndex, colorIndex + 2);
+        
         List<String> coloredLines = new ArrayList<String>();
         for (int i = 0; i < msgLines.size(); i++) {
-            coloredLines.add(channel.getColorString() + msgLines.get(i));
+            coloredLines.add(lastColor + msgLines.get(i));
         }
 
         return coloredLines;
