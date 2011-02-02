@@ -16,6 +16,7 @@ import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import com.bukkit.dthielke.herochat.command.AutoJoinCommand;
 import com.bukkit.dthielke.herochat.command.BanCommand;
 import com.bukkit.dthielke.herochat.command.ChannelsCommand;
 import com.bukkit.dthielke.herochat.command.Command;
@@ -98,6 +99,7 @@ public class HeroChatPlugin extends JavaPlugin {
 
     private HashMap<Player, Channel> activeChannelMap;
     private HashMap<Player, List<String>> ignoreMap;
+    private HashMap<String, List<String>> autoJoinMap;
 
     private Logger logger;
     
@@ -137,7 +139,9 @@ public class HeroChatPlugin extends JavaPlugin {
         else
             iChatPlugin = null;
         
-        joinAllDefaultChannels();
+        getServer().getPluginManager().enablePlugin(getServer().getPluginManager().getPlugin("Permissions"));
+        
+        joinAllDefaultChannels(false);
     }
 
     private void registerEvents() {
@@ -166,11 +170,12 @@ public class HeroChatPlugin extends JavaPlugin {
         commands.add(new BanCommand(this));
         commands.add(new HelpCommand(this));
         commands.add(new ReloadCommand(this));
+        commands.add(new AutoJoinCommand(this));
     }
 
     public void setupPermissions() {
         Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
-
+        
         if (test != null)
             usingPermissions = true;
         else
@@ -186,6 +191,7 @@ public class HeroChatPlugin extends JavaPlugin {
         config.localDistance = LocalChannel.getDistance();
         config.defaultChannel = defaultChannel.getName();
         config.defaultMessageFormat = MessageFormatter.getDefaultMessageFormat();
+        config.autojoin = autoJoinMap;
 
         for (Channel c : channels) {            
             if (!c.isSaved())
@@ -225,6 +231,8 @@ public class HeroChatPlugin extends JavaPlugin {
         LocalChannel.setDistance(config.localDistance);
 
         MessageFormatter.setDefaultMessageFormat(config.defaultMessageFormat);
+        
+        autoJoinMap = config.autojoin;
 
         channels = new ArrayList<Channel>();
 
@@ -262,31 +270,67 @@ public class HeroChatPlugin extends JavaPlugin {
         defaultChannel = getChannel(config.defaultChannel);
     }
     
-    public void joinAllDefaultChannels() {
+    public void joinAllDefaultChannels(boolean notifyUser) {
 
         Player[] players = getServer().getOnlinePlayers();
         
         for (Channel c : channels) {
             List<String> whitelist = c.getWhiteList();
             
-            if (c.isAutomaticallyJoined()) {
-                for (Player p : players) {
+            for (Player p : players) {
+                
+                if (c.isAutomaticallyJoined() || checkPlayerAutoJoinChannel(p.getName(), c)) {
+                
                     if (usingPermissions && !whitelist.isEmpty()) {
                         String group = Permissions.Security.getGroup(p.getName());
                         
                         if (whitelist.contains(group)) {                            
                             c.addPlayer(p);
-
-                            p.sendMessage("HeroChat: Joined channel " + c.getColoredName());
+                            
+                            if (notifyUser)
+                                p.sendMessage("HeroChat: Joined channel " + c.getColoredName());
                         }
                     } else {
                         c.addPlayer(p);
-
-                        p.sendMessage("HeroChat: Joined channel " + c.getColoredName());
+                        
+                        if (notifyUser)
+                            p.sendMessage("HeroChat: Joined channel " + c.getColoredName());
                     }
                 }
             }
         }
+    }
+    
+    public boolean checkPlayerAutoJoinChannel(String player, Channel channel) {
+        List<String> autojoins = autoJoinMap.get(player);
+        
+        if (autojoins == null)
+            return false;
+        
+        for (String s : autojoins)
+            if (s.equalsIgnoreCase(channel.getName()) || s.equalsIgnoreCase(channel.getNick()))
+                return true;
+
+        return false;
+    }
+    
+    public boolean toggleAutoJoin(String player, Channel channel) {
+        List<String> autojoins = autoJoinMap.get(player);
+        
+        if (autojoins == null);
+            autojoins = new ArrayList<String>();
+        
+        for (String s : autojoins) {
+            if (s.equalsIgnoreCase(channel.getName()) || s.equalsIgnoreCase(channel.getNick())) {
+                autojoins.remove(s);
+                autoJoinMap.put(player, autojoins);
+                return false;
+            }
+        }
+        
+        autojoins.add(channel.getNick());
+        autoJoinMap.put(player, autojoins);
+        return true;
     }
 
     public void log(String log) {
@@ -370,6 +414,13 @@ public class HeroChatPlugin extends JavaPlugin {
             return "";
         
         return iChatPlugin.healthBar(player, false);
+    }
+    
+    public String censor(String msg) {
+        if (iChatPlugin == null)
+            return msg;
+        
+        return iChatPlugin.censored(msg);
     }
 
 }

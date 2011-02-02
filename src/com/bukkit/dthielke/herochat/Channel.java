@@ -88,6 +88,8 @@ public class Channel {
             }
         }
         
+        msg = plugin.censor(msg);
+        
         List<String> msgLines = formatter.formatMessageWrapped(this, sender.getName(), sender.getDisplayName(), msg, plugin.getHealthBar(sender), plugin.isUsingPermissions());
 
         for (Player p : players) {

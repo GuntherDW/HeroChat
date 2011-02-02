@@ -27,7 +27,7 @@ public class ReloadCommand extends Command {
 
         plugin.loadConfig();
 
-        plugin.joinAllDefaultChannels();
+        plugin.joinAllDefaultChannels(true);
 
         for (Player p : plugin.getServer().getOnlinePlayers()) {
             plugin.setActiveChannel(p, plugin.getDefaultChannel());

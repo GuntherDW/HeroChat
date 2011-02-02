@@ -16,10 +16,11 @@ public class HelpCommand extends Command {
                                               "/join <channel> " + ChatColor.LIGHT_GRAY.format() + "- joins a channel",
                                               "/leave <channel> " + ChatColor.LIGHT_GRAY.format() + "- leaves a channel",
                                               "/<channel> <msg> " + ChatColor.LIGHT_GRAY.format() + "- sends a message to a quick message",
-                                              "/ignore " + ChatColor.LIGHT_GRAY.format() + "- displays your ignore list",
-                                              "/ignore <player> " + ChatColor.LIGHT_GRAY.format() + "- toggles ignoring a player" };
+                                              "/ch auto <channel> " + ChatColor.LIGHT_GRAY.format() + "- toggles auto joining a channel upon login" };
 
     private static final String[] HELP_TWO = { ChatColor.YELLOW.format() + "HeroChat Help <Page 2/2>:",
+                                              "/ignore " + ChatColor.LIGHT_GRAY.format() + "- displays your ignore list",
+                                              "/ignore <player> " + ChatColor.LIGHT_GRAY.format() + "- toggles ignoring a player",
                                               "/ch create <name> <nick> [color:#] [hidden] [saved]",
                                               ChatColor.LIGHT_GRAY.format() + "  creates a channel (square brackets mean optional)",
                                               "/ch remove <channel> " + ChatColor.LIGHT_GRAY.format() + "- deletes a channel",

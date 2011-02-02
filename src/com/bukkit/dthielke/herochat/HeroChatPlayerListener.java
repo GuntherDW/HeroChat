@@ -71,7 +71,7 @@ public class HeroChatPlayerListener extends PlayerListener {
                     continue;
             }
             
-            if (c.isAutomaticallyJoined())
+            if (c.isAutomaticallyJoined() || plugin.checkPlayerAutoJoinChannel(joiner.getName(), c))
                 c.addPlayer(joiner);
         }
 

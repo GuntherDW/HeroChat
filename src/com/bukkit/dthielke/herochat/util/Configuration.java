@@ -24,6 +24,7 @@ public class Configuration {
     public String defaultChannel;
     public String defaultMessageFormat;
     public List<ChannelWrapper> channels;
+    public HashMap<String, List<String>> autojoin;
 
     public static class ChannelWrapper {
 
@@ -58,6 +59,7 @@ public class Configuration {
     public Configuration() {
         localDistance = 0;
         channels = new ArrayList<ChannelWrapper>();
+        autojoin = new HashMap<String, List<String>>();
     }
 
     public static Configuration loadConfig(File file) {

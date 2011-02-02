@@ -29,6 +29,8 @@ public class LocalChannel extends Channel {
             }
         }
         
+        msg = plugin.censor(msg);
+        
         List<String> msgLines = formatter.formatMessageWrapped(this, sender.getName(), sender.getDisplayName(), msg, plugin.getHealthBar(sender), plugin.isUsingPermissions());
 
         boolean heard = false;
