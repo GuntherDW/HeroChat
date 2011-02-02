@@ -29,11 +29,11 @@ public class Channel {
         SUCCESS
     }
 
-    public static final String logFormat = "[{nick}] {player}: ";
+    public static final String LOG_FORMAT = "[{nick}] {player}: ";
+    public static final MessageFormatter LOG_FORMATTER = new MessageFormatter(LOG_FORMAT);
 
     protected HeroChatPlugin plugin;
     protected MessageFormatter formatter;
-    protected MessageFormatter logFormatter;
 
     protected String name;
     protected String nick;
@@ -57,7 +57,6 @@ public class Channel {
     public Channel(HeroChatPlugin plugin) {
         this.plugin = plugin;
         formatter = new MessageFormatter();
-        logFormatter = new MessageFormatter(logFormat);
 
         name = "default";
         nick = "def";
@@ -99,7 +98,7 @@ public class Channel {
             }
         }
 
-        plugin.log(logFormatter.formatMessage(this, sender.getName(), sender.getDisplayName(), msg, plugin.getHealthBar(sender), false));
+        plugin.log(LOG_FORMATTER.formatMessage(this, sender.getName(), sender.getDisplayName(), msg, plugin.getHealthBar(sender), false));
     }
 
     public boolean hasPlayer(Player player) {

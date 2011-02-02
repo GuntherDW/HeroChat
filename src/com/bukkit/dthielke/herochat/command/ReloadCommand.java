@@ -3,10 +3,8 @@ package com.bukkit.dthielke.herochat.command;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 
-import com.bukkit.dthielke.herochat.Channel;
 import com.bukkit.dthielke.herochat.HeroChatPlugin;
 import com.bukkit.dthielke.herochat.HeroChatPlugin.PluginPermission;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class ReloadCommand extends Command {
 
@@ -29,25 +27,7 @@ public class ReloadCommand extends Command {
 
         plugin.loadConfig();
 
-        for (Channel c : plugin.getChannels()) {
-            if (c.isAutomaticallyJoined()) {
-                for (Player p : plugin.getServer().getOnlinePlayers()) {
-                    if (plugin.isUsingPermissions() && !c.getWhiteList().isEmpty()) {
-                        String group = Permissions.Security.getGroup(p.getName());
-                        
-                        if (c.getWhiteList().contains(group)) {                            
-                            c.addPlayer(p);
-
-                            p.sendMessage("HeroChat: Joined channel " + c.getColoredName());
-                        }
-                    } else {
-                        c.addPlayer(p);
-
-                        p.sendMessage("HeroChat: Joined channel " + c.getColoredName());
-                    }
-                }
-            }
-        }
+        plugin.joinAllDefaultChannels();
 
         for (Player p : plugin.getServer().getOnlinePlayers()) {
             plugin.setActiveChannel(p, plugin.getDefaultChannel());

@@ -136,6 +136,8 @@ public class HeroChatPlugin extends JavaPlugin {
             iChatPlugin = (com.nijikokun.bukkit.iChat.iChat)iChatTest;
         else
             iChatPlugin = null;
+        
+        joinAllDefaultChannels();
     }
 
     private void registerEvents() {
@@ -146,7 +148,6 @@ public class HeroChatPlugin extends JavaPlugin {
         pm.registerEvent(Event.Type.PLAYER_CHAT, playerListener, Event.Priority.Normal, this);
         pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
         pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
-
     }
 
     private void registerCommands() {
@@ -259,6 +260,33 @@ public class HeroChatPlugin extends JavaPlugin {
         }
 
         defaultChannel = getChannel(config.defaultChannel);
+    }
+    
+    public void joinAllDefaultChannels() {
+
+        Player[] players = getServer().getOnlinePlayers();
+        
+        for (Channel c : channels) {
+            List<String> whitelist = c.getWhiteList();
+            
+            if (c.isAutomaticallyJoined()) {
+                for (Player p : players) {
+                    if (usingPermissions && !whitelist.isEmpty()) {
+                        String group = Permissions.Security.getGroup(p.getName());
+                        
+                        if (whitelist.contains(group)) {                            
+                            c.addPlayer(p);
+
+                            p.sendMessage("HeroChat: Joined channel " + c.getColoredName());
+                        }
+                    } else {
+                        c.addPlayer(p);
+
+                        p.sendMessage("HeroChat: Joined channel " + c.getColoredName());
+                    }
+                }
+            }
+        }
     }
 
     public void log(String log) {
