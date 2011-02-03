@@ -31,10 +31,7 @@ import com.bukkit.dthielke.herochat.command.ListCommand;
 import com.bukkit.dthielke.herochat.command.QuickMsgCommand;
 import com.bukkit.dthielke.herochat.command.ReloadCommand;
 import com.bukkit.dthielke.herochat.command.RemoveCommand;
-import com.bukkit.dthielke.herochat.util.Configuration;
-import com.bukkit.dthielke.herochat.util.MessageFormatter;
-import com.bukkit.dthielke.herochat.util.Configuration.ChannelWrapper;
-import com.bukkit.dthielke.herochat.util.Configuration.ChannelWrapper.ChannelProperties;
+import com.bukkit.dthielke.herochat.util.ConfigurationHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.nijikokun.bukkit.iChat.iChat;
 
@@ -141,6 +138,10 @@ public class HeroChatPlugin extends JavaPlugin {
         return activeChannelMap;
     }
 
+    public HashMap<String, List<String>> getAutoJoinMap() {
+        return autoJoinMap;
+    }
+
     public Channel getChannel(String identifier) {
         for (Channel c : channels) {
             if (c.getName().equalsIgnoreCase(identifier) || c.getNick().equalsIgnoreCase(identifier)) {
@@ -233,48 +234,7 @@ public class HeroChatPlugin extends JavaPlugin {
 
     public void loadConfig() {
         File file = new File(getDataFolder(), "data.yml");
-        Configuration config = Configuration.loadConfig(file);
-
-        LocalChannel.setDistance(config.localDistance);
-
-        MessageFormatter.setDefaultMessageFormat(config.defaultMessageFormat);
-
-        autoJoinMap = config.autojoin;
-
-        channels = new ArrayList<Channel>();
-
-        for (ChannelWrapper wrapper : config.channels) {
-            ChannelProperties prop = wrapper.channel;
-
-            Channel channel;
-            if (prop.options.get("local"))
-                channel = new LocalChannel(this);
-            else
-                channel = new Channel(this);
-
-            channel.setFormatter(new MessageFormatter(prop.messageFormat));
-
-            channel.setName(prop.identifiers.get("name"));
-            channel.setNick(prop.identifiers.get("nick"));
-            channel.setColor(prop.color);
-
-            channel.setForced(prop.options.get("forced"));
-            channel.setHidden(prop.options.get("hidden"));
-            channel.setAutomaticallyJoined(prop.options.get("auto"));
-            channel.setPermanent(prop.options.get("permanent"));
-            channel.setQuickMessagable(prop.options.get("quickMessagable"));
-            channel.setModerators(prop.lists.get("moderators"));
-            channel.setBanList(prop.lists.get("bans"));
-
-            channel.setWhiteList(prop.permissions.get("join"));
-            channel.setVoiceList(prop.permissions.get("speak"));
-
-            channel.setSaved(true);
-
-            channels.add(channel);
-        }
-
-        defaultChannel = getChannel(config.defaultChannel);
+        ConfigurationHandler.load(this, file);
     }
 
     public void log(String log) {
@@ -294,7 +254,8 @@ public class HeroChatPlugin extends JavaPlugin {
 
         setupPermissions();
 
-        loadConfig();
+        File file = new File(getDataFolder(), "data.yml");
+        ConfigurationHandler.load(this, file);
 
         ignoreMap = new HashMap<Player, List<String>>();
         activeChannelMap = new HashMap<Player, Channel>();
@@ -346,48 +307,20 @@ public class HeroChatPlugin extends JavaPlugin {
     }
 
     public void saveConfig() {
-        log("Saving...");
-
-        Configuration config = new Configuration();
-
-        config.localDistance = LocalChannel.getDistance();
-        config.defaultChannel = defaultChannel.getName();
-        config.defaultMessageFormat = MessageFormatter.getDefaultMessageFormat();
-        config.autojoin = autoJoinMap;
-
-        for (Channel c : channels) {
-            if (!c.isSaved())
-                continue;
-
-            ChannelWrapper wrapper = new ChannelWrapper();
-            ChannelProperties prop = wrapper.channel;
-
-            prop.identifiers.put("name", c.getName());
-            prop.identifiers.put("nick", c.getNick());
-            prop.color = c.getColor();
-            prop.messageFormat = c.getFormatter().getFormat();
-            prop.options.put("local", c instanceof LocalChannel);
-            prop.options.put("forced", c.isForced());
-            prop.options.put("hidden", c.isHidden());
-            prop.options.put("auto", c.isAutomaticallyJoined());
-            prop.options.put("permanent", c.isPermanent());
-            prop.options.put("quickMessagable", c.isQuickMessagable());
-            prop.lists.put("moderators", c.getModerators());
-            prop.lists.put("bans", c.getBanList());
-            prop.permissions.put("join", c.getWhiteList());
-            prop.permissions.put("speak", c.getVoiceList());
-
-            config.channels.add(wrapper);
-        }
-
         File file = new File(getDataFolder(), "data.yml");
-        Configuration.saveConfig(file, config);
-
-        log("Save completed.");
+        ConfigurationHandler.save(this, file);
     }
 
     public void setActiveChannel(Player player, Channel channel) {
         activeChannelMap.put(player, channel);
+    }
+
+    public void setAutoJoinMap(HashMap<String, List<String>> autoJoinMap) {
+        this.autoJoinMap = autoJoinMap;
+    }
+
+    public void setChannels(List<Channel> channels) {
+        this.channels = channels;
     }
 
     public void setDefaultChannel(Channel defaultChannel) {
