@@ -110,7 +110,8 @@ public class HeroChatPlugin extends JavaPlugin {
         if (iChatPlugin == null)
             return msg;
 
-        return iChatPlugin.censored(msg);
+        String censored = iChatPlugin.censored(msg);
+        return censored.replaceAll("&", "\u00a7");
     }
 
     public boolean checkPlayerAutoJoinChannel(String player, Channel channel) {
