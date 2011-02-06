@@ -41,7 +41,6 @@ public class HeroChatPlayerListener extends PlayerListener {
 
         for (Command c : commands) {
             int tmpValid = c.validate(message);
-
             if (tmpValid != -1) {
                 if (bestMatch == null) {
                     bestMatch = c;

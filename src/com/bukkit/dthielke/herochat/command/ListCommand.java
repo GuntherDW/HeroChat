@@ -35,7 +35,7 @@ public class ListCommand extends Command {
         for (Player p : players) {
             String name = p.getName();
 
-            if (plugin.hasPermission(sender, PluginPermission.ADMIN))
+            if (plugin.hasPermission(p, PluginPermission.ADMIN))
                 name = "@" + name;
 
             if (c.isModerator(p))

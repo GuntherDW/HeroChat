@@ -28,6 +28,7 @@ import com.bukkit.dthielke.herochat.command.JoinCommand;
 import com.bukkit.dthielke.herochat.command.KickCommand;
 import com.bukkit.dthielke.herochat.command.LeaveCommand;
 import com.bukkit.dthielke.herochat.command.ListCommand;
+import com.bukkit.dthielke.herochat.command.ModCommand;
 import com.bukkit.dthielke.herochat.command.QuickMsgCommand;
 import com.bukkit.dthielke.herochat.command.ReloadCommand;
 import com.bukkit.dthielke.herochat.command.RemoveCommand;
@@ -295,6 +296,7 @@ public class HeroChatPlugin extends JavaPlugin {
         commands.add(new HelpCommand(this));
         commands.add(new ReloadCommand(this));
         commands.add(new AutoJoinCommand(this));
+        commands.add(new ModCommand(this));
     }
 
     private void registerEvents() {
