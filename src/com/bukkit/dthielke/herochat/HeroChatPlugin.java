@@ -338,12 +338,14 @@ public class HeroChatPlugin extends JavaPlugin {
 
     }
 
+    // TODO: add option to broadcast player joins on a per-channel basis
+    // TODO: give players a way to remove server-defined autojoins
+    
     public boolean toggleAutoJoin(String player, Channel channel) {
         List<String> autojoins = autoJoinMap.get(player);
 
         if (autojoins == null)
-            ;
-        autojoins = new ArrayList<String>();
+            autojoins = new ArrayList<String>();
 
         for (String s : autojoins) {
             if (s.equalsIgnoreCase(channel.getName()) || s.equalsIgnoreCase(channel.getNick())) {
