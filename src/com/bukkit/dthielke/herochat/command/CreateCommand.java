@@ -102,7 +102,7 @@ public class CreateCommand extends Command {
         sender.sendMessage("HeroChat: Joined channel " + c.getColoredName());
 
         if (c.isSaved())
-            plugin.saveConfig();
+            plugin.saveConfigOld();
     }
 
 }

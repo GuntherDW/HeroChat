@@ -26,14 +26,14 @@ public class RemoveCommand extends Command {
             return;
         }
 
-        if (!plugin.hasPermission(sender, PluginPermission.REMOVE)) {
-            sender.sendMessage("HeroChat: You do not have permission to remove channels");
-            return;
-        }
-
         Channel c = plugin.getChannel(args[0]);
 
         if (c != null) {
+            
+            if (!plugin.hasPermission(sender, PluginPermission.REMOVE) && !c.isModerator(sender)) {
+                sender.sendMessage("HeroChat: You do not have permission to remove this channel");
+                return;
+            }
 
             if (c.isPermanent() && !plugin.hasPermission(sender, PluginPermission.ADMIN)) {
                 sender.sendMessage("HeroChat: Channel " + c.getColoredName() + ChatColor.WHITE.format() + "is permanent and cannot be removed");
@@ -43,7 +43,7 @@ public class RemoveCommand extends Command {
             plugin.getChannels().remove(c);
 
             if (c.isSaved())
-                plugin.saveConfig();
+                plugin.saveConfigOld();
 
             sender.sendMessage("HeroChat: Removed channel " + c.getColoredName());
 

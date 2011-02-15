@@ -24,16 +24,18 @@ public class ReloadCommand extends Command {
             sender.sendMessage("HeroChat: You must be an admin to reload HeroChat");
             return;
         }
+        
+        plugin.onEnable();
 
-        plugin.loadConfig();
-
-        plugin.joinAllDefaultChannels(true);
-
-        for (Player p : plugin.getServer().getOnlinePlayers()) {
-            plugin.setActiveChannel(p, plugin.getDefaultChannel());
-
-            p.sendMessage("HeroChat: Set active channel to " + plugin.getDefaultChannel().getColoredName());
-        }
+//        plugin.loadConfigOld();
+//
+//        plugin.joinAllDefaultChannels(true);
+//
+//        for (Player p : plugin.getServer().getOnlinePlayers()) {
+//            plugin.setActiveChannel(p, plugin.getDefaultChannel());
+//
+//            p.sendMessage("HeroChat: Set active channel to " + plugin.getDefaultChannel().getColoredName());
+//        }
 
         sender.sendMessage("HeroChat: Plugin reloaded");
 

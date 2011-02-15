@@ -8,6 +8,13 @@ import com.bukkit.dthielke.herochat.HeroChatPlugin.ChatColor;
 
 public class Configuration {
 
+    public static class UserWrapper {
+        
+        public List<String> autojoin;
+        public String defaultChannel;
+        
+    }
+    
     public static class ChannelWrapper {
 
         public static class ChannelProperties {

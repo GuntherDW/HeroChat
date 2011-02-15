@@ -1,6 +1,11 @@
 package com.bukkit.dthielke.herochat;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,8 +20,8 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.config.Configuration;
 
-import com.bukkit.dthielke.herochat.command.AutoJoinCommand;
 import com.bukkit.dthielke.herochat.command.BanCommand;
 import com.bukkit.dthielke.herochat.command.ChannelsCommand;
 import com.bukkit.dthielke.herochat.command.Command;
@@ -33,6 +38,7 @@ import com.bukkit.dthielke.herochat.command.QuickMsgCommand;
 import com.bukkit.dthielke.herochat.command.ReloadCommand;
 import com.bukkit.dthielke.herochat.command.RemoveCommand;
 import com.bukkit.dthielke.herochat.util.ConfigurationHandler;
+import com.bukkit.dthielke.herochat.util.MessageFormatter;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.nijikokun.bukkit.iChat.iChat;
 
@@ -73,18 +79,7 @@ public class HeroChatPlugin extends JavaPlugin {
         REMOVE
     };
 
-    public static final String[] RESERVED_NAMES = { "ban",
-                                                   "channels",
-                                                   "create",
-                                                   "ignore",
-                                                   "help",
-                                                   "ch",
-                                                   "join",
-                                                   "kick",
-                                                   "leave",
-                                                   "list",
-                                                   "mod",
-                                                   "remove" };
+    public static final String[] RESERVED_NAMES = { "ban", "channels", "create", "ignore", "help", "ch", "join", "kick", "leave", "list", "mod", "remove" };
 
     private HeroChatPlayerListener playerListener;
 
@@ -95,14 +90,16 @@ public class HeroChatPlugin extends JavaPlugin {
 
     private Channel defaultChannel;
 
-    private HashMap<Player, Channel> activeChannelMap;
-    private HashMap<Player, List<String>> ignoreMap;
-    private HashMap<String, List<String>> autoJoinMap;
+    private HashMap<String, String> activeChannels = new HashMap<String, String>();
+    private HashMap<Player, List<String>> ignoreMap = new HashMap<Player, List<String>>();
+    private HashMap<String, List<String>> joinedChannels = new HashMap<String, List<String>>();
 
     private Logger logger;
 
     private iChat iChatPlugin;
-
+    
+    private Configuration usersConfig;
+    
     public HeroChatPlugin(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
         super(pluginLoader, instance, desc, folder, plugin, cLoader);
     }
@@ -115,17 +112,23 @@ public class HeroChatPlugin extends JavaPlugin {
         return censored.replaceAll("&", "\u00a7");
     }
 
-    public boolean checkPlayerAutoJoinChannel(String player, Channel channel) {
-        List<String> autojoins = autoJoinMap.get(player);
+    public void checkNewPlayerSettings(Player player) {
+        String name = player.getName();
 
-        if (autojoins == null)
-            return false;
+        if (joinedChannels.get(name) == null) {
+            List<String> joined = new ArrayList<String>();
 
-        for (String s : autojoins)
-            if (s.equalsIgnoreCase(channel.getName()) || s.equalsIgnoreCase(channel.getNick()))
-                return true;
+            for (Channel c : channels) {
+                if (c.isAutomaticallyJoined())
+                    joined.add(c.getName());
+            }
 
-        return false;
+            joinedChannels.put(name, joined);
+        }
+
+        if (activeChannels.get(name) == null) {
+            activeChannels.put(name, defaultChannel.getName());
+        }
     }
 
     public void createIgnoreList(Player player) {
@@ -133,15 +136,12 @@ public class HeroChatPlugin extends JavaPlugin {
     }
 
     public Channel getActiveChannel(Player player) {
-        return activeChannelMap.get(player);
+        String name = player.getName();
+        return getChannel(activeChannels.get(name));
     }
 
-    public HashMap<Player, Channel> getActiveChannelMap() {
-        return activeChannelMap;
-    }
-
-    public HashMap<String, List<String>> getAutoJoinMap() {
-        return autoJoinMap;
+    public HashMap<String, String> getActiveChannels() {
+        return activeChannels;
     }
 
     public Channel getChannel(String identifier) {
@@ -186,6 +186,16 @@ public class HeroChatPlugin extends JavaPlugin {
         return ignoreMap;
     }
 
+    public List<Channel> getJoinedChannels(Player player) {
+        String name = player.getName();
+        List<Channel> joined = new ArrayList<Channel>();
+
+        for (String s : joinedChannels.get(name))
+            joined.add(getChannel(s));
+
+        return joined;
+    }
+
     public boolean hasPermission(Player player, PluginPermission permission) {
         return Permissions.Security.permission(player, "herochat." + permission.toString().toLowerCase());
     }
@@ -203,40 +213,84 @@ public class HeroChatPlugin extends JavaPlugin {
         return usingPermissions;
     }
 
-    public void joinAllDefaultChannels(boolean notifyUser) {
+    public void joinChannel(Player player, Channel channel) {
+        String name = player.getName();
 
-        Player[] players = getServer().getOnlinePlayers();
-
-        for (Channel c : channels) {
-            List<String> whitelist = c.getWhiteList();
-
-            for (Player p : players) {
-
-                if (c.isAutomaticallyJoined() || checkPlayerAutoJoinChannel(p.getName(), c)) {
-
-                    if (usingPermissions && !whitelist.isEmpty()) {
-                        String group = Permissions.Security.getGroup(p.getName());
-
-                        if (whitelist.contains(group)) {
-                            c.addPlayer(p);
-
-                            if (notifyUser)
-                                p.sendMessage("HeroChat: Joined channel " + c.getColoredName());
-                        }
-                    } else {
-                        c.addPlayer(p);
-
-                        if (notifyUser)
-                            p.sendMessage("HeroChat: Joined channel " + c.getColoredName());
-                    }
-                }
-            }
+        List<String> channels = joinedChannels.get(name);
+        if (!channels.contains(channel.getName())) {
+            joinedChannels.get(name).add(channel.getName());
+            //savePlayerSettings(name);
         }
     }
 
+    public void leaveChannel(Player player, Channel channel) {
+        String name = player.getName();
+        joinedChannels.get(name).remove(channel.getName());
+        //savePlayerSettings(name);
+    }
+
     public void loadConfig() {
+        Configuration config = this.getConfiguration();
+
+        channels = new ArrayList<Channel>();
+        for (String s : config.getKeys("channels")) {
+            Channel c;
+            if (config.getBoolean(s + ".options.", false))
+                c = new LocalChannel(this);
+            else
+                c = new Channel(this);
+
+            String root = "channels." + s + ".";
+
+            c.setName(s);
+
+            c.setNick(config.getString(root + "nickname", "DEFAULT-NICK"));
+            c.setColor(ChatColor.valueOf(config.getString(root + "color", "WHITE")));
+            c.setFormatter(new MessageFormatter(config.getString(root + "message-format", "{default}")));
+
+            String options = root + "options.";
+            c.setJoinMessages(config.getBoolean(options + "join-messages", true));
+            c.setQuickMessagable(config.getBoolean(options + "shortcut-allowed", false));
+            c.setPermanent(config.getBoolean(options + "permanent", false));
+            c.setHidden(config.getBoolean(options + "hidden", false));
+            c.setAutomaticallyJoined(config.getBoolean(options + "auto-join", false));
+            c.setForced(config.getBoolean(options + "forced", false));
+
+            String lists = root + "lists.";
+            c.setBanList(config.getStringList(lists + "bans", null));
+            c.setModerators(config.getStringList(lists + "moderators", null));
+
+            String permissions = root + "permissions.";
+            c.setWhiteList(config.getStringList(permissions + "join", null));
+            c.setVoiceList(config.getStringList(permissions + "speak", null));
+
+            channels.add(c);
+        }
+
+        String globals = "globals.";
+        defaultChannel = getChannel(config.getString(globals + "default-channel", channels.get(0).getName()));
+        MessageFormatter.setDefaultMessageFormat(config.getString(globals + "default-message-format", "{name}: "));
+        LocalChannel.setDistance(config.getInt(globals + "default-local-distance", 100));
+
+        loadPlayerSettings();
+    }
+
+    public void loadConfigOld() {
         File file = new File(getDataFolder(), "data.yml");
         ConfigurationHandler.load(this, file);
+    }
+
+    public void loadPlayerSettings() {
+        if (usersConfig.getNode("users") == null)
+            return;
+        
+        for (String name : usersConfig.getKeys("users"))
+            loadPlayerSettings(name);
+    }
+
+    public void loadPlayerSettings(String name) {
+        activeChannels.put(name, usersConfig.getString("users." + name + ".active-channel", defaultChannel.getName()));
+        joinedChannels.put(name, usersConfig.getStringList("users." + name + ".joined-channels", null));
     }
 
     public void log(String log) {
@@ -245,22 +299,22 @@ public class HeroChatPlugin extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        saveConfig();
+        
         PluginDescriptionFile desc = getDescription();
         System.out.println(desc.getName() + " version " + desc.getVersion() + " disabled.");
     }
 
     @Override
     public void onEnable() {
+        usersConfig = new Configuration(new File(getDataFolder(), "users.yml"));
+        usersConfig.load();
+        
         registerEvents();
         registerCommands();
 
         setupPermissions();
-
-        File file = new File(getDataFolder(), "data.yml");
-        ConfigurationHandler.load(this, file);
-
-        ignoreMap = new HashMap<Player, List<String>>();
-        activeChannelMap = new HashMap<Player, Channel>();
+        pickLoader();
 
         logger = Logger.getLogger("Minecraft");
 
@@ -275,51 +329,94 @@ public class HeroChatPlugin extends JavaPlugin {
             iChatPlugin = null;
 
         getServer().getPluginManager().enablePlugin(getServer().getPluginManager().getPlugin("Permissions"));
-
-        joinAllDefaultChannels(false);
     }
 
-    private void registerCommands() {
-        commands = new ArrayList<Command>();
+    public void pickLoader() {
+        boolean old = true;
+        File file = new File(getDataFolder(), "data.yml");
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            old = reader.readLine().trim().equals("!<configuration>");
+            reader.close();
+        } catch (Exception e) {
+            old = false;
+        }
 
-        commands.add(new FocusCommand(this));
-        commands.add(new JoinCommand(this));
-        commands.add(new LeaveCommand(this));
-        commands.add(new QuickMsgCommand(this));
-        commands.add(new ListCommand(this));
-        commands.add(new ChannelsCommand(this));
-        commands.add(new IgnoreCommand(this));
-        commands.add(new CreateCommand(this));
-        commands.add(new RemoveCommand(this));
-        commands.add(new KickCommand(this));
-        commands.add(new BanCommand(this));
-        commands.add(new HelpCommand(this));
-        commands.add(new ReloadCommand(this));
-        commands.add(new AutoJoinCommand(this));
-        commands.add(new ModCommand(this));
-    }
-
-    private void registerEvents() {
-        playerListener = new HeroChatPlayerListener(this);
-
-        PluginManager pm = getServer().getPluginManager();
-        pm.registerEvent(Event.Type.PLAYER_COMMAND, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_CHAT, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
+        if (old) {
+            loadConfigOld();
+            try {
+                BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
+                writer.write("This file can be deleted. See config.yml for configuration options.");
+                writer.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            loadConfig();
+        }
+        saveConfig();
     }
 
     public void saveConfig() {
+        Configuration config = this.getConfiguration();
+
+        String globals = "globals.";
+        config.setProperty(globals + "default-channel", defaultChannel.getName());
+        config.setProperty(globals + "default-message-format", MessageFormatter.getDefaultMessageFormat());
+        config.setProperty(globals + "default-local-distance", LocalChannel.getDistance());
+
+        for (Channel c : channels) {
+            String root = "channels." + c.getName() + ".";
+            config.setProperty(root + "nickname", c.getNick());
+            config.setProperty(root + "color", c.getColor().toString());
+            config.setProperty(root + "message-format", c.getFormatter().getFormat());
+
+            String options = root + "options.";
+            config.setProperty(options + "join-messages", c.isJoinMessages());
+            config.setProperty(options + "shortcut-allowed", c.isQuickMessagable());
+            config.setProperty(options + "permanent", c.isPermanent());
+            config.setProperty(options + "hidden", c.isHidden());
+            config.setProperty(options + "auto-join", c.isAutomaticallyJoined());
+            config.setProperty(options + "local", c instanceof LocalChannel);
+            config.setProperty(options + "forced", c.isForced());
+
+            String lists = root + "lists.";
+            config.setProperty(lists + "bans", c.getBanList());
+            config.setProperty(lists + "moderators", c.getModerators());
+
+            String permissions = root + "permissions.";
+            config.setProperty(permissions + "join", c.getWhiteList());
+            config.setProperty(permissions + "speak", c.getVoiceList());
+        }
+
+        config.save();
+
+        savePlayerSettings();
+    }
+
+    public void saveConfigOld() {
         File file = new File(getDataFolder(), "data.yml");
         ConfigurationHandler.save(this, file);
     }
 
-    public void setActiveChannel(Player player, Channel channel) {
-        activeChannelMap.put(player, channel);
+    public void savePlayerSettings() {
+        for (String name : activeChannels.keySet())
+            savePlayerSettings(name);
     }
 
-    public void setAutoJoinMap(HashMap<String, List<String>> autoJoinMap) {
-        this.autoJoinMap = autoJoinMap;
+    public void savePlayerSettings(String name) {
+        usersConfig.setProperty("users." + name + ".active-channel", activeChannels.get(name));
+        usersConfig.setProperty("users." + name + ".joined-channels", joinedChannels.get(name));
+        
+        usersConfig.save();
+    }
+
+    public void setActiveChannel(Player player, Channel channel) {
+        String name = player.getName();
+        activeChannels.put(name, channel.getName());
+        //savePlayerSettings(name);
+
+        channel.addPlayer(player);
     }
 
     public void setChannels(List<Channel> channels) {
@@ -340,26 +437,34 @@ public class HeroChatPlugin extends JavaPlugin {
 
     }
 
-    // TODO: add option to broadcast player joins on a per-channel basis
-    // TODO: give players a way to remove server-defined autojoins
-    
-    public boolean toggleAutoJoin(String player, Channel channel) {
-        List<String> autojoins = autoJoinMap.get(player);
+    private void registerCommands() {
+        commands = new ArrayList<Command>();
 
-        if (autojoins == null)
-            autojoins = new ArrayList<String>();
-
-        for (String s : autojoins) {
-            if (s.equalsIgnoreCase(channel.getName()) || s.equalsIgnoreCase(channel.getNick())) {
-                autojoins.remove(s);
-                autoJoinMap.put(player, autojoins);
-                return false;
-            }
-        }
-
-        autojoins.add(channel.getNick());
-        autoJoinMap.put(player, autojoins);
-        return true;
+        commands.add(new FocusCommand(this));
+        commands.add(new JoinCommand(this));
+        commands.add(new LeaveCommand(this));
+        commands.add(new QuickMsgCommand(this));
+        commands.add(new ListCommand(this));
+        commands.add(new ChannelsCommand(this));
+        commands.add(new IgnoreCommand(this));
+        commands.add(new CreateCommand(this));
+        commands.add(new RemoveCommand(this));
+        commands.add(new KickCommand(this));
+        commands.add(new BanCommand(this));
+        commands.add(new HelpCommand(this));
+        commands.add(new ReloadCommand(this));
+        // commands.add(new AutoJoinCommand(this));
+        commands.add(new ModCommand(this));
+        // commands.add(new DefaultCommand(this));
     }
 
+    private void registerEvents() {
+        playerListener = new HeroChatPlayerListener(this);
+
+        PluginManager pm = getServer().getPluginManager();
+        pm.registerEvent(Event.Type.PLAYER_COMMAND, playerListener, Event.Priority.Normal, this);
+        pm.registerEvent(Event.Type.PLAYER_CHAT, playerListener, Event.Priority.Normal, this);
+        pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
+        pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
+    }
 }

@@ -51,7 +51,7 @@ public class LocalChannel extends Channel {
                 if (p.getLocation().toVector().distance(senderLoc) <= distance) {
                     for (String line : msgLines)
                         p.sendMessage(line);
-
+        
                     if (!p.getName().equalsIgnoreCase(senderName))
                         heard = true;
                 }

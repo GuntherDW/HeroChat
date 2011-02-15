@@ -46,7 +46,7 @@ public class ConfigurationHandler {
 
         MessageFormatter.setDefaultMessageFormat(config.defaultMessageFormat);
 
-        plugin.setAutoJoinMap(config.autojoin);
+//        plugin.setAutoJoinMap(config.autojoin);
 
         List<Channel> channels = new ArrayList<Channel>();
 
@@ -70,6 +70,7 @@ public class ConfigurationHandler {
             channel.setAutomaticallyJoined(prop.options.get("auto"));
             channel.setPermanent(prop.options.get("permanent"));
             channel.setQuickMessagable(prop.options.get("quickMessagable"));
+            channel.setJoinMessages(prop.options.get("joinMessages"));
             channel.setModerators(prop.lists.get("moderators"));
             channel.setBanList(prop.lists.get("bans"));
 
@@ -107,7 +108,7 @@ public class ConfigurationHandler {
         config.localDistance = LocalChannel.getDistance();
         config.defaultChannel = plugin.getDefaultChannel().getName();
         config.defaultMessageFormat = MessageFormatter.getDefaultMessageFormat();
-        config.autojoin = plugin.getAutoJoinMap();
+//        config.autojoin = plugin.getAutoJoinMap();
 
         for (Channel c : plugin.getChannels()) {
             if (!c.isSaved())
@@ -126,6 +127,7 @@ public class ConfigurationHandler {
             prop.options.put("auto", c.isAutomaticallyJoined());
             prop.options.put("permanent", c.isPermanent());
             prop.options.put("quickMessagable", c.isQuickMessagable());
+            prop.options.put("joinMessages", c.isJoinMessages());
             prop.lists.put("moderators", c.getModerators());
             prop.lists.put("bans", c.getBanList());
             prop.permissions.put("join", c.getWhiteList());

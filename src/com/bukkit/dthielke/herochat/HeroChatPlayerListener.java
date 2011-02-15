@@ -8,7 +8,6 @@ import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
 
 import com.bukkit.dthielke.herochat.command.Command;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class HeroChatPlayerListener extends PlayerListener {
 
@@ -23,8 +22,10 @@ public class HeroChatPlayerListener extends PlayerListener {
 
         Channel c = plugin.getActiveChannel(sender);
 
-        if (c == null)
+        if (c == null) {
             c = plugin.getDefaultChannel();
+            c.addPlayer(sender);
+        }
 
         c.sendMessage(sender, event.getMessage());
 
@@ -62,31 +63,22 @@ public class HeroChatPlayerListener extends PlayerListener {
     public void onPlayerJoin(PlayerEvent event) {
         Player joiner = event.getPlayer();
 
-        for (Channel c : plugin.getChannels()) {
-            if (plugin.isUsingPermissions() && !c.getWhiteList().isEmpty()) {
-                String group = Permissions.Security.getGroup(joiner.getName());
+        plugin.checkNewPlayerSettings(joiner);
 
-                if (!c.getWhiteList().contains(group))
-                    continue;
-            }
+        for (Channel c : plugin.getJoinedChannels(joiner))
+            c.addPlayer(joiner);
 
-            if (c.isAutomaticallyJoined() || plugin.checkPlayerAutoJoinChannel(joiner.getName(), c))
-                c.addPlayer(joiner);
-        }
-
-        plugin.setActiveChannel(joiner, plugin.getDefaultChannel());
         plugin.createIgnoreList(joiner);
     }
 
     public void onPlayerQuit(PlayerEvent event) {
         Player quitter = event.getPlayer();
 
-        for (Channel c : plugin.getChannels()) {
-            c.removePlayer(quitter);
-        }
+        for (Channel c : plugin.getChannels())
+            c.getPlayers().remove(quitter);
 
-        plugin.getActiveChannelMap().remove(quitter);
         plugin.getIgnoreMap().remove(quitter);
+        plugin.savePlayerSettings();
     }
 
 }

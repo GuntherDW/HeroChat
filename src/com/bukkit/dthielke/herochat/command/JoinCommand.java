@@ -47,10 +47,11 @@ public class JoinCommand extends Command {
 
             boolean success = c.addPlayer(sender);
 
-            if (success)
+            if (success) {
                 sender.sendMessage("HeroChat: Joined channel " + c.getColoredName());
-            else
+            } else {
                 sender.sendMessage("HeroChat: You are already in this channel");
+            }
 
         } else {
             sender.sendMessage("HeroChat: Channel not found");

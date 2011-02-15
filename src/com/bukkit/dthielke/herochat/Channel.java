@@ -36,7 +36,9 @@ public class Channel {
     }
 
     public static final String LOG_FORMAT = "[{nick}] {player}: ";
+    public static final String JOIN_FORMAT = "{color.CHANNEL}[{nick}] ";
     public static final MessageFormatter LOG_FORMATTER = new MessageFormatter(LOG_FORMAT);
+    public static final MessageFormatter JOIN_FORMATTER = new MessageFormatter(JOIN_FORMAT);
 
     protected HeroChatPlugin plugin;
     protected MessageFormatter formatter;
@@ -52,6 +54,7 @@ public class Channel {
     protected boolean saved;
     protected boolean permanent;
     protected boolean quickMessagable;
+    protected boolean joinMessages;
 
     protected List<Player> players;
     protected List<String> moderators;
@@ -81,6 +84,7 @@ public class Channel {
         saved = false;
         permanent = false;
         quickMessagable = false;
+        joinMessages = false;
 
         players = new ArrayList<Player>();
         moderators = new ArrayList<String>();
@@ -124,6 +128,22 @@ public class Channel {
             return false;
 
         players.add(player);
+
+        if (joinMessages) {
+            String msg = player.getDisplayName() + " has joined the channel.";
+            List<String> msgLines = JOIN_FORMATTER.formatMessageWrapped(this, "", "", msg, "", false);
+
+            for (Player p : players) {
+                if (p.equals(player))
+                    continue;
+                for (String line : msgLines) {
+                    p.sendMessage(line);
+                }
+            }
+        }
+        
+        plugin.joinChannel(player, this);
+        
         return true;
     }
 
@@ -142,7 +162,7 @@ public class Channel {
 
         KickResult result = kickPlayer(sender, name);
 
-        if (result == KickResult.SUCCESS)
+        if (result == KickResult.SUCCESS || result == KickResult.PLAYER_NOT_FOUND)
             banList.add(name);
 
         return BanResult.valueOf(result.toString());
@@ -419,7 +439,7 @@ public class Channel {
 
         for (Player p : players) {
             if (p.getName().equalsIgnoreCase(name)) {
-                players.remove(p);
+                removePlayer(p);
                 return KickResult.SUCCESS;
             }
         }
@@ -440,6 +460,20 @@ public class Channel {
             return false;
 
         players.remove(player);
+
+        if (joinMessages) {
+            String msg = player.getDisplayName() + " has left the channel.";
+            List<String> msgLines = JOIN_FORMATTER.formatMessageWrapped(this, "", "", msg, "", false);
+
+            for (Player p : players) {
+                for (String line : msgLines) {
+                    p.sendMessage(line);
+                }
+            }
+        }
+        
+        plugin.leaveChannel(player, this);
+
         return true;
     }
 
@@ -661,6 +695,18 @@ public class Channel {
         }
 
         return BanResult.PLAYER_NOT_FOUND;
+    }
+
+    public boolean isJoinMessages() {
+        return joinMessages;
+    }
+
+    public void setJoinMessages(Boolean joinMessages) {
+        if (joinMessages != null)
+            this.joinMessages = joinMessages;
+        else {
+            this.joinMessages = false;
+        }
     }
 
 }

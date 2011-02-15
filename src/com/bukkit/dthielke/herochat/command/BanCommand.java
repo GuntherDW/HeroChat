@@ -33,8 +33,6 @@ public class BanCommand extends Command {
             sender.sendMessage("HeroChat: You cannot kick moderators");
             break;
         case PLAYER_NOT_FOUND:
-            sender.sendMessage("HeroChat: Player not found");
-            break;
         case SUCCESS:
             sender.sendMessage("HeroChat: Banned player " + name + " from " + channel.getColoredName());
             plugin.getServer().getPlayer(name)
