@@ -18,6 +18,9 @@ public class HeroChatPlayerListener extends PlayerListener {
     }
 
     public void onPlayerChat(PlayerChatEvent event) {
+        if (event.isCancelled())
+            return;
+        
         Player sender = event.getPlayer();
 
         Channel c = plugin.getActiveChannel(sender);
@@ -33,6 +36,9 @@ public class HeroChatPlayerListener extends PlayerListener {
     }
 
     public void onPlayerCommand(PlayerChatEvent event) {
+        if (event.isCancelled())
+            return;
+        
         Player sender = event.getPlayer();
         String message = event.getMessage();
 
@@ -58,9 +64,11 @@ public class HeroChatPlayerListener extends PlayerListener {
 
             bestMatch.execute(event, sender, args);
         }
+        
+        event.setCancelled(true);
     }
 
-    public void onPlayerJoin(PlayerEvent event) {
+    public void onPlayerJoin(PlayerEvent event) {        
         Player joiner = event.getPlayer();
 
         plugin.checkNewPlayerSettings(joiner);

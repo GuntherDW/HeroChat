@@ -1,6 +1,5 @@
 TODO List
 
-1.	Ability to remove server defined auto-joins on a user specific basis
-3.	Support multiple local channels with channel specific distances
-4.  User based channel permissions in addition to existing group permissions
-5.  Offer public API for checking bounties
+1.	Support multiple local channels with channel specific distances
+2.  User based channel permissions in addition to existing group permissions
+3.  Offer public API for checking bounties

@@ -30,7 +30,7 @@ public class ChannelsCommand extends Command {
             return;
         }
 
-        List<Channel> channels = extractVisibleChannels(plugin.getChannels());
+        List<Channel> channels = extractVisibleChannels(plugin.getChannels(), sender);
 
         int pages = (int) Math.ceil((double) channels.size() / CHANNELS_PER_PAGE);
         int p;
@@ -69,11 +69,11 @@ public class ChannelsCommand extends Command {
         }
     }
 
-    private List<Channel> extractVisibleChannels(List<Channel> channels) {
+    private List<Channel> extractVisibleChannels(List<Channel> channels, Player player) {
         List<Channel> visible = new ArrayList<Channel>();
 
         for (Channel c : channels)
-            if (!c.isHidden())
+            if (!c.isHidden() || c.hasPlayer(player))
                 visible.add(c);
 
         return visible;

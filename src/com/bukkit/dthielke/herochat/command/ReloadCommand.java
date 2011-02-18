@@ -25,7 +25,7 @@ public class ReloadCommand extends Command {
             return;
         }
         
-        plugin.onEnable();
+        plugin.reload();
 
 //        plugin.loadConfigOld();
 //

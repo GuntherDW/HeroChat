@@ -15,6 +15,8 @@ import java.util.logging.Logger;
 import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.Event.Type;
+import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginLoader;
@@ -115,12 +117,21 @@ public class HeroChatPlugin extends JavaPlugin {
     public void checkNewPlayerSettings(Player player) {
         String name = player.getName();
 
-        if (joinedChannels.get(name) == null) {
+        if (joinedChannels.get(name) == null || joinedChannels.get(name).isEmpty()) {
             List<String> joined = new ArrayList<String>();
 
             for (Channel c : channels) {
-                if (c.isAutomaticallyJoined())
+                if (c.isAutomaticallyJoined()) {
+                    if (usingPermissions && !c.getWhiteList().isEmpty()) {
+                        String group = Permissions.Security.getGroup(name);
+
+                        if (!c.getWhiteList().contains(group)) {
+                            continue;
+                        }
+                    }
+                    
                     joined.add(c.getName());
+                }
             }
 
             joinedChannels.put(name, joined);
@@ -190,8 +201,11 @@ public class HeroChatPlugin extends JavaPlugin {
         String name = player.getName();
         List<Channel> joined = new ArrayList<Channel>();
 
-        for (String s : joinedChannels.get(name))
-            joined.add(getChannel(s));
+        for (String s : joinedChannels.get(name)) {
+            Channel c = getChannel(s);
+            if (c != null)
+                joined.add(c);
+        }
 
         return joined;
     }
@@ -231,16 +245,16 @@ public class HeroChatPlugin extends JavaPlugin {
 
     public void loadConfig() {
         Configuration config = this.getConfiguration();
+        config.load();
 
         channels = new ArrayList<Channel>();
         for (String s : config.getKeys("channels")) {
+            String root = "channels." + s + ".";
             Channel c;
-            if (config.getBoolean(s + ".options.", false))
+            if (config.getBoolean(root + "options.local", false))
                 c = new LocalChannel(this);
             else
                 c = new Channel(this);
-
-            String root = "channels." + s + ".";
 
             c.setName(s);
 
@@ -301,6 +315,19 @@ public class HeroChatPlugin extends JavaPlugin {
     public void onDisable() {
         saveConfig();
         
+        this.activeChannels.clear();
+        this.channels.clear();
+        this.commands.clear();
+        this.ignoreMap.clear();
+        this.joinedChannels.clear();
+        
+        this.defaultChannel = null;
+        this.iChatPlugin = null;
+        this.logger = null;
+        this.playerListener = null;
+        this.usersConfig = null;
+        this.usingPermissions = false;
+        
         PluginDescriptionFile desc = getDescription();
         System.out.println(desc.getName() + " version " + desc.getVersion() + " disabled.");
     }
@@ -329,6 +356,17 @@ public class HeroChatPlugin extends JavaPlugin {
             iChatPlugin = null;
 
         getServer().getPluginManager().enablePlugin(getServer().getPluginManager().getPlugin("Permissions"));
+        
+        for (Player p : getServer().getOnlinePlayers())
+            playerListener.onPlayerJoin(new PlayerEvent(Type.PLAYER_JOIN, p));
+    }
+    
+    public void reload() {
+        usersConfig.load();
+        pickLoader();
+        
+        for (Player p : getServer().getOnlinePlayers())
+            playerListener.onPlayerJoin(new PlayerEvent(Type.PLAYER_JOIN, p));
     }
 
     public void pickLoader() {
@@ -366,6 +404,9 @@ public class HeroChatPlugin extends JavaPlugin {
         config.setProperty(globals + "default-local-distance", LocalChannel.getDistance());
 
         for (Channel c : channels) {
+            if (!c.isSaved())
+                continue;
+            
             String root = "channels." + c.getName() + ".";
             config.setProperty(root + "nickname", c.getNick());
             config.setProperty(root + "color", c.getColor().toString());

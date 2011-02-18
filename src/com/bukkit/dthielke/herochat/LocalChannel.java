@@ -42,12 +42,12 @@ public class LocalChannel extends Channel {
         List<String> msgLines = formatter.formatMessageWrapped(this, sender.getName(), sender.getDisplayName(), msg, plugin.getHealthBar(sender), plugin.isUsingPermissions());
 
         boolean heard = false;
-
+        
         Vector senderLoc = sender.getLocation().toVector();
         String senderName = sender.getName();
-
+        
         for (Player p : players) {
-            if (!plugin.getIgnoreList(p).contains(sender.getName())) {
+            if (!plugin.getIgnoreList(p).contains(senderName)) {
                 if (p.getLocation().toVector().distance(senderLoc) <= distance) {
                     for (String line : msgLines)
                         p.sendMessage(line);
@@ -57,7 +57,7 @@ public class LocalChannel extends Channel {
                 }
             }
         }
-
+        
         if (!heard)
             sender.sendMessage(ChatColor.GRAY.format() + "No one hears you.");
 
