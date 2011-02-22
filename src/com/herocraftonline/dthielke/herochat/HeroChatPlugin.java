@@ -1,4 +1,4 @@
-package com.bukkit.dthielke.herochat;
+package com.herocraftonline.dthielke.herochat;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -22,23 +22,23 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
 
-import com.bukkit.dthielke.herochat.command.BanCommand;
-import com.bukkit.dthielke.herochat.command.ChannelsCommand;
-import com.bukkit.dthielke.herochat.command.Command;
-import com.bukkit.dthielke.herochat.command.CreateCommand;
-import com.bukkit.dthielke.herochat.command.FocusCommand;
-import com.bukkit.dthielke.herochat.command.HelpCommand;
-import com.bukkit.dthielke.herochat.command.IgnoreCommand;
-import com.bukkit.dthielke.herochat.command.JoinCommand;
-import com.bukkit.dthielke.herochat.command.KickCommand;
-import com.bukkit.dthielke.herochat.command.LeaveCommand;
-import com.bukkit.dthielke.herochat.command.ListCommand;
-import com.bukkit.dthielke.herochat.command.ModCommand;
-import com.bukkit.dthielke.herochat.command.QuickMsgCommand;
-import com.bukkit.dthielke.herochat.command.ReloadCommand;
-import com.bukkit.dthielke.herochat.command.RemoveCommand;
-import com.bukkit.dthielke.herochat.util.ConfigurationHandler;
-import com.bukkit.dthielke.herochat.util.MessageFormatter;
+import com.herocraftonline.dthielke.herochat.command.BanCommand;
+import com.herocraftonline.dthielke.herochat.command.ChannelsCommand;
+import com.herocraftonline.dthielke.herochat.command.Command;
+import com.herocraftonline.dthielke.herochat.command.CreateCommand;
+import com.herocraftonline.dthielke.herochat.command.FocusCommand;
+import com.herocraftonline.dthielke.herochat.command.HelpCommand;
+import com.herocraftonline.dthielke.herochat.command.IgnoreCommand;
+import com.herocraftonline.dthielke.herochat.command.JoinCommand;
+import com.herocraftonline.dthielke.herochat.command.KickCommand;
+import com.herocraftonline.dthielke.herochat.command.LeaveCommand;
+import com.herocraftonline.dthielke.herochat.command.ListCommand;
+import com.herocraftonline.dthielke.herochat.command.ModCommand;
+import com.herocraftonline.dthielke.herochat.command.QuickMsgCommand;
+import com.herocraftonline.dthielke.herochat.command.ReloadCommand;
+import com.herocraftonline.dthielke.herochat.command.RemoveCommand;
+import com.herocraftonline.dthielke.herochat.util.ConfigurationHandler;
+import com.herocraftonline.dthielke.herochat.util.MessageFormatter;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.nijikokun.bukkit.iChat.iChat;
 

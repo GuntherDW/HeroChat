@@ -1,13 +1,13 @@
-package com.bukkit.dthielke.herochat;
+package com.herocraftonline.dthielke.herochat;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import com.bukkit.dthielke.herochat.HeroChatPlugin.ChatColor;
-import com.bukkit.dthielke.herochat.HeroChatPlugin.PluginPermission;
-import com.bukkit.dthielke.herochat.util.MessageFormatter;
+import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChatPlugin.PluginPermission;
+import com.herocraftonline.dthielke.herochat.util.MessageFormatter;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
 /**

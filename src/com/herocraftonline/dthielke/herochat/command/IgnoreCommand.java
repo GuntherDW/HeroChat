@@ -1,13 +1,13 @@
-package com.bukkit.dthielke.herochat.command;
+package com.herocraftonline.dthielke.herochat.command;
 
 import java.util.List;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 
-import com.bukkit.dthielke.herochat.HeroChatPlugin;
-import com.bukkit.dthielke.herochat.HeroChatPlugin.ChatColor;
-import com.bukkit.dthielke.herochat.HeroChatPlugin.PluginPermission;
+import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
+import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChatPlugin.PluginPermission;
 
 public class IgnoreCommand extends Command {
 

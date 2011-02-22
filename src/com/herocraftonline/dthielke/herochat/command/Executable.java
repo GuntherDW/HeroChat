@@ -1,4 +1,4 @@
-package com.bukkit.dthielke.herochat.command;
+package com.herocraftonline.dthielke.herochat.command;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;

@@ -1,4 +1,4 @@
-package com.bukkit.dthielke.herochat;
+package com.herocraftonline.dthielke.herochat;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
 
-import com.bukkit.dthielke.herochat.command.Command;
+import com.herocraftonline.dthielke.herochat.command.Command;
 
 public class HeroChatPlayerListener extends PlayerListener {
 

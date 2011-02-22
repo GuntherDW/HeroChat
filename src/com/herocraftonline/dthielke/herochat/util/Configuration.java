@@ -1,10 +1,10 @@
-package com.bukkit.dthielke.herochat.util;
+package com.herocraftonline.dthielke.herochat.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.bukkit.dthielke.herochat.HeroChatPlugin.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 
 public class Configuration {
 

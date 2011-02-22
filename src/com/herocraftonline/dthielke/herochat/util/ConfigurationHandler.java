@@ -1,4 +1,4 @@
-package com.bukkit.dthielke.herochat.util;
+package com.herocraftonline.dthielke.herochat.util;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -15,11 +15,11 @@ import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.nodes.Tag;
 import org.yaml.snakeyaml.representer.Representer;
 
-import com.bukkit.dthielke.herochat.Channel;
-import com.bukkit.dthielke.herochat.HeroChatPlugin;
-import com.bukkit.dthielke.herochat.LocalChannel;
-import com.bukkit.dthielke.herochat.util.Configuration.ChannelWrapper;
-import com.bukkit.dthielke.herochat.util.Configuration.ChannelWrapper.ChannelProperties;
+import com.herocraftonline.dthielke.herochat.Channel;
+import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
+import com.herocraftonline.dthielke.herochat.LocalChannel;
+import com.herocraftonline.dthielke.herochat.util.Configuration.ChannelWrapper;
+import com.herocraftonline.dthielke.herochat.util.Configuration.ChannelWrapper.ChannelProperties;
 
 public class ConfigurationHandler {
     public static void dumpToFile(Configuration config, File file) {

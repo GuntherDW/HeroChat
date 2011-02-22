@@ -1,13 +1,13 @@
-package com.bukkit.dthielke.herochat.command;
+package com.herocraftonline.dthielke.herochat.command;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 
-import com.bukkit.dthielke.herochat.Channel;
-import com.bukkit.dthielke.herochat.HeroChatPlugin;
-import com.bukkit.dthielke.herochat.HeroChatPlugin.ChatColor;
-import com.bukkit.dthielke.herochat.HeroChatPlugin.PluginPermission;
-import com.bukkit.dthielke.herochat.util.MessageFormatter;
+import com.herocraftonline.dthielke.herochat.Channel;
+import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
+import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChatPlugin.PluginPermission;
+import com.herocraftonline.dthielke.herochat.util.MessageFormatter;
 
 public class CreateCommand extends Command {
 

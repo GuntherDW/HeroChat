@@ -1,4 +1,4 @@
-package com.bukkit.dthielke.herochat.util;
+package com.herocraftonline.dthielke.herochat.util;
 
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.bukkit.dthielke.herochat.Channel;
-import com.bukkit.dthielke.herochat.HeroChatPlugin.ChatColor;
+import com.herocraftonline.dthielke.herochat.Channel;
+import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class MessageFormatter {
