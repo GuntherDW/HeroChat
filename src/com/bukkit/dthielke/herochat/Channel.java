@@ -512,6 +512,20 @@ public class Channel {
 
         plugin.log(LOG_FORMATTER.formatMessage(this, sender.getName(), sender.getDisplayName(), msg, plugin.getHealthBar(sender), false));
     }
+    
+    public void sendMessage(String source, String msg) {
+        msg = plugin.censor(msg);
+        
+        List<String> msgLines = formatter.formatMessageWrapped(this, source, source, msg, "", false);
+        for (Player p : players) {
+            if (!plugin.getIgnoreList(p).contains(source)) {
+                for (String line : msgLines) {
+                    p.sendMessage(line);
+                }
+            }
+        }
+        plugin.log(LOG_FORMATTER.formatMessage(this, source, source, msg, "", false));
+    }
 
     /**
      * Sets whether the channel should be automatically joined by players upon

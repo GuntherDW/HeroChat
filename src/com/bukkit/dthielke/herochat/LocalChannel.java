@@ -2,8 +2,8 @@ package com.bukkit.dthielke.herochat;
 
 import java.util.List;
 
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
 
 import com.bukkit.dthielke.herochat.HeroChatPlugin.ChatColor;
 import com.nijikokun.bukkit.Permissions.Permissions;
@@ -43,24 +43,39 @@ public class LocalChannel extends Channel {
 
         boolean heard = false;
         
-        Vector senderLoc = sender.getLocation().toVector();
-        String senderName = sender.getName();
+        String sName = sender.getName();
+        Location sLoc = plugin.getServer().getPlayer(sName).getLocation();
+        
+        //plugin.getServer().broadcastMessage("Speaker: (" + sLoc.getBlockX() + ", " + sLoc.getBlockZ() + ")");
         
         for (Player p : players) {
-            if (!plugin.getIgnoreList(p).contains(senderName)) {
-                if (p.getLocation().toVector().distance(senderLoc) <= distance) {
+            if (!plugin.getIgnoreList(p).contains(sName)) {
+                Location pLoc = p.getLocation();
+                
+                int dx = sLoc.getBlockX() - pLoc.getBlockX();
+                int dz = sLoc.getBlockZ() - pLoc.getBlockZ();
+                dx = dx * dx;
+                dz = dz * dz;
+                int d = (int)Math.sqrt(dx + dz);
+                
+                //plugin.getServer().broadcastMessage("Listener: (" + pLoc.getBlockX() + ", " + pLoc.getBlockZ() + "), d: " + d);
+                
+                if (d <= distance) {
                     for (String line : msgLines)
                         p.sendMessage(line);
         
-                    if (!p.getName().equalsIgnoreCase(senderName))
+                    if (!p.getName().equalsIgnoreCase(sName))
                         heard = true;
                 }
             }
         }
         
+        //if (heard)
+            //plugin.getServer().broadcastMessage("Speaker is heard.");
+        
         if (!heard)
             sender.sendMessage(ChatColor.GRAY.format() + "No one hears you.");
 
-        plugin.log(LOG_FORMATTER.formatMessage(this, senderName, sender.getDisplayName(), msg, plugin.getHealthBar(sender), false));
+        plugin.log(LOG_FORMATTER.formatMessage(this, sName, sender.getDisplayName(), msg, plugin.getHealthBar(sender), false));
     }
 }

@@ -64,8 +64,6 @@ public class HeroChatPlayerListener extends PlayerListener {
 
             bestMatch.execute(event, sender, args);
         }
-        
-        event.setCancelled(true);
     }
 
     public void onPlayerJoin(PlayerEvent event) {        

@@ -12,14 +12,12 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.bukkit.Server;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Type;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.plugin.PluginLoader;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.config.Configuration;
@@ -97,14 +95,12 @@ public class HeroChatPlugin extends JavaPlugin {
     private HashMap<String, List<String>> joinedChannels = new HashMap<String, List<String>>();
 
     private Logger logger;
-
     private iChat iChatPlugin;
-    
     private Configuration usersConfig;
-    
-    public HeroChatPlugin(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
-        super(pluginLoader, instance, desc, folder, plugin, cLoader);
-    }
+
+    // public HeroChatPlugin(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
+    //     super(pluginLoader, instance, desc, folder, plugin, cLoader);
+    // }
 
     public String censor(String msg) {
         if (iChatPlugin == null)
@@ -129,7 +125,7 @@ public class HeroChatPlugin extends JavaPlugin {
                             continue;
                         }
                     }
-                    
+
                     joined.add(c.getName());
                 }
             }
@@ -233,14 +229,14 @@ public class HeroChatPlugin extends JavaPlugin {
         List<String> channels = joinedChannels.get(name);
         if (!channels.contains(channel.getName())) {
             joinedChannels.get(name).add(channel.getName());
-            //savePlayerSettings(name);
+            // savePlayerSettings(name);
         }
     }
 
     public void leaveChannel(Player player, Channel channel) {
         String name = player.getName();
         joinedChannels.get(name).remove(channel.getName());
-        //savePlayerSettings(name);
+        // savePlayerSettings(name);
     }
 
     public void loadConfig() {
@@ -278,6 +274,8 @@ public class HeroChatPlugin extends JavaPlugin {
             c.setWhiteList(config.getStringList(permissions + "join", null));
             c.setVoiceList(config.getStringList(permissions + "speak", null));
 
+            c.setSaved(true);
+
             channels.add(c);
         }
 
@@ -297,7 +295,7 @@ public class HeroChatPlugin extends JavaPlugin {
     public void loadPlayerSettings() {
         if (usersConfig.getNode("users") == null)
             return;
-        
+
         for (String name : usersConfig.getKeys("users"))
             loadPlayerSettings(name);
     }
@@ -314,20 +312,20 @@ public class HeroChatPlugin extends JavaPlugin {
     @Override
     public void onDisable() {
         saveConfig();
-        
+
         this.activeChannels.clear();
         this.channels.clear();
         this.commands.clear();
         this.ignoreMap.clear();
         this.joinedChannels.clear();
-        
+
         this.defaultChannel = null;
         this.iChatPlugin = null;
         this.logger = null;
         this.playerListener = null;
         this.usersConfig = null;
         this.usingPermissions = false;
-        
+
         PluginDescriptionFile desc = getDescription();
         System.out.println(desc.getName() + " version " + desc.getVersion() + " disabled.");
     }
@@ -336,7 +334,7 @@ public class HeroChatPlugin extends JavaPlugin {
     public void onEnable() {
         usersConfig = new Configuration(new File(getDataFolder(), "users.yml"));
         usersConfig.load();
-        
+
         registerEvents();
         registerCommands();
 
@@ -356,15 +354,7 @@ public class HeroChatPlugin extends JavaPlugin {
             iChatPlugin = null;
 
         getServer().getPluginManager().enablePlugin(getServer().getPluginManager().getPlugin("Permissions"));
-        
-        for (Player p : getServer().getOnlinePlayers())
-            playerListener.onPlayerJoin(new PlayerEvent(Type.PLAYER_JOIN, p));
-    }
-    
-    public void reload() {
-        usersConfig.load();
-        pickLoader();
-        
+
         for (Player p : getServer().getOnlinePlayers())
             playerListener.onPlayerJoin(new PlayerEvent(Type.PLAYER_JOIN, p));
     }
@@ -395,6 +385,14 @@ public class HeroChatPlugin extends JavaPlugin {
         saveConfig();
     }
 
+    public void reload() {
+        usersConfig.load();
+        pickLoader();
+
+        for (Player p : getServer().getOnlinePlayers())
+            playerListener.onPlayerJoin(new PlayerEvent(Type.PLAYER_JOIN, p));
+    }
+
     public void saveConfig() {
         Configuration config = this.getConfiguration();
 
@@ -406,7 +404,7 @@ public class HeroChatPlugin extends JavaPlugin {
         for (Channel c : channels) {
             if (!c.isSaved())
                 continue;
-            
+
             String root = "channels." + c.getName() + ".";
             config.setProperty(root + "nickname", c.getNick());
             config.setProperty(root + "color", c.getColor().toString());
@@ -448,14 +446,18 @@ public class HeroChatPlugin extends JavaPlugin {
     public void savePlayerSettings(String name) {
         usersConfig.setProperty("users." + name + ".active-channel", activeChannels.get(name));
         usersConfig.setProperty("users." + name + ".joined-channels", joinedChannels.get(name));
-        
+
         usersConfig.save();
+    }
+
+    public void sendMessage(Channel channel, String sourceName, String msg) {
+        channel.sendMessage(sourceName, msg);
     }
 
     public void setActiveChannel(Player player, Channel channel) {
         String name = player.getName();
         activeChannels.put(name, channel.getName());
-        //savePlayerSettings(name);
+        // savePlayerSettings(name);
 
         channel.addPlayer(player);
     }
