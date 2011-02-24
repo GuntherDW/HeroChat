@@ -28,7 +28,7 @@ public class LocalChannel extends Channel {
 
     @Override
     public void sendMessage(Player sender, String msg) {
-        if (plugin.isUsingPermissions() && !voiceList.isEmpty()) {
+        if (!voiceList.isEmpty()) {
             String group = Permissions.Security.getGroup(sender.getName());
 
             if (!voiceList.contains(group)) {
@@ -39,16 +39,17 @@ public class LocalChannel extends Channel {
 
         msg = plugin.censor(msg);
 
-        List<String> msgLines = formatter.formatMessageWrapped(this, sender.getName(), sender.getDisplayName(), msg, plugin.getHealthBar(sender), plugin.isUsingPermissions());
+        List<String> msgLines = formatter.formatMessageWrapped(this, sender.getWorld().getName(), sender.getName(), sender.getDisplayName(), msg, plugin.getHealthBar(sender));
 
         boolean heard = false;
         
         String sName = sender.getName();
         Location sLoc = plugin.getServer().getPlayer(sName).getLocation();
         
-        //plugin.getServer().broadcastMessage("Speaker: (" + sLoc.getBlockX() + ", " + sLoc.getBlockZ() + ")");
-        
         for (Player p : players) {
+            p = plugin.getServer().getPlayer(p.getName());
+            if (p == null)
+                continue;
             if (!plugin.getIgnoreList(p).contains(sName)) {
                 Location pLoc = p.getLocation();
                 
@@ -57,8 +58,6 @@ public class LocalChannel extends Channel {
                 dx = dx * dx;
                 dz = dz * dz;
                 int d = (int)Math.sqrt(dx + dz);
-                
-                //plugin.getServer().broadcastMessage("Listener: (" + pLoc.getBlockX() + ", " + pLoc.getBlockZ() + "), d: " + d);
                 
                 if (d <= distance) {
                     for (String line : msgLines)
@@ -70,12 +69,9 @@ public class LocalChannel extends Channel {
             }
         }
         
-        //if (heard)
-            //plugin.getServer().broadcastMessage("Speaker is heard.");
-        
         if (!heard)
             sender.sendMessage(ChatColor.GRAY.format() + "No one hears you.");
 
-        plugin.log(LOG_FORMATTER.formatMessage(this, sName, sender.getDisplayName(), msg, plugin.getHealthBar(sender), false));
+        plugin.log(logFormatter.formatMessage(this, sender.getWorld().getName(), sName, sender.getDisplayName(), msg, plugin.getHealthBar(sender)));
     }
 }

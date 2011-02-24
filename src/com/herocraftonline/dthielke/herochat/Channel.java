@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.PluginPermission;
 import com.herocraftonline.dthielke.herochat.util.MessageFormatter;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 /**
  * Channel creates the possibility for sending particular Minecraft chat
@@ -37,8 +36,8 @@ public class Channel {
 
     public static final String LOG_FORMAT = "[{nick}] {player}: ";
     public static final String JOIN_FORMAT = "{color.CHANNEL}[{nick}] ";
-    public static final MessageFormatter LOG_FORMATTER = new MessageFormatter(LOG_FORMAT);
-    public static final MessageFormatter JOIN_FORMATTER = new MessageFormatter(JOIN_FORMAT);
+    protected MessageFormatter logFormatter;
+    protected MessageFormatter joinFormatter;
 
     protected HeroChatPlugin plugin;
     protected MessageFormatter formatter;
@@ -71,7 +70,10 @@ public class Channel {
      */
     public Channel(HeroChatPlugin plugin) {
         this.plugin = plugin;
-        formatter = new MessageFormatter();
+        
+        logFormatter = new MessageFormatter(plugin, LOG_FORMAT);
+        joinFormatter = new MessageFormatter(plugin, JOIN_FORMAT);
+        formatter = new MessageFormatter(plugin);
 
         name = "default";
         nick = "def";
@@ -131,7 +133,7 @@ public class Channel {
 
         if (joinMessages) {
             String msg = player.getDisplayName() + " has joined the channel.";
-            List<String> msgLines = JOIN_FORMATTER.formatMessageWrapped(this, "", "", msg, "", false);
+            List<String> msgLines = joinFormatter.formatMessageWrapped(this, "", "", "", msg, "");
 
             for (Player p : players) {
                 if (p.equals(player))
@@ -463,7 +465,7 @@ public class Channel {
 
         if (joinMessages) {
             String msg = player.getDisplayName() + " has left the channel.";
-            List<String> msgLines = JOIN_FORMATTER.formatMessageWrapped(this, "", "", msg, "", false);
+            List<String> msgLines = joinFormatter.formatMessageWrapped(this, "", "", "", msg, "");
 
             for (Player p : players) {
                 for (String line : msgLines) {
@@ -488,8 +490,8 @@ public class Channel {
      *            the message to be sent
      */
     public void sendMessage(Player sender, String msg) {
-        if (plugin.isUsingPermissions() && !voiceList.isEmpty()) {
-            String group = Permissions.Security.getGroup(sender.getName());
+        if (!voiceList.isEmpty()) {
+            String group = plugin.security.getGroup(sender.getName());
 
             if (!voiceList.contains(group)) {
                 sender.sendMessage("HeroChat: You cannot speak in this channel");
@@ -499,8 +501,7 @@ public class Channel {
 
         msg = plugin.censor(msg);
 
-        List<String> msgLines = formatter.formatMessageWrapped(this, sender.getName(), sender.getDisplayName(), msg, plugin.getHealthBar(sender),
-                plugin.isUsingPermissions());
+        List<String> msgLines = formatter.formatMessageWrapped(this, sender.getWorld().getName(), sender.getName(), sender.getDisplayName(), msg, plugin.getHealthBar(sender));
 
         for (Player p : players) {
             if (!plugin.getIgnoreList(p).contains(sender.getName())) {
@@ -510,13 +511,13 @@ public class Channel {
             }
         }
 
-        plugin.log(LOG_FORMATTER.formatMessage(this, sender.getName(), sender.getDisplayName(), msg, plugin.getHealthBar(sender), false));
+        plugin.log(logFormatter.formatMessage(this, sender.getWorld().getName(), sender.getName(), sender.getDisplayName(), msg, plugin.getHealthBar(sender)));
     }
     
     public void sendMessage(String source, String msg) {
         msg = plugin.censor(msg);
         
-        List<String> msgLines = formatter.formatMessageWrapped(this, source, source, msg, "", false);
+        List<String> msgLines = formatter.formatMessageWrapped(this, "", source, source, msg, "");
         for (Player p : players) {
             if (!plugin.getIgnoreList(p).contains(source)) {
                 for (String line : msgLines) {
@@ -524,7 +525,7 @@ public class Channel {
                 }
             }
         }
-        plugin.log(LOG_FORMATTER.formatMessage(this, source, source, msg, "", false));
+        plugin.log(logFormatter.formatMessage(this, "", source, source, msg, ""));
     }
 
     /**

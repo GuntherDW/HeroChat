@@ -11,15 +11,16 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.herocraftonline.dthielke.herochat.Channel;
+import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class MessageFormatter {
 
     public static final String FONT_NAME = "minecraft.ttf";
     public static final int CHAT_LINE_LENGTH = 940;
 
-    private static String defaultMessageFormat = "";
+    protected static String defaultMessageFormat = "";
+    protected HeroChatPlugin plugin;
 
     public static String colorToString(ChatColor color) {
         return "\u00a7" + Integer.toHexString(color.ordinal());
@@ -69,15 +70,17 @@ public class MessageFormatter {
 
     private String format;
 
-    public MessageFormatter() {
+    public MessageFormatter(HeroChatPlugin plugin) {
         createFontMetrics();
 
+        this.plugin = plugin;
         this.format = "{default}";
     }
 
-    public MessageFormatter(String format) {
+    public MessageFormatter(HeroChatPlugin plugin, String format) {
         createFontMetrics();
 
+        this.plugin = plugin;
         this.format = format;
     }
 
@@ -123,21 +126,19 @@ public class MessageFormatter {
 
     }
 
-    private String createLeader(Channel channel, String name, String displayName, String msg, String healthBar, boolean usePermissions) {
+    private String createLeader(Channel channel, String world, String name, String displayName, String msg, String healthBar) {
         String prefix = "";
         String suffix = "";
 
-        if (usePermissions) {
-            prefix = Permissions.Security.getUserPermissionString(name, "prefix");
-            suffix = Permissions.Security.getUserPermissionString(name, "suffix");
+        prefix = plugin.security.getUserPermissionString(name, "prefix");
+        suffix = plugin.security.getUserPermissionString(name, "suffix");
 
-            String group = Permissions.Security.getGroup(name);
-            if (prefix.equals(""))
-                prefix = Permissions.Security.getGroupPrefix(group);
+        String group = plugin.security.getGroup(name);
+        if (prefix == null || prefix.equals(""))
+            prefix = plugin.security.getGroupPrefix(group);
 
-            if (suffix.equals(""))
-                suffix = Permissions.Security.getGroupSuffix(group);
-        }
+        if ( suffix == null || suffix.equals(""))
+            suffix = plugin.security.getGroupSuffix(group);
 
         if (prefix == null) {
             prefix = "";
@@ -154,14 +155,14 @@ public class MessageFormatter {
         return applyFormat(channel, prefix, suffix, displayName, healthBar);
     }
 
-    public String formatMessage(Channel channel, String name, String displayName, String msg, String healthBar, boolean usePermissions) {
-        String leader = createLeader(channel, name, displayName, msg, healthBar, usePermissions);
+    public String formatMessage(Channel channel, String world, String name, String displayName, String msg, String healthBar) {
+        String leader = createLeader(channel, world, name, displayName, msg, healthBar);
 
         return leader + msg;
     }
 
-    public List<String> formatMessageWrapped(Channel channel, String name, String displayName, String msg, String healthBar, boolean usePermissions) {
-        String leader = createLeader(channel, name, displayName, msg, healthBar, usePermissions);
+    public List<String> formatMessageWrapped(Channel channel, String world, String name, String displayName, String msg, String healthBar) {
+        String leader = createLeader(channel, world, name, displayName, msg, healthBar);
 
         List<String> msgLines = wrap(leader + msg, fontMetrics);
 

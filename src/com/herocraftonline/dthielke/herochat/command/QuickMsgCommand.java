@@ -5,7 +5,6 @@ import org.bukkit.event.player.PlayerChatEvent;
 
 import com.herocraftonline.dthielke.herochat.Channel;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class QuickMsgCommand extends Command {
 
@@ -28,8 +27,8 @@ public class QuickMsgCommand extends Command {
 
         event.setCancelled(true);
 
-        if (plugin.isUsingPermissions() && !c.getWhiteList().isEmpty()) {
-            String group = Permissions.Security.getGroup(sender.getName());
+        if (!c.getWhiteList().isEmpty()) {
+            String group = plugin.security.getGroup(sender.getName());
             
             if (!c.getWhiteList().contains(group)) {
                 sender.sendMessage("HeroChat: You are not allowed to join this channel");

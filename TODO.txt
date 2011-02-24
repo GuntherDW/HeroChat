@@ -2,4 +2,4 @@ TODO List
 
 1.	Support multiple local channels with channel specific distances
 2.  User based channel permissions in addition to existing group permissions
-3.  Offer public API for checking bounties
+3.	Global mute command

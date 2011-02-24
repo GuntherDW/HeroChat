@@ -41,7 +41,7 @@ public class CreateCommand extends Command {
             }
         }
 
-        c.setFormatter(new MessageFormatter("{default}"));
+        c.setFormatter(new MessageFormatter(plugin, "{default}"));
 
         return c;
     }
@@ -102,7 +102,7 @@ public class CreateCommand extends Command {
         sender.sendMessage("HeroChat: Joined channel " + c.getColoredName());
 
         if (c.isSaved())
-            plugin.saveConfigOld();
+            plugin.saveConfig();
     }
 
 }

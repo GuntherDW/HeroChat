@@ -1,17 +1,13 @@
 package com.herocraftonline.dthielke.herochat;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.anjocaido.groupmanager.GroupManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Type;
@@ -37,8 +33,8 @@ import com.herocraftonline.dthielke.herochat.command.ModCommand;
 import com.herocraftonline.dthielke.herochat.command.QuickMsgCommand;
 import com.herocraftonline.dthielke.herochat.command.ReloadCommand;
 import com.herocraftonline.dthielke.herochat.command.RemoveCommand;
-import com.herocraftonline.dthielke.herochat.util.ConfigurationHandler;
 import com.herocraftonline.dthielke.herochat.util.MessageFormatter;
+import com.nijiko.permissions.PermissionHandler;
 import com.nijikokun.bukkit.Permissions.Permissions;
 import com.nijikokun.bukkit.iChat.iChat;
 
@@ -83,8 +79,6 @@ public class HeroChatPlugin extends JavaPlugin {
 
     private HeroChatPlayerListener playerListener;
 
-    private boolean usingPermissions;
-
     private List<Command> commands;
     private List<Channel> channels;
 
@@ -98,9 +92,7 @@ public class HeroChatPlugin extends JavaPlugin {
     private iChat iChatPlugin;
     private Configuration usersConfig;
 
-    // public HeroChatPlugin(PluginLoader pluginLoader, Server instance, PluginDescriptionFile desc, File folder, File plugin, ClassLoader cLoader) {
-    //     super(pluginLoader, instance, desc, folder, plugin, cLoader);
-    // }
+    public PermissionHandler security;
 
     public String censor(String msg) {
         if (iChatPlugin == null)
@@ -118,8 +110,8 @@ public class HeroChatPlugin extends JavaPlugin {
 
             for (Channel c : channels) {
                 if (c.isAutomaticallyJoined()) {
-                    if (usingPermissions && !c.getWhiteList().isEmpty()) {
-                        String group = Permissions.Security.getGroup(name);
+                    if (!c.getWhiteList().isEmpty()) {
+                        String group = security.getGroup(name);
 
                         if (!c.getWhiteList().contains(group)) {
                             continue;
@@ -207,22 +199,18 @@ public class HeroChatPlugin extends JavaPlugin {
     }
 
     public boolean hasPermission(Player player, PluginPermission permission) {
-        return Permissions.Security.permission(player, "herochat." + permission.toString().toLowerCase());
+        return security.permission(player, "herochat." + permission.toString().toLowerCase());
     }
 
     public boolean hasPermission(String name, PluginPermission permission) {
         Player p = getServer().getPlayer(name);
 
-        if (p == null || !usingPermissions)
+        if (p == null)
             return false;
 
         return hasPermission(p, permission);
     }
-
-    public boolean isUsingPermissions() {
-        return usingPermissions;
-    }
-
+    
     public void joinChannel(Player player, Channel channel) {
         String name = player.getName();
 
@@ -256,7 +244,7 @@ public class HeroChatPlugin extends JavaPlugin {
 
             c.setNick(config.getString(root + "nickname", "DEFAULT-NICK"));
             c.setColor(ChatColor.valueOf(config.getString(root + "color", "WHITE")));
-            c.setFormatter(new MessageFormatter(config.getString(root + "message-format", "{default}")));
+            c.setFormatter(new MessageFormatter(this, config.getString(root + "message-format", "{default}")));
 
             String options = root + "options.";
             c.setJoinMessages(config.getBoolean(options + "join-messages", true));
@@ -285,11 +273,6 @@ public class HeroChatPlugin extends JavaPlugin {
         LocalChannel.setDistance(config.getInt(globals + "default-local-distance", 100));
 
         loadPlayerSettings();
-    }
-
-    public void loadConfigOld() {
-        File file = new File(getDataFolder(), "data.yml");
-        ConfigurationHandler.load(this, file);
     }
 
     public void loadPlayerSettings() {
@@ -324,7 +307,6 @@ public class HeroChatPlugin extends JavaPlugin {
         this.logger = null;
         this.playerListener = null;
         this.usersConfig = null;
-        this.usingPermissions = false;
 
         PluginDescriptionFile desc = getDescription();
         System.out.println(desc.getName() + " version " + desc.getVersion() + " disabled.");
@@ -332,19 +314,18 @@ public class HeroChatPlugin extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        logger = Logger.getLogger("Minecraft");
+        registerEvents();
+        registerCommands();
+        
         usersConfig = new Configuration(new File(getDataFolder(), "users.yml"));
         usersConfig.load();
 
-        registerEvents();
-        registerCommands();
-
-        setupPermissions();
-        pickLoader();
-
-        logger = Logger.getLogger("Minecraft");
+        loadConfig();
+        loadPermissions();
 
         PluginDescriptionFile desc = getDescription();
-        logger.log(Level.INFO, desc.getName() + " version " + desc.getVersion() + " enabled.");
+        log(desc.getName() + " version " + desc.getVersion() + " enabled.");
 
         Plugin iChatTest = this.getServer().getPluginManager().getPlugin("iChat");
 
@@ -353,41 +334,38 @@ public class HeroChatPlugin extends JavaPlugin {
         else
             iChatPlugin = null;
 
-        getServer().getPluginManager().enablePlugin(getServer().getPluginManager().getPlugin("Permissions"));
-
         for (Player p : getServer().getOnlinePlayers())
             playerListener.onPlayerJoin(new PlayerEvent(Type.PLAYER_JOIN, p));
     }
 
-    public void pickLoader() {
-        boolean old = true;
-        File file = new File(getDataFolder(), "data.yml");
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            old = reader.readLine().trim().equals("!<configuration>");
-            reader.close();
-        } catch (Exception e) {
-            old = false;
+    private void loadPermissions() {
+        Plugin p = this.getServer().getPluginManager().getPlugin("GroupManager");
+        if (p != null) {
+            if (!p.isEnabled()) {
+                this.getServer().getPluginManager().enablePlugin(p);
+            }
+            security = ((GroupManager) p).getPermissionHandler();
+            log("GroupManager found.");
+            return;
         }
 
-        if (old) {
-            loadConfigOld();
-            try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(file, false));
-                writer.write("This file can be deleted. See config.yml for configuration options.");
-                writer.close();
-            } catch (IOException e) {
-                e.printStackTrace();
+        p = this.getServer().getPluginManager().getPlugin("Permissions");
+        if (p != null) {
+            if (!p.isEnabled()) {
+                this.getServer().getPluginManager().enablePlugin(p);
             }
-        } else {
-            loadConfig();
+            security = ((Permissions) p).getHandler();
+            log("Permissions found.");
+            return;
         }
-        saveConfig();
+
+        this.getPluginLoader().disablePlugin(this);
+        log("Permissions or GroupManager not found! Disabling HeroChat.");
     }
 
     public void reload() {
         usersConfig.load();
-        pickLoader();
+        loadConfig();
 
         for (Player p : getServer().getOnlinePlayers())
             playerListener.onPlayerJoin(new PlayerEvent(Type.PLAYER_JOIN, p));
@@ -433,11 +411,6 @@ public class HeroChatPlugin extends JavaPlugin {
         savePlayerSettings();
     }
 
-    public void saveConfigOld() {
-        File file = new File(getDataFolder(), "data.yml");
-        ConfigurationHandler.save(this, file);
-    }
-
     public void savePlayerSettings() {
         for (String name : activeChannels.keySet())
             savePlayerSettings(name);
@@ -468,16 +441,6 @@ public class HeroChatPlugin extends JavaPlugin {
 
     public void setDefaultChannel(Channel defaultChannel) {
         this.defaultChannel = defaultChannel;
-    }
-
-    public void setupPermissions() {
-        Plugin test = this.getServer().getPluginManager().getPlugin("Permissions");
-
-        if (test != null)
-            usingPermissions = true;
-        else
-            usingPermissions = false;
-
     }
 
     private void registerCommands() {

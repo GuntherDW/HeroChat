@@ -6,7 +6,6 @@ import org.bukkit.event.player.PlayerChatEvent;
 import com.herocraftonline.dthielke.herochat.Channel;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class FocusCommand extends Command {
 
@@ -30,8 +29,8 @@ public class FocusCommand extends Command {
         Channel c = plugin.getChannel(args[0]);
 
         if (c != null) {
-            if (plugin.isUsingPermissions() && !c.getWhiteList().isEmpty()) {
-                String group = Permissions.Security.getGroup(sender.getName());
+            if (!c.getWhiteList().isEmpty()) {
+                String group = plugin.security.getGroup(sender.getName());
                 if (!c.getWhiteList().contains(group)) {
                     sender.sendMessage("HeroChat: You are not allowed to join this channel");
                     return;
