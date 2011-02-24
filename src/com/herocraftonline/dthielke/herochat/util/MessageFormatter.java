@@ -86,11 +86,11 @@ public class MessageFormatter {
 
     private String applyFormat(Channel channel, String prefix, String suffix, String displayName, String healthBar) {
         healthBar = healthBar.replaceAll("&", "\u00a7");
-
+        prefix = prefix.replaceAll("\\{healthbar\\}", healthBar);
+        suffix = suffix.replaceAll("\\{healthbar\\}", healthBar);
         String leader = format;
-
+        
         leader = leader.replaceAll("\\{default\\}", defaultMessageFormat);
-
         leader = leader.replaceAll("\\{nick\\}", channel.getNick());
         leader = leader.replaceAll("\\{name\\}", channel.getName());
         leader = leader.replaceAll("\\{prefix\\}", prefix);
