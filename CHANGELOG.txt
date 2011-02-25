@@ -1,5 +1,0 @@
-1. Added optional join/leave messages.
-2. Granted channel moderators the ability to delete their own channels.
-3. Moderators can now ban users preemptively, even if they aren't online.
-4. All user settings are now saved across logins.
-5. Removed the /ch auto and /ch default commands as they are now obsolete.

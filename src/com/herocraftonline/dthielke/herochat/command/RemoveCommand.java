@@ -51,10 +51,8 @@ public class RemoveCommand extends Command {
                 plugin.setDefaultChannel(plugin.getChannels().get(0));
 
             for (Player p : c.getPlayers()) {
-                plugin.setActiveChannel(p, plugin.getDefaultChannel());
-
                 p.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Left channel " + c.getColoredName());
-                p.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Set active channel to " + plugin.getDefaultChannel().getColoredName());
+                c.removePlayer(p);
             }
 
         } else {

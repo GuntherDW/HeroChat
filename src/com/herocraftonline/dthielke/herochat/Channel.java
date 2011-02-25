@@ -462,6 +462,15 @@ public class Channel {
             return false;
 
         players.remove(player);
+        if (plugin.getActiveChannel(player).getName().equals(this.name)) {
+            List<Channel> channels = plugin.getJoinedChannels(player);
+            for (Channel c : channels)
+                if (!c.getName().equals(name)) {
+                    plugin.setActiveChannel(player, c);
+                    player.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Set active channel to " + c.getColoredName());
+                    break;
+                }
+        }
 
         if (joinMessages) {
             String msg = player.getDisplayName() + " has left the channel.";
