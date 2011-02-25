@@ -32,21 +32,21 @@ public class FocusCommand extends Command {
             if (!c.getWhiteList().isEmpty()) {
                 String group = plugin.security.getGroup(sender.getName());
                 if (!c.getWhiteList().contains(group)) {
-                    sender.sendMessage("HeroChat: You are not allowed to join this channel");
+                    sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are not allowed to join this channel");
                     return;
                 }
             }
 
             boolean joined = c.addPlayer(sender);
             if (joined) {
-                sender.sendMessage("HeroChat: Joined channel " + c.getColoredName());
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Joined channel " + c.getColoredName());
             }
 
             plugin.setActiveChannel(sender, c);
-            sender.sendMessage("HeroChat: Set active channel to " + c.getColoredName());
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Set active channel to " + c.getColoredName());
             
         } else {
-            sender.sendMessage("HeroChat: Channel not found");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Channel not found");
         }
     }
 

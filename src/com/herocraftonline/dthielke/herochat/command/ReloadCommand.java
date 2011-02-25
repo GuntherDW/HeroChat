@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
+import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.PluginPermission;
 
 public class ReloadCommand extends Command {
@@ -21,13 +22,13 @@ public class ReloadCommand extends Command {
         event.setCancelled(true);
 
         if (!plugin.hasPermission(sender, PluginPermission.ADMIN)) {
-            sender.sendMessage("HeroChat: You must be an admin to reload HeroChat");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You must be an admin to reload HeroChat");
             return;
         }
         
         plugin.reload();
 
-        sender.sendMessage("HeroChat: Plugin reloaded");
+        sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Plugin reloaded");
 
     }
 

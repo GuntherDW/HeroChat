@@ -31,12 +31,12 @@ public class RemoveCommand extends Command {
         if (c != null) {
             
             if (!plugin.hasPermission(sender, PluginPermission.REMOVE) && !c.isModerator(sender)) {
-                sender.sendMessage("HeroChat: You do not have permission to remove this channel");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You do not have permission to remove this channel");
                 return;
             }
 
             if (c.isPermanent() && !plugin.hasPermission(sender, PluginPermission.ADMIN)) {
-                sender.sendMessage("HeroChat: Channel " + c.getColoredName() + ChatColor.WHITE.format() + "is permanent and cannot be removed");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Channel " + c.getColoredName() + ChatColor.ROSE.format() + "is permanent and cannot be removed");
                 return;
             }
 
@@ -45,7 +45,7 @@ public class RemoveCommand extends Command {
             if (c.isSaved())
                 plugin.saveConfig();
 
-            sender.sendMessage("HeroChat: Removed channel " + c.getColoredName());
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Removed channel " + c.getColoredName());
 
             if (c == plugin.getDefaultChannel())
                 plugin.setDefaultChannel(plugin.getChannels().get(0));
@@ -53,12 +53,12 @@ public class RemoveCommand extends Command {
             for (Player p : c.getPlayers()) {
                 plugin.setActiveChannel(p, plugin.getDefaultChannel());
 
-                p.sendMessage("HeroChat: Left channel " + c.getColoredName());
-                p.sendMessage("HeroChat: Set active channel to " + plugin.getDefaultChannel().getColoredName());
+                p.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Left channel " + c.getColoredName());
+                p.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Set active channel to " + plugin.getDefaultChannel().getColoredName());
             }
 
         } else {
-            sender.sendMessage("HeroChat: Channel not found");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Channel not found");
         }
     }
 

@@ -93,6 +93,7 @@ public class HeroChatPlugin extends JavaPlugin {
     private Configuration usersConfig;
 
     public PermissionHandler security;
+    private String pluginTag;
 
     public String censor(String msg) {
         if (iChatPlugin == null)
@@ -271,6 +272,8 @@ public class HeroChatPlugin extends JavaPlugin {
         defaultChannel = getChannel(config.getString(globals + "default-channel", channels.get(0).getName()));
         MessageFormatter.setDefaultMessageFormat(config.getString(globals + "default-message-format", "{name}: "));
         LocalChannel.setDistance(config.getInt(globals + "default-local-distance", 100));
+        pluginTag = config.getString(globals + "plugin-tag", "[HeroChat] ");
+        pluginTag = pluginTag.replace("&", "§");
 
         loadPlayerSettings();
     }
@@ -322,6 +325,7 @@ public class HeroChatPlugin extends JavaPlugin {
         usersConfig.load();
 
         loadConfig();
+        saveConfig();
         loadPermissions();
 
         PluginDescriptionFile desc = getDescription();
@@ -375,6 +379,7 @@ public class HeroChatPlugin extends JavaPlugin {
         Configuration config = this.getConfiguration();
 
         String globals = "globals.";
+        config.setProperty(globals + "plugin-tag", pluginTag);
         config.setProperty(globals + "default-channel", defaultChannel.getName());
         config.setProperty(globals + "default-message-format", MessageFormatter.getDefaultMessageFormat());
         config.setProperty(globals + "default-local-distance", LocalChannel.getDistance());
@@ -417,6 +422,7 @@ public class HeroChatPlugin extends JavaPlugin {
     }
 
     public void savePlayerSettings(String name) {
+        
         usersConfig.setProperty("users." + name + ".active-channel", activeChannels.get(name));
         usersConfig.setProperty("users." + name + ".joined-channels", joinedChannels.get(name));
 
@@ -472,5 +478,9 @@ public class HeroChatPlugin extends JavaPlugin {
         pm.registerEvent(Event.Type.PLAYER_CHAT, playerListener, Event.Priority.Normal, this);
         pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
         pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
+    }
+
+    public String getPluginTag() {
+        return pluginTag;
     }
 }

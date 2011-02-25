@@ -34,24 +34,24 @@ public class KickCommand extends Command {
 
             switch (result) {
             case NO_PERMISSION:
-                sender.sendMessage("HeroChat: You are not a moderator of this channel");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are not a moderator of this channel");
                 break;
             case PLAYER_IS_ADMIN:
-                sender.sendMessage("HeroChat: You cannot kick admins");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You cannot kick admins");
                 break;
             case PLAYER_IS_MODERATOR:
-                sender.sendMessage("HeroChat: You cannot kick moderators");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You cannot kick moderators");
                 break;
             case PLAYER_NOT_FOUND:
-                sender.sendMessage("HeroChat: Player not found");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Player not found");
                 break;
             case SUCCESS:
-                sender.sendMessage("HeroChat: Kicked player " + args[1] + " from " + c.getColoredName());
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Kicked player " + args[1] + " from " + c.getColoredName());
                 plugin.getServer().getPlayer(args[1])
-                        .sendMessage("HeroChat: Kicked from " + c.getColoredName() + ChatColor.WHITE.format() + " by " + sender.getName());
+                        .sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Kicked from " + c.getColoredName() + ChatColor.ROSE.format() + " by " + sender.getName());
             }
         } else {
-            sender.sendMessage("HeroChat: Channel not found");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Channel not found");
         }
 
     }

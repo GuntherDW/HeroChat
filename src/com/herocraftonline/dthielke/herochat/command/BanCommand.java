@@ -24,19 +24,19 @@ public class BanCommand extends Command {
 
         switch (result) {
         case NO_PERMISSION:
-            sender.sendMessage("HeroChat: You are not a moderator of this channel");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are not a moderator of this channel");
             break;
         case PLAYER_IS_ADMIN:
-            sender.sendMessage("HeroChat: You cannot kick admins");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You cannot kick admins");
             break;
         case PLAYER_IS_MODERATOR:
-            sender.sendMessage("HeroChat: You cannot kick moderators");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You cannot kick moderators");
             break;
         case PLAYER_NOT_FOUND:
         case SUCCESS:
-            sender.sendMessage("HeroChat: Banned player " + name + " from " + channel.getColoredName());
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Banned player " + name + " from " + channel.getColoredName());
             plugin.getServer().getPlayer(name)
-                    .sendMessage("HeroChat: Banned from " + channel.getColoredName() + ChatColor.WHITE.format() + " by " + sender.getName());
+                    .sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Banned from " + channel.getColoredName() + ChatColor.ROSE.format() + " by " + sender.getName());
         }
     }
 
@@ -46,7 +46,7 @@ public class BanCommand extends Command {
         if (banList.isEmpty()) {
             banListMsg = "No one is currently banned from " + channel.getColoredName();
         } else {
-            banListMsg = "Currently banned from " + channel.getColoredName() + ChatColor.WHITE.format() + ": ";
+            banListMsg = "Currently banned from " + channel.getColoredName() + ChatColor.ROSE.format() + ": ";
 
             for (String s : banList) {
                 banListMsg += s + ",";
@@ -78,7 +78,7 @@ public class BanCommand extends Command {
                 toggleBan(sender, args[1], c);
 
         } else {
-            sender.sendMessage("HeroChat: Channel not found");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Channel not found");
         }
 
     }
@@ -95,12 +95,12 @@ public class BanCommand extends Command {
 
         switch (result) {
         case NO_PERMISSION:
-            sender.sendMessage("HeroChat: You are not a moderator of this channel");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are not a moderator of this channel");
             break;
         case SUCCESS:
-            sender.sendMessage("HeroChat: Unbanned player " + name + " from " + channel.getColoredName());
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Unbanned player " + name + " from " + channel.getColoredName());
             plugin.getServer().getPlayer(name)
-                    .sendMessage("HeroChat: Unbanned from " + channel.getColoredName() + ChatColor.WHITE.format() + "by " + sender.getName());
+                    .sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Unbanned from " + channel.getColoredName() + ChatColor.ROSE.format() + "by " + sender.getName());
         }
     }
 

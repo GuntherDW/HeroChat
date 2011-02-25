@@ -31,28 +31,28 @@ public class ModCommand extends Command {
 
         if (c != null) {
             if (!c.isModerator(sender) && !plugin.hasPermission(sender, PluginPermission.ADMIN)) {
-                sender.sendMessage("HeroChat: You are not a moderator of this channel");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are not a moderator of this channel");
                 return;
             }
 
             if (c.isModerator(args[1])) {
-                sender.sendMessage("HeroChat: " + args[1] + " is already moderating this channel");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + args[1] + " is already moderating this channel");
                 return;
             }
 
             Player newMod = plugin.getServer().getPlayer(args[1]);
 
             if (newMod == null) {
-                sender.sendMessage("HeroChat: Player not found");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Player not found");
                 return;
             }
 
             c.addModerator(newMod);
-            sender.sendMessage("HeroChat: Granted " + args[1] + " moderation priveleges of " + c.getColoredName());
-            newMod.sendMessage("HeroChat: You are now moderating " + c.getColoredName());
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Granted " + args[1] + " moderation priveleges of " + c.getColoredName());
+            newMod.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are now moderating " + c.getColoredName());
 
         } else {
-            sender.sendMessage("HeroChat: Channel not found");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Channel not found");
         }
     }
 

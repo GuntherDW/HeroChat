@@ -5,6 +5,7 @@ import org.bukkit.event.player.PlayerChatEvent;
 
 import com.herocraftonline.dthielke.herochat.Channel;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
+import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 
 public class QuickMsgCommand extends Command {
 
@@ -31,14 +32,14 @@ public class QuickMsgCommand extends Command {
             String group = plugin.security.getGroup(sender.getName());
             
             if (!c.getWhiteList().contains(group)) {
-                sender.sendMessage("HeroChat: You are not allowed to join this channel");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are not allowed to join this channel");
                 return;
             }
         }
         
         boolean joined = c.addPlayer(sender);
         if (joined)
-            sender.sendMessage("HeroChat: Joined channel " + c.getColoredName());
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Joined channel " + c.getColoredName());
 
         String msg = "";
         for (int i = 1; i < args.length; i++) {

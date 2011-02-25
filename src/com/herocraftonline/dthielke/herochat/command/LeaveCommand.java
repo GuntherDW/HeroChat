@@ -31,19 +31,19 @@ public class LeaveCommand extends Command {
         if (c != null) {
 
             if (c.isForced()) {
-                sender.sendMessage("HeroChat: You cannot leave " + c.getColoredName());
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You cannot leave " + c.getColoredName());
                 return;
             }
 
             boolean success = c.removePlayer(sender);
 
             if (success)
-                sender.sendMessage("HeroChat: Left channel " + c.getColoredName());
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Left channel " + c.getColoredName());
             else
-                sender.sendMessage("HeroChat: You are not in this channel");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are not in this channel");
 
         } else {
-            sender.sendMessage("HeroChat: Channel not found");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Channel not found");
         }
     }
 

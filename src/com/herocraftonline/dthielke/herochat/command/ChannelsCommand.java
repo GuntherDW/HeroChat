@@ -49,7 +49,7 @@ public class ChannelsCommand extends Command {
         if (p > pages)
             p = pages;
 
-        sender.sendMessage(ChatColor.YELLOW.format() + "HeroChat: Channel list <Page " + p + "/" + pages + ">");
+        sender.sendMessage(ChatColor.YELLOW.format() + plugin.getPluginTag() + "Channel list <Page " + p + "/" + pages + ">");
 
         for (int i = 0; i < CHANNELS_PER_PAGE; i++) {
 

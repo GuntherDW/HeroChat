@@ -31,14 +31,14 @@ public class JoinCommand extends Command {
         if (c != null) {
 
             if (c.isBanned(sender)) {
-                sender.sendMessage("HeroChat: You are banned from " + c.getColoredName());
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are banned from " + c.getColoredName());
                 return;
             }
 
             if (!c.getWhiteList().isEmpty()) {
                 String group = plugin.security.getGroup(sender.getName());
                 if (!c.getWhiteList().contains(group)) {
-                    sender.sendMessage("HeroChat: You are not allowed to join this channel");
+                    sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are not allowed to join this channel");
                     return;
                 }
             }
@@ -46,13 +46,13 @@ public class JoinCommand extends Command {
             boolean success = c.addPlayer(sender);
 
             if (success) {
-                sender.sendMessage("HeroChat: Joined channel " + c.getColoredName());
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Joined channel " + c.getColoredName());
             } else {
-                sender.sendMessage("HeroChat: You are already in this channel");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are already in this channel");
             }
 
         } else {
-            sender.sendMessage("HeroChat: Channel not found");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Channel not found");
         }
     }
 

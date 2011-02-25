@@ -46,7 +46,7 @@ public class IgnoreCommand extends Command {
         }
 
         if (args[0].equalsIgnoreCase(sender.getName())) {
-            sender.sendMessage("HeroChat: You can't ignore yourself!");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You can't ignore yourself!");
             return;
         }
 
@@ -60,7 +60,7 @@ public class IgnoreCommand extends Command {
 
     private void toggleIgnore(Player sender, String name, List<String> ignoreList) {
         if (plugin.hasPermission(name, PluginPermission.ADMIN)) {
-            sender.sendMessage("HeroChat: You can't ignore admins");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You can't ignore admins");
             return;
         }
 
@@ -76,13 +76,13 @@ public class IgnoreCommand extends Command {
         if (index != -1) {
             ignoreList.remove(index);
 
-            sender.sendMessage("HeroChat: No longer ignoring " + name);
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "No longer ignoring " + name);
         } else if (plugin.getServer().getPlayer(name) != null) {
             ignoreList.add(name);
 
-            sender.sendMessage("HeroChat: Now ignoring " + name);
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Now ignoring " + name);
         } else {
-            sender.sendMessage("HeroChat: Player not found");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Player not found");
         }
     }
 

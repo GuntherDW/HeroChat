@@ -56,7 +56,7 @@ public class CreateCommand extends Command {
         }
 
         if (!plugin.hasPermission(sender, PluginPermission.CREATE)) {
-            sender.sendMessage("HeroChat: You do not have permission to create channels");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You do not have permission to create channels");
             return;
         }
 
@@ -69,12 +69,12 @@ public class CreateCommand extends Command {
 
         for (String reserved : HeroChatPlugin.RESERVED_NAMES) {
             if (args[0].equalsIgnoreCase(reserved)) {
-                sender.sendMessage("HeroChat: That name is reserved");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "That name is reserved");
                 return;
             }
 
             if (args[1].equalsIgnoreCase(reserved)) {
-                sender.sendMessage("HeroChat: That nick is reserved");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "That nick is reserved");
                 return;
             }
         }
@@ -83,23 +83,23 @@ public class CreateCommand extends Command {
         Channel nickTest = plugin.getChannel(c.getNick());
 
         if (nameTest != null) {
-            sender.sendMessage("HeroChat: That name is taken");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "That name is taken");
             return;
         }
 
         if (nickTest != null) {
-            sender.sendMessage("HeroChat: That nick is taken");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "That nick is taken");
             return;
         }
 
         plugin.getChannels().add(c);
-        sender.sendMessage("HeroChat: Created channel " + c.getColoredName());
+        sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Created channel " + c.getColoredName());
 
         c.addModerator(sender);
-        sender.sendMessage("HeroChat: You are now moderating " + c.getColoredName());
+        sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are now moderating " + c.getColoredName());
 
         c.addPlayer(sender);
-        sender.sendMessage("HeroChat: Joined channel " + c.getColoredName());
+        sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Joined channel " + c.getColoredName());
 
         if (c.isSaved())
             plugin.saveConfig();

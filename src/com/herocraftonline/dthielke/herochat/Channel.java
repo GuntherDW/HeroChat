@@ -494,7 +494,7 @@ public class Channel {
             String group = plugin.security.getGroup(sender.getName());
 
             if (!voiceList.contains(group)) {
-                sender.sendMessage("HeroChat: You cannot speak in this channel");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You cannot speak in this channel");
                 return;
             }
         }

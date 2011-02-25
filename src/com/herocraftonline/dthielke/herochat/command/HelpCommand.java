@@ -52,7 +52,7 @@ public class HelpCommand extends Command {
             help = HELP_TWO;
 
         for (String s : help)
-            sender.sendMessage(ChatColor.LIGHT_GREEN.format() + s);
+            sender.sendMessage(ChatColor.LIGHT_GREEN.format() + s.replace("HeroChat", plugin.getPluginTag()));
     }
 
 }

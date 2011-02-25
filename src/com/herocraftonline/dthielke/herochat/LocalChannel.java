@@ -6,7 +6,6 @@ import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
-import com.nijikokun.bukkit.Permissions.Permissions;
 
 public class LocalChannel extends Channel {
 
@@ -29,10 +28,10 @@ public class LocalChannel extends Channel {
     @Override
     public void sendMessage(Player sender, String msg) {
         if (!voiceList.isEmpty()) {
-            String group = Permissions.Security.getGroup(sender.getName());
+            String group = plugin.security.getGroup(sender.getName());
 
             if (!voiceList.contains(group)) {
-                sender.sendMessage("HeroChat: You cannot speak in this channel");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You cannot speak in this channel");
                 return;
             }
         }
