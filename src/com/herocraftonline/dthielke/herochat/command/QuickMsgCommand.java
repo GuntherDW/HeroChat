@@ -25,8 +25,13 @@ public class QuickMsgCommand extends Command {
 
         if (c == null || !c.isQuickMessagable())
             return;
-
+        
         event.setCancelled(true);
+        
+        if (c.isBanned(sender)) {
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are banned from " + c.getColoredName());
+            return;
+        }
 
         if (!c.getWhiteList().isEmpty()) {
             String group = plugin.security.getGroup(sender.getName());

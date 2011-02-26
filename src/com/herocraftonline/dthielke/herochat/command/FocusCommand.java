@@ -29,6 +29,11 @@ public class FocusCommand extends Command {
         Channel c = plugin.getChannel(args[0]);
 
         if (c != null) {
+            if (c.isBanned(sender)) {
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are banned from " + c.getColoredName());
+                return;
+            }
+            
             if (!c.getWhiteList().isEmpty()) {
                 String group = plugin.security.getGroup(sender.getName());
                 if (!c.getWhiteList().contains(group)) {

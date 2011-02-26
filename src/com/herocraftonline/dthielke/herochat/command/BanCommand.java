@@ -76,11 +76,13 @@ public class BanCommand extends Command {
                 displayBanList(sender, banList, c);
             else
                 toggleBan(sender, args[1], c);
-
+            
+            if (c.isSaved())
+                plugin.saveConfig();
+            
         } else {
             sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Channel not found");
         }
-
     }
 
     private void toggleBan(Player sender, String name, Channel channel) {
