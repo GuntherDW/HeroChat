@@ -80,11 +80,13 @@ public class HeroChatPlayerListener extends PlayerListener {
     public void onPlayerQuit(PlayerEvent event) {
         Player quitter = event.getPlayer();
 
-        for (Channel c : plugin.getChannels())
+        List<Channel> channels = plugin.getJoinedChannels(quitter);
+        for (Channel c : channels)
             c.getPlayers().remove(quitter);
 
         plugin.getIgnoreMap().remove(quitter);
-        plugin.savePlayerSettings();
+        plugin.savePlayerSettings(quitter.getName());
+        //plugin.savePlayerSettings();
     }
 
 }

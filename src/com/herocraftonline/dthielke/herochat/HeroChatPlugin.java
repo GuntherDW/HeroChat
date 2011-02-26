@@ -352,7 +352,7 @@ public class HeroChatPlugin extends JavaPlugin {
             log("GroupManager found.");
             return;
         }
-
+    
         p = this.getServer().getPluginManager().getPlugin("Permissions");
         if (p != null) {
             if (!p.isEnabled()) {
@@ -362,7 +362,7 @@ public class HeroChatPlugin extends JavaPlugin {
             log("Permissions found.");
             return;
         }
-
+    
         this.getPluginLoader().disablePlugin(this);
         log("Permissions or GroupManager not found! Disabling HeroChat.");
     }

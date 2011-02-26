@@ -20,13 +20,22 @@ public class HelpCommand extends Command {
                                               "/ignore <player> " + ChatColor.LIGHT_GRAY.format() + "- toggles ignoring a player" };
 
     private static final String[] HELP_TWO = { ChatColor.YELLOW.format() + "HeroChat Help <Page 2/2>:",
-                                              "/ch create <name> <nick> [color:#] [hidden] [saved]",
-                                              ChatColor.LIGHT_GRAY.format() + "  creates a channel (square brackets mean optional)",
-                                              "/ch remove <channel> " + ChatColor.LIGHT_GRAY.format() + "- deletes a channel",
+                                              "/ch create <name> <nick> [color:#] [-options]",
+                                              "/ch remove <channel>",
                                               "/ch mod <channel> <player> " + ChatColor.LIGHT_GRAY.format() + "- grants mod privileges",
                                               "/ch kick <channel> <player> " + ChatColor.LIGHT_GRAY.format() + "- kicks a player",
                                               "/ch ban <channel> <player> " + ChatColor.LIGHT_GRAY.format() + "- toggles banning a player",
                                               "/ch reload " + ChatColor.LIGHT_GRAY.format() + "- reloads the config file" };
+    private static final String[] HELP_CREATE = { "Usage: /ch create <name> <nick> [color:#] [-options]",
+                                                  "Options (combinable, ie. -hsqf):",
+                                                  "-h   Hidden from /ch channels list",
+                                                  "-j   Show join and leave messages",
+                                                  "-s   Save the channel",
+                                                  "Admin-only options:",
+                                                  "-a   Automatically joined by new users",
+                                                  "-q   Allow quick message shortcut",
+                                                  "-f   Force users to stay in this channel",
+                                                  "-p   Make this channel permanent (only removable via config)" };    
 
     public HelpCommand(HeroChatPlugin plugin) {
         super(plugin);
@@ -48,11 +57,19 @@ public class HelpCommand extends Command {
         String[] help;
         if (args[0].isEmpty() || args[0].equals("1"))
             help = HELP_ONE;
-        else
+        else if (args[0].equals("2"))
             help = HELP_TWO;
-
-        for (String s : help)
-            sender.sendMessage(ChatColor.LIGHT_GREEN.format() + s.replace("HeroChat", plugin.getPluginTag()));
+        else if (args[0].equals("create"))
+            help = HELP_CREATE;
+        else
+            help = HELP_ONE;
+        
+        if (help != HELP_CREATE)
+            for (String s : help)
+                sender.sendMessage(ChatColor.LIGHT_GREEN.format() + s.replace("HeroChat", plugin.getPluginTag()));
+        else
+            for (String s : help)
+                sender.sendMessage(ChatColor.ROSE.format() + s);
     }
 
 }

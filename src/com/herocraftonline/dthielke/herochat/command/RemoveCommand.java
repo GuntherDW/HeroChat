@@ -36,7 +36,7 @@ public class RemoveCommand extends Command {
             }
 
             if (c.isPermanent() && !plugin.hasPermission(sender, PluginPermission.ADMIN)) {
-                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Channel " + c.getColoredName() + ChatColor.ROSE.format() + "is permanent and cannot be removed");
+                sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Channel " + c.getColoredName() + ChatColor.ROSE.format() + " is permanent and cannot be removed");
                 return;
             }
 

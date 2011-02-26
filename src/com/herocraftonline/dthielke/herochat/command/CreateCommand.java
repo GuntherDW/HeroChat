@@ -18,7 +18,7 @@ public class CreateCommand extends Command {
         this.identifiers.add("/ch create");
     }
 
-    private Channel createChannel(String[] args) {
+    private Channel createChannel(String[] args, boolean full) {
         Channel c = new Channel(plugin);
 
         c.setName(args[0]);
@@ -29,15 +29,14 @@ public class CreateCommand extends Command {
 
             if (tmp.startsWith("color:")) {
                 try {
-                    int color = Integer.parseInt(tmp.substring(6));
+                    int color = Integer.parseInt(tmp.substring(6), 16);
                     c.setColor(ChatColor.values()[color]);
                 } catch (NumberFormatException e) {
                     return null;
                 }
-            } else if (tmp.equals("hidden")) {
-                c.setHidden(true);
-            } else if (tmp.equals("saved")) {
-                c.setSaved(true);
+            } else if (tmp.startsWith("-")) {
+                tmp = tmp.substring(1);
+                applyOptions(c, tmp.toCharArray(), full);
             }
         }
 
@@ -46,12 +45,44 @@ public class CreateCommand extends Command {
         return c;
     }
 
+    private void applyOptions(Channel c, char[] args, boolean full) {
+        for (char option : args) {
+            switch (option) {
+            case 'h':
+                c.setHidden(true);
+                break;
+            case 'j':
+                c.setJoinMessages(true);
+                break;
+            case 's':
+                c.setSaved(true);
+                break;
+            case 'a':
+                if (full)
+                    c.setAutomaticallyJoined(true);
+                break;
+            case 'q':
+                if (full)
+                    c.setQuickMessagable(true);
+                break;
+            case 'f':
+                if (full)
+                    c.setForced(true);
+                break;
+            case 'p':
+                if (full)
+                    c.setPermanent(true);
+                break;
+            }
+        }
+    }
+
     @Override
     public void execute(PlayerChatEvent event, Player sender, String[] args) {
         event.setCancelled(true);
 
-        if (args.length < 2 || args.length > 5) {
-            sender.sendMessage(ChatColor.ROSE.format() + "Usage: /ch create <name> <nick> [color:#] [hidden] [saved]");
+        if (args.length < 2 || args.length > 4) {
+            sender.sendMessage(ChatColor.ROSE.format() + "Invalid syntax. Type /ch help create for info.");
             return;
         }
 
@@ -60,10 +91,10 @@ public class CreateCommand extends Command {
             return;
         }
 
-        Channel c = createChannel(args);
+        Channel c = createChannel(args, plugin.hasPermission(sender, PluginPermission.ADMIN));
 
         if (c == null) {
-            sender.sendMessage(ChatColor.ROSE.format() + "Usage: /ch create <name> <nick> [color:#] [hidden] [saved]");
+            sender.sendMessage(ChatColor.ROSE.format() + "Invalid syntax. Type /ch help create for info.");
             return;
         }
 
