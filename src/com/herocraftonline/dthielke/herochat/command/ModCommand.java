@@ -1,27 +1,23 @@
 package com.herocraftonline.dthielke.herochat.command;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
 
 import com.herocraftonline.dthielke.herochat.Channel;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.PluginPermission;
 
-public class ModCommand extends Command {
+public class ModCommand extends HeroChatCommand {
 
     public ModCommand(HeroChatPlugin plugin) {
         super(plugin);
 
         this.name = "mod";
-        this.identifiers.add("/ch mod");
+        this.identifiers.add("ch mod");
     }
 
     @Override
-    public void execute(PlayerChatEvent event, Player sender, String[] args) {
-
-        event.setCancelled(true);
-
+    public void execute(Player sender, String[] args) {
         if (args.length != 2) {
             sender.sendMessage(ChatColor.ROSE.format() + "Usage: /ch mod <channel> <player>");
             return;

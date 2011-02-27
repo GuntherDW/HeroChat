@@ -1,26 +1,22 @@
 package com.herocraftonline.dthielke.herochat.command;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
 
 import com.herocraftonline.dthielke.herochat.Channel;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 
-public class FocusCommand extends Command {
+public class FocusCommand extends HeroChatCommand {
 
     public FocusCommand(HeroChatPlugin plugin) {
         super(plugin);
 
         this.name = "focus";
-        this.identifiers.add("/ch");
+        this.identifiers.add("ch");
     }
 
     @Override
-    public void execute(PlayerChatEvent event, Player sender, String[] args) {
-
-        event.setCancelled(true);
-
+    public void execute(Player sender, String[] args) {
         if (args[0].isEmpty()) {
             sender.sendMessage(ChatColor.ROSE.format() + "Usage: /ch <channel>");
             return;
@@ -35,7 +31,7 @@ public class FocusCommand extends Command {
             }
             
             if (!c.getWhiteList().isEmpty()) {
-                String group = plugin.security.getGroup(sender.getName());
+                String group = plugin.security.getGroup(sender.getWorld().getName(), sender.getName());
                 if (!c.getWhiteList().contains(group)) {
                     sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are not allowed to join this channel");
                     return;

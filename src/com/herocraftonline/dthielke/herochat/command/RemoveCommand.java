@@ -1,26 +1,23 @@
 package com.herocraftonline.dthielke.herochat.command;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
 
 import com.herocraftonline.dthielke.herochat.Channel;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.PluginPermission;
 
-public class RemoveCommand extends Command {
+public class RemoveCommand extends HeroChatCommand {
 
     public RemoveCommand(HeroChatPlugin plugin) {
         super(plugin);
 
         this.name = "remove";
-        this.identifiers.add("/ch remove");
+        this.identifiers.add("ch remove");
     }
 
     @Override
-    public void execute(PlayerChatEvent event, Player sender, String[] args) {
-        event.setCancelled(true);
-
+    public void execute(Player sender, String[] args) {
         if (args.length > 1 || args[0].isEmpty()) {
             sender.sendMessage(ChatColor.ROSE.format() + "Usage: /ch remove <name>");
             return;

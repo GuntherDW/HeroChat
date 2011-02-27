@@ -3,20 +3,19 @@ package com.herocraftonline.dthielke.herochat.command;
 import java.util.List;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
 
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.PluginPermission;
 
-public class IgnoreCommand extends Command {
+public class IgnoreCommand extends HeroChatCommand {
 
     public IgnoreCommand(HeroChatPlugin plugin) {
         super(plugin);
 
         this.name = "ignore";
-        this.identifiers.add("/ch ignore");
-        this.identifiers.add("/ignore");
+        this.identifiers.add("ch ignore");
+        this.identifiers.add("ignore");
     }
 
     private void displayIgnoreList(Player sender, List<String> ignoreList) {
@@ -37,9 +36,7 @@ public class IgnoreCommand extends Command {
     }
 
     @Override
-    public void execute(PlayerChatEvent event, Player sender, String[] args) {
-        event.setCancelled(true);
-
+    public void execute(Player sender, String[] args) {
         if (args.length > 1) {
             sender.sendMessage(ChatColor.ROSE.format() + "Usage: /ignore OR /ignore <player>");
             return;

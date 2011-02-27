@@ -28,7 +28,7 @@ public class LocalChannel extends Channel {
     @Override
     public void sendMessage(Player sender, String msg) {
         if (!voiceList.isEmpty()) {
-            String group = plugin.security.getGroup(sender.getName());
+            String group = plugin.security.getGroup(sender.getWorld().getName(), sender.getName());
 
             if (!voiceList.contains(group)) {
                 sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You cannot speak in this channel");

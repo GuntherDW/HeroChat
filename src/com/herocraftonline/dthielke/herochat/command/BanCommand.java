@@ -3,20 +3,19 @@ package com.herocraftonline.dthielke.herochat.command;
 import java.util.List;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
 
 import com.herocraftonline.dthielke.herochat.Channel;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
 import com.herocraftonline.dthielke.herochat.Channel.BanResult;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 
-public class BanCommand extends Command {
+public class BanCommand extends HeroChatCommand {
 
     public BanCommand(HeroChatPlugin plugin) {
         super(plugin);
 
         this.name = "ban";
-        this.identifiers.add("/ch ban");
+        this.identifiers.add("ch ban");
     }
 
     private void ban(Player sender, String name, Channel channel) {
@@ -58,10 +57,7 @@ public class BanCommand extends Command {
     }
 
     @Override
-    public void execute(PlayerChatEvent event, Player sender, String[] args) {
-
-        event.setCancelled(true);
-
+    public void execute(Player sender, String[] args) {
         if (args.length > 2 || args[0].isEmpty()) {
             sender.sendMessage(ChatColor.ROSE.format() + "Usage: /ch ban <channel> or /ch ban <channel> <player>");
             return;

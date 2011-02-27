@@ -1,27 +1,23 @@
 package com.herocraftonline.dthielke.herochat.command;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
 
 import com.herocraftonline.dthielke.herochat.Channel;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
 import com.herocraftonline.dthielke.herochat.Channel.KickResult;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 
-public class KickCommand extends Command {
+public class KickCommand extends HeroChatCommand {
 
     public KickCommand(HeroChatPlugin plugin) {
         super(plugin);
 
         this.name = "kick";
-        this.identifiers.add("/ch kick");
+        this.identifiers.add("ch kick");
     }
 
     @Override
-    public void execute(PlayerChatEvent event, Player sender, String[] args) {
-
-        event.setCancelled(true);
-
+    public void execute(Player sender, String[] args) {
         if (args.length != 2) {
             sender.sendMessage(ChatColor.ROSE.format() + "Usage: /ch kick <channel> <player>");
             return;

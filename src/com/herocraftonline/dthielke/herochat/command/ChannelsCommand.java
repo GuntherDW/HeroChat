@@ -4,13 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
 
 import com.herocraftonline.dthielke.herochat.Channel;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 
-public class ChannelsCommand extends Command {
+public class ChannelsCommand extends HeroChatCommand {
 
     public static final int CHANNELS_PER_PAGE = 9;
 
@@ -18,13 +17,11 @@ public class ChannelsCommand extends Command {
         super(plugin);
 
         this.name = "channels";
-        this.identifiers.add("/ch channels");
+        this.identifiers.add("ch channels");
     }
 
     @Override
-    public void execute(PlayerChatEvent event, Player sender, String[] args) {
-        event.setCancelled(true);
-
+    public void execute(Player sender, String[] args) {
         if (args.length > 1) {
             sender.sendMessage(ChatColor.ROSE.format() + "Usage: /ch channels [page#]");
             return;
