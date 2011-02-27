@@ -35,7 +35,7 @@ public class MessageFormatter {
     }
 
     public static List<String> wrap(String msg, FontMetrics fontMetrics) {
-        msg = msg.replaceAll(" ", "  ");
+        msg = msg.replace(" ", "  ");
         ArrayList<String> lines = new ArrayList<String>();
 
         while (!msg.isEmpty()) {
@@ -43,7 +43,7 @@ public class MessageFormatter {
 
             for (int i = 0; i < msg.length(); i++) {
                 String tmpLine = msg.substring(0, i + 1).replaceAll("\u00a7[0-9a-f]", "");
-                if (fontMetrics.stringWidth(tmpLine) > CHAT_LINE_LENGTH) {
+                if (fontMetrics.stringWidth(tmpLine) >= CHAT_LINE_LENGTH) {
                     lines.add(msg.substring(0, i));
                     msg = msg.substring(i);
                     flag = true;
@@ -59,7 +59,7 @@ public class MessageFormatter {
 
         ArrayList<String> out = new ArrayList<String>();
         for (String s : lines) {
-            out.add(s.replaceAll("  ", " "));
+            out.add(s.replace("  ", " "));
         }
 
         return out;
