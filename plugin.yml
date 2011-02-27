@@ -1,5 +1,5 @@
 name: HeroChat
-version: 3.19
+version: 3.20
 main: com.herocraftonline.dthielke.herochat.HeroChatPlugin
 description: Provides fully configurable chat channels.
 commands:

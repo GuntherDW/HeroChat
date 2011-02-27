@@ -474,7 +474,7 @@ public class Channel {
 
         if (joinMessages) {
             String msg = player.getDisplayName() + " has left the channel.";
-            List<String> msgLines = joinFormatter.formatMessageWrapped(this, "", "", "", msg, "");
+            List<String> msgLines = joinFormatter.formatMessageWrapped(this, player.getWorld().getName(), player.getName(), player.getDisplayName(), msg, "");
 
             for (Player p : players) {
                 for (String line : msgLines) {

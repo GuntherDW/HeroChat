@@ -47,7 +47,8 @@ public class RemoveCommand extends HeroChatCommand {
             if (c == plugin.getDefaultChannel())
                 plugin.setDefaultChannel(plugin.getChannels().get(0));
 
-            for (Player p : c.getPlayers()) {
+            Player[] players = c.getPlayers().toArray(new Player[0]);
+            for (Player p : players) {
                 p.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Left channel " + c.getColoredName());
                 c.removePlayer(p);
             }
