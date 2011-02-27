@@ -35,7 +35,6 @@ public class MessageFormatter {
     }
 
     public static List<String> wrap(String msg, FontMetrics fontMetrics) {
-
         msg = msg.replaceAll(" ", "  ");
         ArrayList<String> lines = new ArrayList<String>();
 
@@ -130,15 +129,15 @@ public class MessageFormatter {
         String prefix = "";
         String suffix = "";
 
-        prefix = plugin.security.getUserPermissionString(name, "prefix");
-        suffix = plugin.security.getUserPermissionString(name, "suffix");
+        prefix = plugin.security.getUserPermissionString(world, name, "prefix");
+        suffix = plugin.security.getUserPermissionString(world, name, "suffix");
 
-        String group = plugin.security.getGroup(name);
+        String group = plugin.security.getGroup(world, name);
         if (prefix == null || prefix.equals(""))
-            prefix = plugin.security.getGroupPrefix(group);
+            prefix = plugin.security.getGroupPrefix(world, group);
 
         if ( suffix == null || suffix.equals(""))
-            suffix = plugin.security.getGroupSuffix(group);
+            suffix = plugin.security.getGroupSuffix(world, group);
 
         if (prefix == null) {
             prefix = "";

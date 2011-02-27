@@ -10,6 +10,5 @@
 	</classpathentry>
 	<classpathentry kind="lib" path="C:/Users/David/My Dropbox/Programming/Eclipse/Workspace/lib/iChat.jar"/>
 	<classpathentry kind="lib" path="C:/Users/David/My Dropbox/Programming/Eclipse/Workspace/lib/Permissions.jar"/>
-	<classpathentry kind="lib" path="C:/Users/David/My Dropbox/Programming/Eclipse/Workspace/lib/GroupManager.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

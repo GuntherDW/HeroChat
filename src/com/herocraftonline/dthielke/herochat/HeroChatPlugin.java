@@ -7,7 +7,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.anjocaido.groupmanager.GroupManager;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.Event.Type;
@@ -20,7 +21,7 @@ import org.bukkit.util.config.Configuration;
 
 import com.herocraftonline.dthielke.herochat.command.BanCommand;
 import com.herocraftonline.dthielke.herochat.command.ChannelsCommand;
-import com.herocraftonline.dthielke.herochat.command.Command;
+import com.herocraftonline.dthielke.herochat.command.HeroChatCommand;
 import com.herocraftonline.dthielke.herochat.command.CreateCommand;
 import com.herocraftonline.dthielke.herochat.command.FocusCommand;
 import com.herocraftonline.dthielke.herochat.command.HelpCommand;
@@ -79,7 +80,7 @@ public class HeroChatPlugin extends JavaPlugin {
 
     private HeroChatPlayerListener playerListener;
 
-    private List<Command> commands;
+    private List<HeroChatCommand> commands;
     private List<Channel> channels;
 
     private Channel defaultChannel;
@@ -95,6 +96,41 @@ public class HeroChatPlugin extends JavaPlugin {
     public PermissionHandler security;
     private String pluginTag;
 
+    public boolean onCommand(CommandSender sender, Command command, String commandLabel, String[] args) {
+        if (!(sender instanceof Player))
+            return false;
+        
+        Player player = (Player)sender;
+        
+        String cmdString = commandLabel + " ";
+        for (String s : args)
+            cmdString += s + " ";
+        
+        HeroChatCommand bestMatch = null;
+        int validIdentifier = -1;
+
+        for (HeroChatCommand c : commands) {
+            int tmpValid = c.validate(cmdString);
+            if (tmpValid != -1) {
+                if (bestMatch == null) {
+                    bestMatch = c;
+                    validIdentifier = tmpValid;
+                } else if (c.getIdentifiers().get(tmpValid).length() > bestMatch.getIdentifiers().get(validIdentifier).length()) {
+                    bestMatch = c;
+                    validIdentifier = tmpValid;
+                }
+            }
+        }
+        
+        if (bestMatch != null) {
+            int i = bestMatch.getIdentifiers().get(validIdentifier).length();
+            String[] trimmedArgs = cmdString.substring(i).trim().split(" ");
+            bestMatch.execute(player, trimmedArgs);
+        }
+        
+        return true;
+    }
+    
     public String censor(String msg) {
         if (iChatPlugin == null)
             return msg;
@@ -112,7 +148,7 @@ public class HeroChatPlugin extends JavaPlugin {
             for (Channel c : channels) {
                 if (c.isAutomaticallyJoined()) {
                     if (!c.getWhiteList().isEmpty()) {
-                        String group = security.getGroup(name);
+                        String group = security.getGroup(player.getWorld().getName(), name);
 
                         if (!c.getWhiteList().contains(group)) {
                             continue;
@@ -158,7 +194,7 @@ public class HeroChatPlugin extends JavaPlugin {
         return channels;
     }
 
-    public List<Command> getCommands() {
+    public List<HeroChatCommand> getCommands() {
         return commands;
     }
 
@@ -200,7 +236,7 @@ public class HeroChatPlugin extends JavaPlugin {
     }
 
     public boolean hasPermission(Player player, PluginPermission permission) {
-        return security.permission(player, "herochat." + permission.toString().toLowerCase());
+        return security.has(player, "herochat." + permission.toString().toLowerCase());
     }
 
     public boolean hasPermission(String name, PluginPermission permission) {
@@ -343,28 +379,22 @@ public class HeroChatPlugin extends JavaPlugin {
     }
 
     private void loadPermissions() {
-        Plugin p = this.getServer().getPluginManager().getPlugin("GroupManager");
+        Plugin p = this.getServer().getPluginManager().getPlugin("Permissions");
         if (p != null) {
-            if (!p.isEnabled()) {
-                this.getServer().getPluginManager().enablePlugin(p);
+            Permissions permissions = (Permissions)p;
+            if (!permissions.isEnabled()) {
+                this.getServer().getPluginManager().enablePlugin(permissions);
             }
-            security = ((GroupManager) p).getPermissionHandler();
-            log("GroupManager found.");
-            return;
-        }
-    
-        p = this.getServer().getPluginManager().getPlugin("Permissions");
-        if (p != null) {
-            if (!p.isEnabled()) {
-                this.getServer().getPluginManager().enablePlugin(p);
+            if (permissions.getDescription().getVersion().equals("2.4")) {
+                security = permissions.getHandler();
+                security.load();
+                log("Permissions 2.4 found.");
+                return;
             }
-            security = ((Permissions) p).getHandler();
-            log("Permissions found.");
-            return;
         }
     
         this.getPluginLoader().disablePlugin(this);
-        log("Permissions or GroupManager not found! Disabling HeroChat.");
+        log("Permissions 2.4 not found! Disabling HeroChat.");
     }
 
     public void reload() {
@@ -450,7 +480,7 @@ public class HeroChatPlugin extends JavaPlugin {
     }
 
     private void registerCommands() {
-        commands = new ArrayList<Command>();
+        commands = new ArrayList<HeroChatCommand>();
 
         commands.add(new FocusCommand(this));
         commands.add(new JoinCommand(this));
@@ -474,7 +504,6 @@ public class HeroChatPlugin extends JavaPlugin {
         playerListener = new HeroChatPlayerListener(this);
 
         PluginManager pm = getServer().getPluginManager();
-        pm.registerEvent(Event.Type.PLAYER_COMMAND, playerListener, Event.Priority.Normal, this);
         pm.registerEvent(Event.Type.PLAYER_CHAT, playerListener, Event.Priority.Normal, this);
         pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
         pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);

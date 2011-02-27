@@ -1,23 +1,22 @@
 package com.herocraftonline.dthielke.herochat.command;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
 
 import com.herocraftonline.dthielke.herochat.Channel;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 
-public class QuickMsgCommand extends Command {
+public class QuickMsgCommand extends HeroChatCommand {
 
     public QuickMsgCommand(HeroChatPlugin plugin) {
         super(plugin);
 
         this.name = "quickmsg";
-        this.identifiers.add("/");
+        this.identifiers.add("qm");
     }
 
     @Override
-    public void execute(PlayerChatEvent event, Player sender, String[] args) {
+    public void execute(Player sender, String[] args) {
         if (args.length < 2)
             return;
 
@@ -25,16 +24,14 @@ public class QuickMsgCommand extends Command {
 
         if (c == null || !c.isQuickMessagable())
             return;
-        
-        event.setCancelled(true);
-        
+
         if (c.isBanned(sender)) {
             sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are banned from " + c.getColoredName());
             return;
         }
 
         if (!c.getWhiteList().isEmpty()) {
-            String group = plugin.security.getGroup(sender.getName());
+            String group = plugin.security.getGroup(sender.getWorld().getName(), sender.getName());
             
             if (!c.getWhiteList().contains(group)) {
                 sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You are not allowed to join this channel");

@@ -1,7 +1,6 @@
 package com.herocraftonline.dthielke.herochat.command;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
 
 import com.herocraftonline.dthielke.herochat.Channel;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
@@ -9,13 +8,13 @@ import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.PluginPermission;
 import com.herocraftonline.dthielke.herochat.util.MessageFormatter;
 
-public class CreateCommand extends Command {
+public class CreateCommand extends HeroChatCommand {
 
     public CreateCommand(HeroChatPlugin plugin) {
         super(plugin);
 
         this.name = "create";
-        this.identifiers.add("/ch create");
+        this.identifiers.add("ch create");
     }
 
     private Channel createChannel(String[] args, boolean full) {
@@ -78,9 +77,7 @@ public class CreateCommand extends Command {
     }
 
     @Override
-    public void execute(PlayerChatEvent event, Player sender, String[] args) {
-        event.setCancelled(true);
-
+    public void execute(Player sender, String[] args) {
         if (args.length < 2 || args.length > 4) {
             sender.sendMessage(ChatColor.ROSE.format() + "Invalid syntax. Type /ch help create for info.");
             return;

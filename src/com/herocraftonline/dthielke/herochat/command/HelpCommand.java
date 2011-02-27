@@ -1,12 +1,11 @@
 package com.herocraftonline.dthielke.herochat.command;
 
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerChatEvent;
 
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
 import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 
-public class HelpCommand extends Command {
+public class HelpCommand extends HeroChatCommand {
 
     private static final String[] HELP_ONE = { ChatColor.YELLOW.format() + "HeroChat Help <Page 1/2>:",
                                               "/ch help [page#] " + ChatColor.LIGHT_GRAY.format() + "- displays this menu",
@@ -15,7 +14,7 @@ public class HelpCommand extends Command {
                                               "/ch channels " + ChatColor.LIGHT_GRAY.format() + "- lists publicly available channels",
                                               "/join <channel> " + ChatColor.LIGHT_GRAY.format() + "- joins a channel",
                                               "/leave <channel> " + ChatColor.LIGHT_GRAY.format() + "- leaves a channel",
-                                              "/<channel> <msg> " + ChatColor.LIGHT_GRAY.format() + "- sends a message to a quick message",
+                                              "/qm <channel> <msg> " + ChatColor.LIGHT_GRAY.format() + "- sends a quick message to a channel",
                                               "/ignore " + ChatColor.LIGHT_GRAY.format() + "- displays your ignore list",
                                               "/ignore <player> " + ChatColor.LIGHT_GRAY.format() + "- toggles ignoring a player" };
 
@@ -41,14 +40,11 @@ public class HelpCommand extends Command {
         super(plugin);
 
         this.name = "help";
-        this.identifiers.add("/ch help");
+        this.identifiers.add("ch help");
     }
 
     @Override
-    public void execute(PlayerChatEvent event, Player sender, String[] args) {
-
-        event.setCancelled(true);
-
+    public void execute(Player sender, String[] args) {
         if (args.length > 1) {
             sender.sendMessage(ChatColor.ROSE.format() + "Usage: /ch help [page#]");
             return;

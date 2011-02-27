@@ -133,7 +133,7 @@ public class Channel {
 
         if (joinMessages) {
             String msg = player.getDisplayName() + " has joined the channel.";
-            List<String> msgLines = joinFormatter.formatMessageWrapped(this, "", "", "", msg, "");
+            List<String> msgLines = joinFormatter.formatMessageWrapped(this, player.getWorld().getName(), player.getName(), player.getDisplayName(), msg, "");
 
             for (Player p : players) {
                 if (p.equals(player))
@@ -500,7 +500,7 @@ public class Channel {
      */
     public void sendMessage(Player sender, String msg) {
         if (!voiceList.isEmpty()) {
-            String group = plugin.security.getGroup(sender.getName());
+            String group = plugin.security.getGroup(sender.getWorld().getName(), sender.getName());
 
             if (!voiceList.contains(group)) {
                 sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You cannot speak in this channel");
