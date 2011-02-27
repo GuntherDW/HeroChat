@@ -17,7 +17,7 @@ import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
 public class MessageFormatter {
 
     public static final String FONT_NAME = "minecraft.ttf";
-    public static final int CHAT_LINE_LENGTH = 940;
+    public static final int CHAT_LINE_LENGTH = 920;
 
     protected static String defaultMessageFormat = "";
     protected HeroChatPlugin plugin;
