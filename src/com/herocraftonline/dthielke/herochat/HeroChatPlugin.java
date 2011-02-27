@@ -393,8 +393,8 @@ public class HeroChatPlugin extends JavaPlugin {
             }
         }
     
-        this.getPluginLoader().disablePlugin(this);
         log("Permissions 2.4 not found! Disabling HeroChat.");
+        this.getPluginLoader().disablePlugin(this);
     }
 
     public void reload() {
