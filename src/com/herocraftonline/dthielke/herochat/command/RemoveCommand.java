@@ -37,13 +37,6 @@ public class RemoveCommand extends HeroChatCommand {
                 return;
             }
 
-            plugin.getChannels().remove(c);
-
-            if (c.isSaved())
-                plugin.saveConfig();
-
-            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Removed channel " + c.getColoredName());
-
             if (c == plugin.getDefaultChannel())
                 plugin.setDefaultChannel(plugin.getChannels().get(0));
 
@@ -52,6 +45,12 @@ public class RemoveCommand extends HeroChatCommand {
                 p.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Left channel " + c.getColoredName());
                 c.removePlayer(p);
             }
+            
+            plugin.getChannels().remove(c);
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Removed channel " + c.getColoredName());
+            
+            if (c.isSaved())
+                plugin.saveConfig();
 
         } else {
             sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "Channel not found");

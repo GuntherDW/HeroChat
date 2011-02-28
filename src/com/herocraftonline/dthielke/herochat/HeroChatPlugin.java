@@ -269,7 +269,8 @@ public class HeroChatPlugin extends JavaPlugin {
         config.load();
 
         channels = new ArrayList<Channel>();
-        for (String s : config.getKeys("channels")) {
+        String[] list = config.getKeys("channels").toArray(new String[0]);
+        for (String s : list) {
             String root = "channels." + s + ".";
             Channel c;
             if (config.getBoolean(root + "options.local", false))
@@ -318,7 +319,8 @@ public class HeroChatPlugin extends JavaPlugin {
         if (usersConfig.getNode("users") == null)
             return;
 
-        for (String name : usersConfig.getKeys("users"))
+        String[] list = usersConfig.getKeys("users").toArray(new String[0]);
+        for (String name : list)
             loadPlayerSettings(name);
     }
 
