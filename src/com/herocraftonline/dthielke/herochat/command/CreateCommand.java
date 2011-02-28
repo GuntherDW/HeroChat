@@ -3,14 +3,14 @@ package com.herocraftonline.dthielke.herochat.command;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dthielke.herochat.Channel;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.PluginPermission;
+import com.herocraftonline.dthielke.herochat.HeroChat;
+import com.herocraftonline.dthielke.herochat.HeroChat.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChat.PluginPermission;
 import com.herocraftonline.dthielke.herochat.util.MessageFormatter;
 
 public class CreateCommand extends HeroChatCommand {
 
-    public CreateCommand(HeroChatPlugin plugin) {
+    public CreateCommand(HeroChat plugin) {
         super(plugin);
 
         this.name = "create";
@@ -95,7 +95,7 @@ public class CreateCommand extends HeroChatCommand {
             return;
         }
 
-        for (String reserved : HeroChatPlugin.RESERVED_NAMES) {
+        for (String reserved : HeroChat.RESERVED_NAMES) {
             if (args[0].equalsIgnoreCase(reserved)) {
                 sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "That name is reserved");
                 return;

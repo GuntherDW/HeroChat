@@ -5,13 +5,13 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dthielke.herochat.Channel;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.PluginPermission;
+import com.herocraftonline.dthielke.herochat.HeroChat;
+import com.herocraftonline.dthielke.herochat.HeroChat.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChat.PluginPermission;
 
 public class ListCommand extends HeroChatCommand {
 
-    public ListCommand(HeroChatPlugin plugin) {
+    public ListCommand(HeroChat plugin) {
         super(plugin);
 
         this.name = "list";

@@ -4,13 +4,13 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.PluginPermission;
+import com.herocraftonline.dthielke.herochat.HeroChat;
+import com.herocraftonline.dthielke.herochat.HeroChat.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChat.PluginPermission;
 
 public class IgnoreCommand extends HeroChatCommand {
 
-    public IgnoreCommand(HeroChatPlugin plugin) {
+    public IgnoreCommand(HeroChat plugin) {
         super(plugin);
 
         this.name = "ignore";

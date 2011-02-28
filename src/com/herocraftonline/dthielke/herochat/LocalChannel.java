@@ -5,7 +5,7 @@ import java.util.List;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChat.ChatColor;
 
 public class LocalChannel extends Channel {
 
@@ -21,7 +21,7 @@ public class LocalChannel extends Channel {
         LocalChannel.distance = distance;
     }
 
-    public LocalChannel(HeroChatPlugin plugin) {
+    public LocalChannel(HeroChat plugin) {
         super(plugin);
     }
 

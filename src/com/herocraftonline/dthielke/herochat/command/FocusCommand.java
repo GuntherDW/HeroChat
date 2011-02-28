@@ -3,12 +3,12 @@ package com.herocraftonline.dthielke.herochat.command;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dthielke.herochat.Channel;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChat;
+import com.herocraftonline.dthielke.herochat.HeroChat.ChatColor;
 
 public class FocusCommand extends HeroChatCommand {
 
-    public FocusCommand(HeroChatPlugin plugin) {
+    public FocusCommand(HeroChat plugin) {
         super(plugin);
 
         this.name = "focus";

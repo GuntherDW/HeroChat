@@ -11,8 +11,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.herocraftonline.dthielke.herochat.Channel;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChat;
+import com.herocraftonline.dthielke.herochat.HeroChat.ChatColor;
 
 public class MessageFormatter {
 
@@ -20,7 +20,7 @@ public class MessageFormatter {
     public static final int CHAT_LINE_LENGTH = 920;
 
     protected static String defaultMessageFormat = "";
-    protected HeroChatPlugin plugin;
+    protected HeroChat plugin;
 
     public static String colorToString(ChatColor color) {
         return "\u00a7" + Integer.toHexString(color.ordinal());
@@ -69,14 +69,14 @@ public class MessageFormatter {
 
     private String format;
 
-    public MessageFormatter(HeroChatPlugin plugin) {
+    public MessageFormatter(HeroChat plugin) {
         createFontMetrics();
 
         this.plugin = plugin;
         this.format = "{default}";
     }
 
-    public MessageFormatter(HeroChatPlugin plugin, String format) {
+    public MessageFormatter(HeroChat plugin, String format) {
         createFontMetrics();
 
         this.plugin = plugin;
@@ -110,7 +110,7 @@ public class MessageFormatter {
 
     private void createFontMetrics() {
 
-        Graphics dummyGraphics = new BufferedImage(2, 2, BufferedImage.TYPE_BYTE_BINARY).createGraphics();
+        Graphics dummyGraphics = new BufferedImage(2, 2, BufferedImage.TYPE_4BYTE_ABGR_PRE).createGraphics();
 
         try {
             InputStream is = MessageFormatter.class.getResourceAsStream(FONT_NAME);

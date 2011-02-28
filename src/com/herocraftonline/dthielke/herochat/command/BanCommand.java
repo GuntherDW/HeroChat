@@ -5,13 +5,13 @@ import java.util.List;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dthielke.herochat.Channel;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
+import com.herocraftonline.dthielke.herochat.HeroChat;
 import com.herocraftonline.dthielke.herochat.Channel.BanResult;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChat.ChatColor;
 
 public class BanCommand extends HeroChatCommand {
 
-    public BanCommand(HeroChatPlugin plugin) {
+    public BanCommand(HeroChat plugin) {
         super(plugin);
 
         this.name = "ban";

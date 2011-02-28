@@ -3,12 +3,12 @@ package com.herocraftonline.dthielke.herochat.command;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dthielke.herochat.Channel;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChat;
+import com.herocraftonline.dthielke.herochat.HeroChat.ChatColor;
 
 public class QuickMsgCommand extends HeroChatCommand {
 
-    public QuickMsgCommand(HeroChatPlugin plugin) {
+    public QuickMsgCommand(HeroChat plugin) {
         super(plugin);
 
         this.name = "quickmsg";

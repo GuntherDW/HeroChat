@@ -2,8 +2,8 @@ package com.herocraftonline.dthielke.herochat.command;
 
 import org.bukkit.entity.Player;
 
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChat;
+import com.herocraftonline.dthielke.herochat.HeroChat.ChatColor;
 
 public class HelpCommand extends HeroChatCommand {
 
@@ -36,7 +36,7 @@ public class HelpCommand extends HeroChatCommand {
                                                   "-f   Force users to stay in this channel",
                                                   "-p   Make this channel permanent (only removable via config)" };    
 
-    public HelpCommand(HeroChatPlugin plugin) {
+    public HelpCommand(HeroChat plugin) {
         super(plugin);
 
         this.name = "help";

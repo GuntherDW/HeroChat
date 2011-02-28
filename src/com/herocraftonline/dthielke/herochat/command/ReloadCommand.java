@@ -2,13 +2,13 @@ package com.herocraftonline.dthielke.herochat.command;
 
 import org.bukkit.entity.Player;
 
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.PluginPermission;
+import com.herocraftonline.dthielke.herochat.HeroChat;
+import com.herocraftonline.dthielke.herochat.HeroChat.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChat.PluginPermission;
 
 public class ReloadCommand extends HeroChatCommand {
 
-    public ReloadCommand(HeroChatPlugin plugin) {
+    public ReloadCommand(HeroChat plugin) {
         super(plugin);
 
         this.name = "reload";

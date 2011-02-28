@@ -3,13 +3,13 @@ package com.herocraftonline.dthielke.herochat.command;
 import org.bukkit.entity.Player;
 
 import com.herocraftonline.dthielke.herochat.Channel;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin;
+import com.herocraftonline.dthielke.herochat.HeroChat;
 import com.herocraftonline.dthielke.herochat.Channel.KickResult;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChat.ChatColor;
 
 public class KickCommand extends HeroChatCommand {
 
-    public KickCommand(HeroChatPlugin plugin) {
+    public KickCommand(HeroChat plugin) {
         super(plugin);
 
         this.name = "kick";

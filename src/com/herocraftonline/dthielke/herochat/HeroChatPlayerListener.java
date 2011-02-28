@@ -9,9 +9,9 @@ import org.bukkit.event.player.PlayerListener;
 
 public class HeroChatPlayerListener extends PlayerListener {
 
-    private HeroChatPlugin plugin;
+    private HeroChat plugin;
 
-    public HeroChatPlayerListener(HeroChatPlugin plugin) {
+    public HeroChatPlayerListener(HeroChat plugin) {
         this.plugin = plugin;
     }
 

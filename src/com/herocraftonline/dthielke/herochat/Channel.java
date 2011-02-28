@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.ChatColor;
-import com.herocraftonline.dthielke.herochat.HeroChatPlugin.PluginPermission;
+import com.herocraftonline.dthielke.herochat.HeroChat.ChatColor;
+import com.herocraftonline.dthielke.herochat.HeroChat.PluginPermission;
 import com.herocraftonline.dthielke.herochat.util.MessageFormatter;
 
 /**
@@ -39,7 +39,7 @@ public class Channel {
     protected MessageFormatter logFormatter;
     protected MessageFormatter joinFormatter;
 
-    protected HeroChatPlugin plugin;
+    protected HeroChat plugin;
     protected MessageFormatter formatter;
 
     protected String name;
@@ -68,7 +68,7 @@ public class Channel {
      * @param plugin
      *            the HeroChatPlugin that will handle this channel
      */
-    public Channel(HeroChatPlugin plugin) {
+    public Channel(HeroChat plugin) {
         this.plugin = plugin;
         
         logFormatter = new MessageFormatter(plugin, LOG_FORMAT);
