@@ -42,14 +42,12 @@ public class LocalChannel extends Channel {
             if (player != null) {
                 if (!plugin.getChannelManager().isIgnoring(name, origin.getName())) {
                     Location pLoc = player.getLocation();
-                    plugin.log("Sender Loc: (" + sLoc.getBlockX() + "," + sLoc.getBlockZ() + ")   Receiver Loc: (" + pLoc.getBlockX() + "," + pLoc.getBlockZ() + ")");
 
                     int dx = sLoc.getBlockX() - pLoc.getBlockX();
                     int dz = sLoc.getBlockZ() - pLoc.getBlockZ();
                     dx = dx * dx;
                     dz = dz * dz;
                     int d = (int) Math.sqrt(dx + dz);
-                    plugin.log("Distance: " + d + "   Threshold: " + distance);
 
                     if (d <= distance) {
                         list.add(player);

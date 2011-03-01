@@ -41,8 +41,6 @@ public class CommandManager {
             match.execute(sender, trimmedArgs);
             return true;
         }
-        
-        System.out.println("CMD: " + identifier);
 
         return false;
     }
