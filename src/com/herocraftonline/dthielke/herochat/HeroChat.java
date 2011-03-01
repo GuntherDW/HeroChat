@@ -145,7 +145,7 @@ public class HeroChat extends JavaPlugin {
                 PermissionHandler security = permissions.getHandler();
                 security.load();
                 PermissionHelper ph = new PermissionHelper(security);
-                log("Permissions 2.4 found.");
+                log("Permissions " + verStr + " found.");
                 return ph;
             }
         }
