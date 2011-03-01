@@ -1,4 +1,4 @@
-package com.herocraftonline.dthielke.herochat.experimental;
+package com.herocraftonline.dthielke.herochat.util;
 
 import org.bukkit.entity.Player;
 
@@ -29,7 +29,7 @@ public class PermissionHelper {
                 prefix = "";
             }
         }
-        return prefix;
+        return prefix.replaceAll("&", "§");
     }
 
     public String getSuffix(Player p) {
@@ -38,12 +38,12 @@ public class PermissionHelper {
         String suffix = security.getUserPermissionString(world, name, "suffix");
         if (suffix == null || suffix.isEmpty()) {
             String group = security.getGroup(world, name);
-            suffix = security.getGroupPrefix(world, group);
+            suffix = security.getGroupSuffix(world, group);
             if (suffix == null) {
                 suffix = "";
             }
         }
-        return suffix;
+        return suffix.replaceAll("&", "§");
     }
     
     public boolean isAdmin(Player p) {
