@@ -7,7 +7,7 @@ import com.herocraftonline.dthielke.herochat.HeroChat.ChatColor;
 
 public class HelpCommand extends HeroChatCommand {
 
-    private static final String[] HELP_ONE = { ChatColor.YELLOW.format() + "HeroChat Help <Page 1/2>:",
+    private static final String[] HELP_ONE = { ChatColor.YELLOW.format() + "HeroChatPlugin Help <Page 1/2>:",
                                               "/ch help [page#] " + ChatColor.LIGHT_GRAY.format() + "- displays this menu",
                                               "/ch <channel> " + ChatColor.LIGHT_GRAY.format() + "- sets your active channel",
                                               "/ch list " + ChatColor.LIGHT_GRAY.format() + "- lists players in your active channel",
@@ -18,7 +18,7 @@ public class HelpCommand extends HeroChatCommand {
                                               "/ignore " + ChatColor.LIGHT_GRAY.format() + "- displays your ignore list",
                                               "/ignore <player> " + ChatColor.LIGHT_GRAY.format() + "- toggles ignoring a player" };
 
-    private static final String[] HELP_TWO = { ChatColor.YELLOW.format() + "HeroChat Help <Page 2/2>:",
+    private static final String[] HELP_TWO = { ChatColor.YELLOW.format() + "HeroChatPlugin Help <Page 2/2>:",
                                               "/ch create <name> <nick> [color:#] [-options]",
                                               "/ch remove <channel>",
                                               "/ch mod <channel> <player> " + ChatColor.LIGHT_GRAY.format() + "- grants mod privileges",
@@ -62,7 +62,7 @@ public class HelpCommand extends HeroChatCommand {
         
         if (help != HELP_CREATE)
             for (String s : help)
-                sender.sendMessage(ChatColor.LIGHT_GREEN.format() + s.replace("HeroChat", plugin.getPluginTag()));
+                sender.sendMessage(ChatColor.LIGHT_GREEN.format() + s.replace("HeroChatPlugin", plugin.getPluginTag()));
         else
             for (String s : help)
                 sender.sendMessage(ChatColor.ROSE.format() + s);

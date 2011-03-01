@@ -66,7 +66,7 @@ public class Channel {
      * Sole constructor specifying the parent plugin.
      * 
      * @param plugin
-     *            the HeroChatPlugin that will handle this channel
+     *            the HeroChatPluginPlugin that will handle this channel
      */
     public Channel(HeroChat plugin) {
         this.plugin = plugin;

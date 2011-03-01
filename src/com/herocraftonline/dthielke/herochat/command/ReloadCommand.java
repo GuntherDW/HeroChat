@@ -18,7 +18,7 @@ public class ReloadCommand extends HeroChatCommand {
     @Override
     public void execute(Player sender, String[] args) {
         if (!plugin.hasPermission(sender, PluginPermission.ADMIN)) {
-            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You must be an admin to reload HeroChat");
+            sender.sendMessage(ChatColor.ROSE.format() + plugin.getPluginTag() + "You must be an admin to reload HeroChatPlugin");
             return;
         }
         
