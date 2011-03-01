@@ -19,37 +19,47 @@ public class PermissionHelper {
     }
 
     public String getPrefix(Player p) {
-        String world = p.getWorld().getName();
-        String name = p.getName();
-        String prefix = security.getUserPermissionString(world, name, "prefix");
-        if (prefix == null || prefix.isEmpty()) {
-            String group = security.getGroup(world, name);
-            prefix = security.getGroupPrefix(world, group);
-            if (prefix == null) {
-                prefix = "";
+        try {
+            String world = p.getWorld().getName();
+            String name = p.getName();
+            String prefix = security.getUserPermissionString(world, name, "prefix");
+            if (prefix == null || prefix.isEmpty()) {
+                String group = security.getGroup(world, name);
+                prefix = security.getGroupPrefix(world, group);
+                if (prefix == null) {
+                    prefix = "";
+                }
             }
+            return prefix.replaceAll("&", "§");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "";
         }
-        return prefix.replaceAll("&", "§");
     }
 
     public String getSuffix(Player p) {
-        String world = p.getWorld().getName();
-        String name = p.getName();
-        String suffix = security.getUserPermissionString(world, name, "suffix");
-        if (suffix == null || suffix.isEmpty()) {
-            String group = security.getGroup(world, name);
-            suffix = security.getGroupSuffix(world, group);
-            if (suffix == null) {
-                suffix = "";
+        try {
+            String world = p.getWorld().getName();
+            String name = p.getName();
+            String suffix = security.getUserPermissionString(world, name, "suffix");
+            if (suffix == null || suffix.isEmpty()) {
+                String group = security.getGroup(world, name);
+                suffix = security.getGroupSuffix(world, group);
+                if (suffix == null) {
+                    suffix = "";
+                }
             }
+            return suffix.replaceAll("&", "§");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return "";
         }
-        return suffix.replaceAll("&", "§");
     }
-    
+
     public boolean isAdmin(Player p) {
         return security.has(p, "herochat.admin");
     }
-    
+
     public boolean canCreate(Player p) {
         boolean admin = security.has(p, "herochat.admin");
         boolean create = security.has(p, "herochat.create");
