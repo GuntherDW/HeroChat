@@ -1,59 +1,55 @@
 package com.herocraftonline.dthielke.herochat;
 
-import java.util.List;
-
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerChatEvent;
 import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerListener;
 
+import com.herocraftonline.dthielke.herochat.channels.Channel;
+import com.herocraftonline.dthielke.herochat.channels.ChannelManager;
+
 public class HeroChatPlayerListener extends PlayerListener {
 
-    private HeroChatPlugin plugin;
+    private HeroChat plugin;
 
-    public HeroChatPlayerListener(HeroChatPlugin plugin) {
+    public HeroChatPlayerListener(HeroChat plugin) {
         this.plugin = plugin;
     }
 
     public void onPlayerChat(PlayerChatEvent event) {
         if (event.isCancelled())
             return;
-        
+
         Player sender = event.getPlayer();
+        String name = sender.getName();
+        ChannelManager cm = plugin.getChannelManager();
+        Channel c = cm.getActiveChannel(name);
 
-        Channel c = plugin.getActiveChannel(sender);
-
-        if (c == null) {
-            c = plugin.getDefaultChannel();
-            c.addPlayer(sender);
+        if (c != null) {
+            String group = plugin.getPermissions().getGroup(sender);
+            if (c.getVoicelist().contains(group) || c.getVoicelist().isEmpty()) {
+                if (!c.getPlayers().contains(name)) {
+                    c.addPlayer(name);
+                }
+                c.sendMessage(sender.getDisplayName(), event.getMessage());
+            } else {
+                sender.sendMessage(plugin.getTag() + "You cannot speak in this channel");
+            }
         }
-
-        c.sendMessage(sender, event.getMessage());
-
         event.setCancelled(true);
     }
 
-    public void onPlayerJoin(PlayerEvent event) {        
+    public void onPlayerJoin(PlayerEvent event) {
         Player joiner = event.getPlayer();
-
-        plugin.checkNewPlayerSettings(joiner);
-
-        for (Channel c : plugin.getJoinedChannels(joiner))
-            c.addPlayer(joiner);
-
-        plugin.createIgnoreList(joiner);
+        String name = joiner.getName();
+        plugin.getConfigManager().loadPlayer(name);
     }
 
     public void onPlayerQuit(PlayerEvent event) {
         Player quitter = event.getPlayer();
-
-        List<Channel> channels = plugin.getJoinedChannels(quitter);
-        for (Channel c : channels)
-            c.getPlayers().remove(quitter);
-
-        plugin.getIgnoreMap().remove(quitter);
-        plugin.savePlayerSettings(quitter.getName());
-        //plugin.savePlayerSettings();
+        String name = quitter.getName();
+        plugin.getConfigManager().savePlayer(name);
+        plugin.getChannelManager().removeFromAll(name);
     }
 
 }
