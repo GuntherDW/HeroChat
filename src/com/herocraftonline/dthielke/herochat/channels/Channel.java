@@ -35,7 +35,9 @@ public class Channel {
 
     public Channel(HeroChat plugin) {
         this.plugin = plugin;
-
+        this.msgFormat = "{default}";
+        this.color = ChatColor.WHITE;
+        
         players = new ArrayList<String>();
         moderators = new ArrayList<String>();
         blacklist = new ArrayList<String>();
@@ -61,16 +63,12 @@ public class Channel {
     }
 
     public void addPlayer(String name) {
-        plugin.log(players.toString());
         if (!players.contains(name) && !blacklist.contains(name)) {
             players.add(name);
-            plugin.log("Player added!");
             if (verbose) {
                 Player p = plugin.getServer().getPlayer(name);
-                plugin.log("Verbose!");
                 if (p != null) {
                     String msg = p.getDisplayName() + " has joined the channel";
-                    plugin.log(msg);
                     List<String> msgLines = Messaging.formatWrapped(plugin, this, joinFormat, "", msg);
 
                     for (String s : players) {
@@ -82,23 +80,17 @@ public class Channel {
                         }
                     }
                 }
-            } else {
-                plugin.log("Not verbose!");
             }
         }
     }
 
     public void removePlayer(String name) {
-        plugin.log(players.toString());
         if (players.contains(name)) {
             players.remove(name);
-            plugin.log("Player removed!");
             if (verbose) {
                 Player p = plugin.getServer().getPlayer(name);
-                plugin.log("Verbose!");
                 if (p != null) {
                     String msg = p.getDisplayName() + " has left the channel";
-                    plugin.log(msg);
                     List<String> msgLines = Messaging.formatWrapped(plugin, this, joinFormat, "", msg);
 
                     for (String s : players) {
@@ -110,8 +102,6 @@ public class Channel {
                         }
                     }
                 }
-            } else {
-                plugin.log("Not verbose!");
             }
         }
     }
