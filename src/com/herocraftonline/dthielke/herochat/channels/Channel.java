@@ -56,18 +56,66 @@ public class Channel {
                 }
             }
         }
+        String logMsg = Messaging.format(plugin, this, logFormat, name, msg);
+        plugin.log(logMsg);
     }
 
     public void addPlayer(String name) {
-        if (!players.contains(name)) {
+        plugin.log(players.toString());
+        if (!players.contains(name) && !blacklist.contains(name)) {
             players.add(name);
+            plugin.log("Player added!");
+            if (verbose) {
+                Player p = plugin.getServer().getPlayer(name);
+                plugin.log("Verbose!");
+                if (p != null) {
+                    String msg = p.getDisplayName() + " has joined the channel";
+                    plugin.log(msg);
+                    List<String> msgLines = Messaging.formatWrapped(plugin, this, joinFormat, "", msg);
+
+                    for (String s : players) {
+                        Player other = plugin.getServer().getPlayer(s);
+                        if (!p.equals(other)) {
+                            for (String line : msgLines) {
+                                other.sendMessage(line);
+                            }
+                        }
+                    }
+                }
+            } else {
+                plugin.log("Not verbose!");
+            }
         }
     }
-    
+
     public void removePlayer(String name) {
-        players.remove(name);
+        plugin.log(players.toString());
+        if (players.contains(name)) {
+            players.remove(name);
+            plugin.log("Player removed!");
+            if (verbose) {
+                Player p = plugin.getServer().getPlayer(name);
+                plugin.log("Verbose!");
+                if (p != null) {
+                    String msg = p.getDisplayName() + " has left the channel";
+                    plugin.log(msg);
+                    List<String> msgLines = Messaging.formatWrapped(plugin, this, joinFormat, "", msg);
+
+                    for (String s : players) {
+                        Player other = plugin.getServer().getPlayer(s);
+                        if (!p.equals(other)) {
+                            for (String line : msgLines) {
+                                other.sendMessage(line);
+                            }
+                        }
+                    }
+                }
+            } else {
+                plugin.log("Not verbose!");
+            }
+        }
     }
-    
+
     public String getCName() {
         return color.str + name;
     }

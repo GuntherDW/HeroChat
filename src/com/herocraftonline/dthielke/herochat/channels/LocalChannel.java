@@ -32,6 +32,8 @@ public class LocalChannel extends Channel {
                 sender.sendMessage("§8No one hears you.");
             }
         }
+        String logMsg = Messaging.format(plugin, this, logFormat, name, msg);
+        plugin.log(logMsg);
     }
 
     private List<Player> getListeners(Player origin) {
