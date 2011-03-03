@@ -6,6 +6,7 @@ import com.nijiko.permissions.PermissionHandler;
 
 public class PermissionHelper {
 
+    public static final int[] MIN_VERSION = { 2, 5, 1 };
     private PermissionHandler security;
 
     public PermissionHelper(PermissionHandler security) {

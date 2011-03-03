@@ -19,14 +19,15 @@ import com.herocraftonline.dthielke.herochat.channels.Channel;
 public class Messaging {
     private static final String FONT_NAME = "minecraft.ttf";
     private static final int CHAT_LINE_LENGTH = 920;
+    private static final String[] HEALTH_COLORS = { "§0", "§4", "§6", "§e" , "§2"};
     private static FontMetrics fontMetrics;
 
-    public static List<String> formatWrapped(HeroChat plugin, Channel channel, String format, String name, String msg) {
+    public static List<String> formatWrapped(HeroChat plugin, Channel channel, String format, String name, String msg, boolean sentByPlayer) {
         if (fontMetrics == null) {
             createFontMetrics();
         }
 
-        String leader = createLeader(plugin, channel, format, name, msg);
+        String leader = createLeader(plugin, channel, format, name, msg, sentByPlayer);
         List<String> msgLines = wrap(leader + msg, fontMetrics);
 
         String firstLine = msgLines.get(0);
@@ -41,29 +42,39 @@ public class Messaging {
         return coloredLines;
     }
 
-    public static String format(HeroChat plugin, Channel channel, String format, String name, String msg) {
-        String leader = createLeader(plugin, channel, format, name, msg);
+    public static String format(HeroChat plugin, Channel channel, String format, String name, String msg, boolean sentByPlayer) {
+        String leader = createLeader(plugin, channel, format, name, msg, sentByPlayer);
         return leader + msg;
     }
 
-    private static String createLeader(HeroChat plugin, Channel channel, String format, String name, String msg) {
+    private static String createLeader(HeroChat plugin, Channel channel, String format, String name, String msg, boolean sentByPlayer) {
+        String prefix = "";
+        String suffix = "";
+        String world = "";
         String healthBar = "";
-        healthBar = healthBar.replaceAll("&", "\u00a7");
-        Player sender = plugin.getServer().getPlayer(name);
-        String prefix = plugin.getPermissions().getPrefix(sender);
-        String suffix = plugin.getPermissions().getSuffix(sender);
-        prefix = prefix.replaceAll("\\{healthbar\\}", healthBar);
-        suffix = suffix.replaceAll("\\{healthbar\\}", healthBar);
+        if (sentByPlayer) {
+            try {
+                Player sender = plugin.getServer().getPlayer(name);
+                prefix = plugin.getPermissions().getPrefix(sender);
+                suffix = plugin.getPermissions().getSuffix(sender);
+                world = sender.getWorld().getName();
+                name = sender.getDisplayName();
+                healthBar = createHealthBar(sender);
+            } catch (Exception e) {
+                plugin.log("Error encountered while fetching prefixes/suffixes from Permissions. Is Permissions properly configured and up to date?");
+            }
+        }
 
         String leader = format;
         leader = leader.replaceAll("\\{default\\}", plugin.getChannelManager().getDefaultMsgFormat());
-        leader = leader.replaceAll("\\{nick\\}", channel.getNick());
-        leader = leader.replaceAll("\\{name\\}", channel.getName());
         leader = leader.replaceAll("\\{prefix\\}", prefix);
         leader = leader.replaceAll("\\{suffix\\}", suffix);
+        leader = leader.replaceAll("\\{nick\\}", channel.getNick());
+        leader = leader.replaceAll("\\{name\\}", channel.getName());
         leader = leader.replaceAll("\\{player\\}", name);
         leader = leader.replaceAll("\\{healthbar\\}", healthBar);
         leader = leader.replaceAll("\\{color.CHANNEL\\}", channel.getColor().str);
+        leader = leader.replaceAll("\\{world\\}", world);
 
         Matcher matcher = Pattern.compile("\\{color.[a-zA-Z]+\\}").matcher(leader);
         while (matcher.find()) {
@@ -119,5 +130,24 @@ public class Messaging {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+    }
+    
+    private static String createHealthBar(Player player) {
+        int health = player.getHealth();
+        int fullBars = health / 4;
+        int remainder = health % 4;
+        String healthBar = "";
+        for (int i = 0; i < fullBars; i++) {
+            healthBar += HEALTH_COLORS[4] + "|";
+        }
+        int barsLeft = 5 - fullBars;
+        if (barsLeft > 0) {
+            healthBar += HEALTH_COLORS[remainder] + "|";
+            barsLeft--;
+            for (int i = 0; i < barsLeft; i++) {
+                healthBar += HEALTH_COLORS[0] + "|";
+            }
+        }
+        return healthBar;
     }
 }

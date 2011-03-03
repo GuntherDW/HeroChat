@@ -44,9 +44,9 @@ public class Channel {
         whitelist = new ArrayList<String>();
         voicelist = new ArrayList<String>();
     }
-
-    public void sendMessage(String name, String msg) {
-        List<String> formattedMsg = Messaging.formatWrapped(plugin, this, msgFormat, name, msg);
+    
+    public void sendMessage(String source, String msg, String format, boolean sentByPlayer) {
+        List<String> formattedMsg = Messaging.formatWrapped(plugin, this, format, source, msg, sentByPlayer);
         ChannelManager cm = plugin.getChannelManager();
         for (String other : players) {
             if (!cm.isIgnoring(other, name)) {
@@ -58,7 +58,11 @@ public class Channel {
                 }
             }
         }
-        String logMsg = Messaging.format(plugin, this, logFormat, name, msg);
+    }
+
+    public void sendMessage(String name, String msg) {
+        sendMessage(name, msg, msgFormat, true);
+        String logMsg = Messaging.format(plugin, this, logFormat, name, msg, false);
         plugin.log(logMsg);
     }
 
@@ -69,7 +73,7 @@ public class Channel {
                 Player p = plugin.getServer().getPlayer(name);
                 if (p != null) {
                     String msg = p.getDisplayName() + " has joined the channel";
-                    List<String> msgLines = Messaging.formatWrapped(plugin, this, joinFormat, "", msg);
+                    List<String> msgLines = Messaging.formatWrapped(plugin, this, joinFormat, "", msg, false);
 
                     for (String s : players) {
                         Player other = plugin.getServer().getPlayer(s);
@@ -91,7 +95,7 @@ public class Channel {
                 Player p = plugin.getServer().getPlayer(name);
                 if (p != null) {
                     String msg = p.getDisplayName() + " has left the channel";
-                    List<String> msgLines = Messaging.formatWrapped(plugin, this, joinFormat, "", msg);
+                    List<String> msgLines = Messaging.formatWrapped(plugin, this, joinFormat, "", msg, false);
 
                     for (String s : players) {
                         Player other = plugin.getServer().getPlayer(s);

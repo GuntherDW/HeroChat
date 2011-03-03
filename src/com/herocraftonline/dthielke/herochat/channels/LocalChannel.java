@@ -15,13 +15,14 @@ public class LocalChannel extends Channel {
 
     public LocalChannel(HeroChat plugin) {
         super(plugin);
+        distance = 100;
     }
 
     public void sendMessage(String name, String msg) {
         Player sender = plugin.getServer().getPlayer(name);
         if (sender != null) {
             List<Player> receivers = getListeners(sender);
-            List<String> formattedMsg = Messaging.formatWrapped(plugin, this, msgFormat, name, msg);
+            List<String> formattedMsg = Messaging.formatWrapped(plugin, this, msgFormat, name, msg, true);
             for (Player receiver : receivers) {
                 for (String line : formattedMsg) {
                     receiver.sendMessage(line);
@@ -32,7 +33,7 @@ public class LocalChannel extends Channel {
                 sender.sendMessage("§8No one hears you.");
             }
         }
-        String logMsg = Messaging.format(plugin, this, logFormat, name, msg);
+        String logMsg = Messaging.format(plugin, this, logFormat, name, msg, false);
         plugin.log(logMsg);
     }
 

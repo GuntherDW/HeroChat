@@ -101,7 +101,7 @@ public class HeroChat extends JavaPlugin {
         registerEvents();
         registerCommands();
     }
-    
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         return commandManager.dispatch(sender, command, label, args);
     }
@@ -139,13 +139,24 @@ public class HeroChat extends JavaPlugin {
             if (!permissions.isEnabled()) {
                 this.getServer().getPluginManager().enablePlugin(permissions);
             }
-            String verStr = permissions.getDescription().getVersion();
-            double version = Double.parseDouble(verStr);
-            if (version >= 2.4) {
+            boolean upToDate = true;
+            String version = permissions.getDescription().getVersion();
+            String[] split = permissions.getDescription().getVersion().split(".");
+            try {
+                for (int i = 0; i < split.length; i++) {
+                    int v = Integer.parseInt(split[i]);
+                    if (v < PermissionHelper.MIN_VERSION[i]) {
+                        upToDate = false;
+                    }
+                }
+            } catch (NumberFormatException e) {
+                upToDate = false;
+            }
+            if (upToDate) {
                 PermissionHandler security = permissions.getHandler();
                 security.load();
                 PermissionHelper ph = new PermissionHelper(security);
-                log("Permissions " + verStr + " found.");
+                log("Permissions " + version + " found.");
                 return ph;
             }
         }
