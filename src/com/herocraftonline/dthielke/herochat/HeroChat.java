@@ -7,6 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
@@ -84,12 +85,18 @@ public class HeroChat extends JavaPlugin {
             return;
         }
 
+        registerEvents();
+        registerCommands();
+        
         PluginDescriptionFile desc = getDescription();
         log(desc.getName() + " version " + desc.getVersion() + " enabled.");
 
         try {
             configManager = new ConfigManager(this);
             configManager.load();
+            for (Player p : getServer().getOnlinePlayers()) {
+                playerListener.onPlayerJoin(new PlayerEvent(Event.Type.PLAYER_JOIN, p));
+            }
             configManager.save();
         } catch (Exception e) {
             log("Error encountered while loading settings.");
@@ -97,11 +104,9 @@ public class HeroChat extends JavaPlugin {
             setEnabled(false);
             return;
         }
-
-        registerEvents();
-        registerCommands();
     }
 
+    @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         return commandManager.dispatch(sender, command, label, args);
     }
@@ -112,6 +117,7 @@ public class HeroChat extends JavaPlugin {
         pm.registerEvent(Event.Type.PLAYER_CHAT, playerListener, Event.Priority.Low, this);
         pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
         pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
+        pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, playerListener, Event.Priority.Normal, this);
     }
 
     private void registerCommands() {

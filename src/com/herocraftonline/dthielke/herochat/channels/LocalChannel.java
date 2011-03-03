@@ -18,9 +18,15 @@ public class LocalChannel extends Channel {
         distance = 100;
     }
 
+    @Override
     public void sendMessage(String name, String msg) {
         Player sender = plugin.getServer().getPlayer(name);
         if (sender != null) {
+            if (!worlds.isEmpty() && !worlds.contains(sender.getWorld().getName())) {
+                sender.sendMessage(plugin.getTag() + "You are not in the correct world for this channel");
+                return;
+            }
+
             List<Player> receivers = getListeners(sender);
             List<String> formattedMsg = Messaging.formatWrapped(plugin, this, msgFormat, name, msg, true);
             for (Player receiver : receivers) {
@@ -28,7 +34,7 @@ public class LocalChannel extends Channel {
                     receiver.sendMessage(line);
                 }
             }
-            
+
             if (receivers.size() == 1) {
                 sender.sendMessage("§8No one hears you.");
             }
@@ -40,20 +46,22 @@ public class LocalChannel extends Channel {
     private List<Player> getListeners(Player origin) {
         List<Player> list = new ArrayList<Player>();
         Location sLoc = origin.getLocation();
+        String sWorld = sLoc.getWorld().getName();
         for (String name : players) {
             Player player = plugin.getServer().getPlayer(name);
             if (player != null) {
                 if (!plugin.getChannelManager().isIgnoring(name, origin.getName())) {
                     Location pLoc = player.getLocation();
+                    if (sWorld.equals(pLoc.getWorld().getName())) {
+                        int dx = sLoc.getBlockX() - pLoc.getBlockX();
+                        int dz = sLoc.getBlockZ() - pLoc.getBlockZ();
+                        dx = dx * dx;
+                        dz = dz * dz;
+                        int d = (int) Math.sqrt(dx + dz);
 
-                    int dx = sLoc.getBlockX() - pLoc.getBlockX();
-                    int dz = sLoc.getBlockZ() - pLoc.getBlockZ();
-                    dx = dx * dx;
-                    dz = dz * dz;
-                    int d = (int) Math.sqrt(dx + dz);
-
-                    if (d <= distance) {
-                        list.add(player);
+                        if (d <= distance) {
+                            list.add(player);
+                        }
                     }
                 }
             }

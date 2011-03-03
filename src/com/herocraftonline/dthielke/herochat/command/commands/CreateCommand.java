@@ -11,8 +11,8 @@ import com.herocraftonline.dthielke.herochat.command.BaseCommand;
 
 public class CreateCommand extends BaseCommand {
 
-    private static final String[] RESERVED_NAMES = { };
-    
+    private static final String[] RESERVED_NAMES = {};
+
     public CreateCommand(HeroChat plugin) {
         super(plugin);
         name = "Create";
@@ -43,7 +43,7 @@ public class CreateCommand extends BaseCommand {
                     return;
                 } else if (cm.getChannel(args[1]) != null) {
                     sender.sendMessage(plugin.getTag() + "That nick is taken");
-                    return;                   
+                    return;
                 }
                 Channel c = createChannel(args, plugin.getPermissions().isAdmin(creator));
                 if (c != null) {
@@ -64,7 +64,7 @@ public class CreateCommand extends BaseCommand {
             sender.sendMessage(plugin.getTag() + "You must be a player to create channels");
         }
     }
-    
+
     private Channel createChannel(String[] args, boolean full) {
         Channel c = new Channel(plugin);
         c.setName(args[0]);
@@ -87,7 +87,7 @@ public class CreateCommand extends BaseCommand {
         }
         return c;
     }
-    
+
     private void applyOptions(Channel c, char[] args, boolean full) {
         for (char option : args) {
             switch (option) {
@@ -98,16 +98,19 @@ public class CreateCommand extends BaseCommand {
                 c.setVerbose(true);
                 break;
             case 'a':
-                if (full)
+                if (full) {
                     c.setAutoJoined(true);
+                }
                 break;
             case 'q':
-                if (full)
+                if (full) {
                     c.setQuickMessagable(true);
+                }
                 break;
             case 'f':
-                if (full)
+                if (full) {
                     c.setForced(true);
+                }
                 break;
             }
         }

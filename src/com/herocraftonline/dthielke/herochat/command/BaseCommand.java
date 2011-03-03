@@ -16,7 +16,7 @@ public abstract class BaseCommand {
     protected int minArgs;
     protected int maxArgs;
     protected List<String> identifiers;
-    
+
     public BaseCommand(HeroChat plugin) {
         this.plugin = plugin;
         this.identifiers = new ArrayList<String>();

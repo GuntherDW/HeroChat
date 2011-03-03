@@ -24,7 +24,7 @@ public class JoinCommand extends BaseCommand {
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (sender instanceof Player) {
-            Player player = (Player)sender;
+            Player player = (Player) sender;
             String name = player.getName();
             ChannelManager cm = plugin.getChannelManager();
             Channel c = cm.getChannel(args[0]);
@@ -37,7 +37,7 @@ public class JoinCommand extends BaseCommand {
                             return;
                         }
                     }
-                    
+
                     if (!c.getPlayers().contains(name)) {
                         c.addPlayer(name);
                         sender.sendMessage(plugin.getTag() + "Joined channel " + c.getCName());
@@ -49,7 +49,7 @@ public class JoinCommand extends BaseCommand {
                 }
             } else {
                 sender.sendMessage(plugin.getTag() + "Channel not found");
-            } 
+            }
         } else {
             sender.sendMessage(plugin.getTag() + "You must be a player to use this command");
         }

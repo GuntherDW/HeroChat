@@ -16,9 +16,21 @@ public class HeroChatPlayerListener extends PlayerListener {
         this.plugin = plugin;
     }
 
+    @Override
+    public void onPlayerCommandPreprocess(PlayerChatEvent event) {
+        String input = event.getMessage().substring(1);
+        String[] args = input.split(" ");
+        if (plugin.getChannelManager().getChannel(args[0]) != null) {
+            event.setCancelled(true);
+            plugin.getCommandManager().dispatch(event.getPlayer(), null, "qm", args);
+        }
+    }
+
+    @Override
     public void onPlayerChat(PlayerChatEvent event) {
-        if (event.isCancelled())
+        if (event.isCancelled()) {
             return;
+        }
 
         Player sender = event.getPlayer();
         String name = sender.getName();
@@ -39,12 +51,14 @@ public class HeroChatPlayerListener extends PlayerListener {
         event.setCancelled(true);
     }
 
+    @Override
     public void onPlayerJoin(PlayerEvent event) {
         Player joiner = event.getPlayer();
         String name = joiner.getName();
         plugin.getConfigManager().loadPlayer(name);
     }
 
+    @Override
     public void onPlayerQuit(PlayerEvent event) {
         Player quitter = event.getPlayer();
         String name = quitter.getName();

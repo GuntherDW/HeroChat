@@ -32,28 +32,43 @@ public class Channel {
     protected List<String> blacklist;
     protected List<String> whitelist;
     protected List<String> voicelist;
+    protected List<String> worlds;
 
     public Channel(HeroChat plugin) {
         this.plugin = plugin;
         this.msgFormat = "{default}";
         this.color = ChatColor.WHITE;
-        
+
         players = new ArrayList<String>();
         moderators = new ArrayList<String>();
         blacklist = new ArrayList<String>();
         whitelist = new ArrayList<String>();
         voicelist = new ArrayList<String>();
+        worlds = new ArrayList<String>();
     }
-    
+
     public void sendMessage(String source, String msg, String format, boolean sentByPlayer) {
         List<String> formattedMsg = Messaging.formatWrapped(plugin, this, format, source, msg, sentByPlayer);
         ChannelManager cm = plugin.getChannelManager();
+        if (sentByPlayer) {
+            Player sender = plugin.getServer().getPlayer(source);
+            if (sender != null) {
+                if (!worlds.isEmpty() && !worlds.contains(sender.getWorld().getName())) {
+                    sender.sendMessage(plugin.getTag() + "You are not in the correct world for this channel");
+                    return;
+                }
+            } else {
+                return;
+            }
+        }
         for (String other : players) {
             if (!cm.isIgnoring(other, name)) {
                 Player receiver = plugin.getServer().getPlayer(other);
                 if (receiver != null) {
-                    for (String line : formattedMsg) {
-                        receiver.sendMessage(line);
+                    if (worlds.isEmpty() || worlds.contains(receiver.getWorld().getName())) {
+                        for (String line : formattedMsg) {
+                            receiver.sendMessage(line);
+                        }
                     }
                 }
             }
@@ -220,6 +235,14 @@ public class Channel {
 
     public void setQuickMessagable(boolean quickMessagable) {
         this.quickMessagable = quickMessagable;
+    }
+
+    public List<String> getWorlds() {
+        return worlds;
+    }
+
+    public void setWorlds(List<String> worlds) {
+        this.worlds = worlds;
     }
 
 }

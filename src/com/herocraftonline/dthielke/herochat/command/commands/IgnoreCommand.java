@@ -39,7 +39,7 @@ public class IgnoreCommand extends BaseCommand {
             sender.sendMessage(plugin.getTag() + "You must be a player to use this command");
         }
     }
-    
+
     private void displayIgnoreList(Player player, List<String> ignoreList) {
         String ignoreListMsg;
         if (ignoreList.isEmpty()) {
@@ -53,18 +53,18 @@ public class IgnoreCommand extends BaseCommand {
         }
         player.sendMessage(ignoreListMsg);
     }
-    
+
     private void toggleIgnore(Player ignorer, Player ignoree) {
         if (plugin.getPermissions().isAdmin(ignoree)) {
             ignorer.sendMessage(plugin.getTag() + "You can't ignore admins");
             return;
         }
-        
+
         if (ignorer.getName().equals(ignoree.getName())) {
             ignorer.sendMessage(plugin.getTag() + "You cannot ignore yourself");
             return;
         }
-        
+
         ChannelManager cm = plugin.getChannelManager();
         if (cm.isIgnoring(ignorer.getName(), ignoree.getName())) {
             cm.removeIgnore(ignorer.getName(), ignoree.getName());

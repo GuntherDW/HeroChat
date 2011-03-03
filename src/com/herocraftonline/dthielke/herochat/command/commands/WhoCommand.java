@@ -20,7 +20,8 @@ public class WhoCommand extends BaseCommand {
         maxArgs = 0;
         identifiers.add("ch who");
     }
-// TODO: BUG! Players showing up twice.
+
+    // TODO: BUG! Players showing up twice.
     @Override
     public void execute(CommandSender sender, String[] args) {
         if (sender instanceof Player) {

@@ -19,7 +19,7 @@ import com.herocraftonline.dthielke.herochat.channels.Channel;
 public class Messaging {
     private static final String FONT_NAME = "minecraft.ttf";
     private static final int CHAT_LINE_LENGTH = 920;
-    private static final String[] HEALTH_COLORS = { "§0", "§4", "§6", "§e" , "§2"};
+    private static final String[] HEALTH_COLORS = { "§0", "§4", "§6", "§e", "§2" };
     private static FontMetrics fontMetrics;
 
     public static List<String> formatWrapped(HeroChat plugin, Channel channel, String format, String name, String msg, boolean sentByPlayer) {
@@ -131,7 +131,7 @@ public class Messaging {
             ex.printStackTrace();
         }
     }
-    
+
     private static String createHealthBar(Player player) {
         int health = player.getHealth();
         int fullBars = health / 4;

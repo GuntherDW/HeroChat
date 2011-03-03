@@ -6,7 +6,6 @@ import java.util.List;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 
-
 public class CommandManager {
 
     protected List<BaseCommand> commands;
@@ -14,7 +13,7 @@ public class CommandManager {
     public CommandManager() {
         commands = new ArrayList<BaseCommand>();
     }
-    
+
     public boolean dispatch(CommandSender sender, Command command, String label, String[] args) {
         String input = label + " ";
         for (String s : args) {
@@ -44,11 +43,11 @@ public class CommandManager {
 
         return false;
     }
-    
+
     public void addCommand(BaseCommand command) {
         commands.add(command);
     }
-    
+
     public void removeCommand(BaseCommand command) {
         commands.remove(command);
     }

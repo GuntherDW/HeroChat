@@ -24,7 +24,7 @@ public class ConfigManager {
         this.usersConfigFile = new File(plugin.getDataFolder(), "users.yml");
         this.usersConfig = new Configuration(usersConfigFile);
     }
-    
+
     public void reload() {
         load();
     }
@@ -49,7 +49,7 @@ public class ConfigManager {
         cm.setDefaultChannel(cm.getChannel(defaultChannel));
         cm.setDefaultMsgFormat(defaultMsgFormat);
         cm.setDefaultLocalDistance(defaultLocalDistance);
-        
+
         for (Channel c : cm.getChannels()) {
             if (c instanceof LocalChannel) {
                 LocalChannel l = (LocalChannel) c;
@@ -73,6 +73,7 @@ public class ConfigManager {
             c.setNick(config.getString(root + "nickname", "DEFAULT-NICK"));
             c.setColor(ChatColor.valueOf(config.getString(root + "color", "WHITE")));
             c.setMsgFormat(config.getString(root + "message-format", "{default}"));
+            c.setWorlds(config.getStringList(root + "worlds", null));
 
             String options = root + "options.";
             c.setVerbose(config.getBoolean(options + "join-messages", true));
@@ -164,6 +165,7 @@ public class ConfigManager {
             config.setProperty(root + "nickname", c.getNick());
             config.setProperty(root + "color", c.getColor().toString());
             config.setProperty(root + "message-format", c.getMsgFormat());
+            config.setProperty(root + "worlds", c.getWorlds());
 
             String options = root + "options.";
             config.setProperty(options + "join-messages", c.isVerbose());
@@ -206,7 +208,7 @@ public class ConfigManager {
             }
             config.setProperty("users." + name + ".active-channel", active.getName());
             config.setProperty("users." + name + ".joined-channels", names);
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             plugin.log("Error saving player data. Delete your users.yml");
         }
