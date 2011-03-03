@@ -68,6 +68,7 @@ public class HeroChat extends JavaPlugin {
     private PermissionHelper permissions;
     private String tag;
     private HeroChatPlayerListener playerListener;
+    private boolean eventsRegistered = false;
 
     @Override
     public void onDisable() {
@@ -75,6 +76,8 @@ public class HeroChat extends JavaPlugin {
             configManager.savePlayer(p.getName());
             configManager.save();
         }
+        PluginDescriptionFile desc = getDescription();
+        log(desc.getName() + " version " + desc.getVersion() + " disabled.");
     }
 
     @Override
@@ -87,7 +90,7 @@ public class HeroChat extends JavaPlugin {
 
         registerEvents();
         registerCommands();
-        
+
         PluginDescriptionFile desc = getDescription();
         log(desc.getName() + " version " + desc.getVersion() + " enabled.");
 
@@ -112,12 +115,15 @@ public class HeroChat extends JavaPlugin {
     }
 
     private void registerEvents() {
-        playerListener = new HeroChatPlayerListener(this);
-        PluginManager pm = getServer().getPluginManager();
-        pm.registerEvent(Event.Type.PLAYER_CHAT, playerListener, Event.Priority.Low, this);
-        pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
-        pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, playerListener, Event.Priority.Normal, this);
+        if (!eventsRegistered) {
+            playerListener = new HeroChatPlayerListener(this);
+            PluginManager pm = getServer().getPluginManager();
+            pm.registerEvent(Event.Type.PLAYER_CHAT, playerListener, Event.Priority.Low, this);
+            pm.registerEvent(Event.Type.PLAYER_JOIN, playerListener, Event.Priority.Normal, this);
+            pm.registerEvent(Event.Type.PLAYER_QUIT, playerListener, Event.Priority.Normal, this);
+            pm.registerEvent(Event.Type.PLAYER_COMMAND_PREPROCESS, playerListener, Event.Priority.Normal, this);
+            eventsRegistered = true;
+        }
     }
 
     private void registerCommands() {
