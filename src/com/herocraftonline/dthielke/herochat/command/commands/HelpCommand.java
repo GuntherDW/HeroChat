@@ -1,3 +1,11 @@
+/**
+ * Copyright (C) 2011 DThielke <dave.thielke@gmail.com>
+ * 
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
+ * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+ **/
+
 package com.herocraftonline.dthielke.herochat.command.commands;
 
 import org.bukkit.command.CommandSender;
@@ -10,7 +18,7 @@ public class HelpCommand extends BaseCommand {
     private static final String[] HELP_ONE = { "§eHeroChat Help <Page 1/2>:", "/ch help [page#] §7- displays this menu",
                                               "/ch <channel> §7- sets your active channel", "/ch who §7- lists players in your active channel",
                                               "/ch list §7- lists publicly available channels", "/join <channel> §7- joins a channel",
-                                              "/leave <channel> §7- leaves a channel", "/qm <channel> <msg> §7- sends a quick message to a channel",
+                                              "/leave <channel> §7- leaves a channel", "/<channel> <msg> §7- sends a quick message to a channel",
                                               "/ch ignore §7- displays your ignore list", "/ch ignore <player> §7- toggles ignoring a player" };
     private static final String[] HELP_TWO = { "§eHeroChat Help <Page 2/2>:", "/ch create <name> <nick> [color:#] [-options]", "/ch remove <channel>",
                                               "/ch mod <channel> <player> §7- grants mod privileges", "/ch kick <channel> <player> §7- kicks a player",

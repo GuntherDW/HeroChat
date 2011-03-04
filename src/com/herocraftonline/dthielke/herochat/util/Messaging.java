@@ -1,3 +1,11 @@
+/**
+ * Copyright (C) 2011 DThielke <dave.thielke@gmail.com>
+ * 
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
+ * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+ **/
+
 package com.herocraftonline.dthielke.herochat.util;
 
 import java.awt.Font;
@@ -18,7 +26,7 @@ import com.herocraftonline.dthielke.herochat.channels.Channel;
 
 public class Messaging {
     private static final String FONT_NAME = "minecraft.ttf";
-    private static final int CHAT_LINE_LENGTH = 920;
+    private static final int CHAT_LINE_LENGTH = 930;
     private static final String[] HEALTH_COLORS = { "§0", "§4", "§6", "§e", "§2" };
     private static FontMetrics fontMetrics;
 
@@ -61,6 +69,7 @@ public class Messaging {
                 name = sender.getDisplayName();
                 healthBar = createHealthBar(sender);
             } catch (Exception e) {
+                plugin.log(e.getMessage());
                 plugin.log("Error encountered while fetching prefixes/suffixes from Permissions. Is Permissions properly configured and up to date?");
             }
         }
@@ -95,6 +104,7 @@ public class Messaging {
 
             for (int i = 0; i < msg.length(); i++) {
                 String tmpLine = msg.substring(0, i + 1).replaceAll("\u00a7[0-9a-f]", "");
+                //System.out.println(msg.substring(0, i + 1) + " ---> " + tmpLine);
                 if (fontMetrics.stringWidth(tmpLine) >= CHAT_LINE_LENGTH) {
                     lines.add(msg.substring(0, i));
                     msg = msg.substring(i);

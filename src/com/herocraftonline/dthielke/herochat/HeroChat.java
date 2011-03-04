@@ -1,3 +1,11 @@
+/**
+ * Copyright (C) 2011 DThielke <dave.thielke@gmail.com>
+ * 
+ * This work is licensed under the Creative Commons Attribution-NonCommercial-NoDerivs 3.0 Unported License.
+ * To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-nd/3.0/ or send a letter to
+ * Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+ **/
+
 package com.herocraftonline.dthielke.herochat;
 
 import java.util.logging.Level;
@@ -153,7 +161,7 @@ public class HeroChat extends JavaPlugin {
             }
             boolean upToDate = true;
             String version = permissions.getDescription().getVersion();
-            String[] split = permissions.getDescription().getVersion().split(".");
+            String[] split = version.split("\\.");
             try {
                 for (int i = 0; i < split.length; i++) {
                     int v = Integer.parseInt(split[i]);
@@ -166,14 +174,13 @@ public class HeroChat extends JavaPlugin {
             }
             if (upToDate) {
                 PermissionHandler security = permissions.getHandler();
-                security.load();
                 PermissionHelper ph = new PermissionHelper(security);
                 log("Permissions " + version + " found.");
                 return ph;
             }
         }
 
-        log("Permissions 2.4 not found! Disabling HeroChat.");
+        log.log(Level.WARNING, "Permissions 2.5.1 or higher not found! Please update Permissions. Disabling HeroChat.");
         this.getPluginLoader().disablePlugin(this);
         return null;
     }
