@@ -68,13 +68,15 @@ public class Messaging {
         if (sentByPlayer) {
             try {
                 Player sender = plugin.getServer().getPlayer(name);
-                prefix = plugin.getPermissions().getPrefix(sender);
-                suffix = plugin.getPermissions().getSuffix(sender);
-                world = sender.getWorld().getName();
-                name = sender.getDisplayName();
-                healthBar = createHealthBar(sender);
+                if (sender != null) {
+                    prefix = plugin.getPermissions().getPrefix(sender);
+                    suffix = plugin.getPermissions().getSuffix(sender);
+                    world = sender.getWorld().getName();
+                    name = sender.getDisplayName();
+                    healthBar = createHealthBar(sender);
+                }
             } catch (Exception e) {
-                plugin.log(e.getMessage());
+                e.printStackTrace();
                 plugin.log("Error encountered while fetching prefixes/suffixes from Permissions. Is Permissions properly configured and up to date?");
             }
         }

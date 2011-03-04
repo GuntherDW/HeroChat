@@ -28,9 +28,7 @@ public class HeroChatPlayerListener extends PlayerListener {
     public void onPlayerCommandPreprocess(PlayerChatEvent event) {
         String input = event.getMessage().substring(1);
         String[] args = input.split(" ");
-        plugin.log(input);
         if (plugin.getChannelManager().getChannel(args[0]) != null) {
-            plugin.log("valid channel");
             event.setCancelled(true);
             plugin.getCommandManager().dispatch(event.getPlayer(), null, "qm", args);
         }
@@ -53,7 +51,7 @@ public class HeroChatPlayerListener extends PlayerListener {
                 if (!c.getPlayers().contains(name)) {
                     c.addPlayer(name);
                 }
-                c.sendMessage(sender.getDisplayName(), event.getMessage());
+                c.sendMessage(name, event.getMessage());
             } else {
                 sender.sendMessage(plugin.getTag() + "You cannot speak in this channel");
             }
