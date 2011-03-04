@@ -39,7 +39,7 @@ public class PermissionHelper {
                     prefix = "";
                 }
             }
-            return prefix.replace(String.valueOf((char)194), "");
+            return prefix.replace("&", "\u00a7").replace(String.valueOf((char) 194), "");
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return "";
@@ -58,7 +58,7 @@ public class PermissionHelper {
                     suffix = "";
                 }
             }
-            return suffix.replace(String.valueOf((char)194), "");
+            return suffix.replace("&", "\u00a7").replace(String.valueOf((char) 194), "");
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return "";

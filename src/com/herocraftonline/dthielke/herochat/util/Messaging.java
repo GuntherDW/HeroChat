@@ -40,7 +40,12 @@ public class Messaging {
 
         String firstLine = msgLines.get(0);
         int colorIndex = firstLine.lastIndexOf("\u00a7");
-        String lastColor = firstLine.substring(colorIndex, colorIndex + 2);
+        String lastColor;
+        if (colorIndex == -1) {
+            lastColor = "";
+        } else {
+            lastColor = firstLine.substring(colorIndex, colorIndex + 2);
+        }
 
         List<String> coloredLines = new ArrayList<String>();
         for (int i = 0; i < msgLines.size(); i++) {
@@ -104,7 +109,8 @@ public class Messaging {
 
             for (int i = 0; i < msg.length(); i++) {
                 String tmpLine = msg.substring(0, i + 1).replaceAll("\u00a7[0-9a-f]", "");
-                //System.out.println(msg.substring(0, i + 1) + " ---> " + tmpLine);
+                // System.out.println(msg.substring(0, i + 1) + " ---> " +
+                // tmpLine);
                 if (fontMetrics.stringWidth(tmpLine) >= CHAT_LINE_LENGTH) {
                     lines.add(msg.substring(0, i));
                     msg = msg.substring(i);
