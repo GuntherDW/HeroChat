@@ -38,7 +38,7 @@ public class WhoCommand extends BaseCommand {
             Channel c = plugin.getChannelManager().getActiveChannel(name);
             if (c != null) {
                 List<String> players = c.getPlayers();
-                String playerList = "Currently in " + c.getCName() + "§f: ";
+                String playerList = "Currently in " + c.getCName() + "Â§f: ";
                 for (String pName : players) {
                     Player p = plugin.getServer().getPlayer(pName);
                     if (p != null) {

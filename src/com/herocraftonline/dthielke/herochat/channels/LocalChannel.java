@@ -44,7 +44,7 @@ public class LocalChannel extends Channel {
             }
 
             if (receivers.size() == 1) {
-                sender.sendMessage("ง8No one hears you.");
+                sender.sendMessage("ยง8No one hears you.");
             }
         }
         String logMsg = Messaging.format(plugin, this, logFormat, name, msg, false);

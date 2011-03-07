@@ -45,22 +45,22 @@ import com.nijikokun.bukkit.Permissions.Permissions;
 public class HeroChat extends JavaPlugin {
 
     public enum ChatColor {
-        BLACK("ง0"),
-        NAVY("ง1"),
-        GREEN("ง2"),
-        BLUE("ง3"),
-        RED("ง4"),
-        PURPLE("ง5"),
-        GOLD("ง6"),
-        LIGHT_GRAY("ง7"),
-        GRAY("ง8"),
-        DARK_PURPLE("ง9"),
-        LIGHT_GREEN("งa"),
-        LIGHT_BLUE("งb"),
-        ROSE("งc"),
-        LIGHT_PURPLE("งd"),
-        YELLOW("งe"),
-        WHITE("งf");
+        BLACK("ยง0"),
+        NAVY("ยง1"),
+        GREEN("ยง2"),
+        BLUE("ยง3"),
+        RED("ยง4"),
+        PURPLE("ยง5"),
+        GOLD("ยง6"),
+        LIGHT_GRAY("ยง7"),
+        GRAY("ยง8"),
+        DARK_PURPLE("ยง9"),
+        LIGHT_GREEN("ยงa"),
+        LIGHT_BLUE("ยงb"),
+        ROSE("ยงc"),
+        LIGHT_PURPLE("ยงd"),
+        YELLOW("ยงe"),
+        WHITE("ยงf");
 
         public final String str;
 
@@ -165,9 +165,10 @@ public class HeroChat extends JavaPlugin {
             try {
                 for (int i = 0; i < split.length; i++) {
                     int v = Integer.parseInt(split[i]);
-                    if (v < PermissionHelper.MIN_VERSION[i]) {
+                    /* if (v < PermissionHelper.MIN_VERSION[i]) {
                         upToDate = false;
-                    }
+                    } */
+                    log.info("[HeroChat] Permissions verion "+version+" found!");
                 }
             } catch (NumberFormatException e) {
                 upToDate = false;

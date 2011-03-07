@@ -48,7 +48,7 @@ public class ConfigManager {
     private void loadGlobals(Configuration config) {
         String globals = "globals.";
         ChannelManager cm = plugin.getChannelManager();
-        String pluginTag = config.getString(globals + "plugin-tag", "[HeroChat] ").replace("&", "ง");
+        String pluginTag = config.getString(globals + "plugin-tag", "[HeroChat] ").replace("&", "ยง");
         String defaultChannel = config.getString(globals + "default-channel", cm.getChannels().get(0).getName());
         String defaultMsgFormat = config.getString(globals + "default-message-format", "{name}: ");
         int defaultLocalDistance = config.getInt(globals + "default-local-distance", 100);
@@ -89,6 +89,8 @@ public class ConfigManager {
             c.setHidden(config.getBoolean(options + "hidden", false));
             c.setAutoJoined(config.getBoolean(options + "auto-join", false));
             c.setForced(config.getBoolean(options + "forced", false));
+
+            c.setPassword(config.getString(options + "password", ""));
 
             String lists = root + "lists.";
             c.setBlacklist(config.getStringList(lists + "bans", null));
@@ -182,6 +184,7 @@ public class ConfigManager {
             config.setProperty(options + "auto-join", c.isAutoJoined());
             config.setProperty(options + "local", c instanceof LocalChannel);
             config.setProperty(options + "forced", c.isForced());
+            config.setProperty(options + "password", c.getPassword());
 
             String lists = root + "lists.";
             config.setProperty(lists + "bans", c.getBlacklist());

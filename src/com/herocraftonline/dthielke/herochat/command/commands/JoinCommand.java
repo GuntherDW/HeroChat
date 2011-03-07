@@ -22,9 +22,9 @@ public class JoinCommand extends BaseCommand {
         super(plugin);
         name = "Join";
         description = "Joins a channel";
-        usage = "Usage: /ch join <channel>";
+        usage = "Usage: /ch join <channel> [password]";
         minArgs = 1;
-        maxArgs = 1;
+        maxArgs = 2;
         identifiers.add("ch join");
         identifiers.add("join");
     }
@@ -36,6 +36,15 @@ public class JoinCommand extends BaseCommand {
             String name = player.getName();
             ChannelManager cm = plugin.getChannelManager();
             Channel c = cm.getChannel(args[0]);
+            String password = "";
+            if(args.length>1)
+                password = args[1];
+            if(plugin.getPermissions().isAdmin(player))
+            {
+                if(args.length>1 && args[1].equals("force"))
+                    password = c.getPassword();
+            }
+            
             if (c != null) {
                 if (!c.getBlacklist().contains(name)) {
                     if (!c.getWhitelist().isEmpty()) {
@@ -47,8 +56,17 @@ public class JoinCommand extends BaseCommand {
                     }
 
                     if (!c.getPlayers().contains(name)) {
-                        c.addPlayer(name);
-                        sender.sendMessage(plugin.getTag() + "Joined channel " + c.getCName());
+                        if(c.getPassword() != null && !c.getPassword().equals("") && !c.getPassword().equals(password))
+                        {
+                            sender.sendMessage(plugin.getTag() + "Incorrect password for " + c.getCName());
+                            if(plugin.getPermissions().isAdmin(player)) {
+                                sender.sendMessage(plugin.getTag() + "Admin note:");
+                                sender.sendMessage(plugin.getTag() + "Force the join by using 'force' as the password!");
+                            }
+                        } else {
+                            c.addPlayer(name);
+                            sender.sendMessage(plugin.getTag() + "Joined channel " + c.getCName());
+                        }
                     } else {
                         sender.sendMessage(plugin.getTag() + "You are already in " + c.getCName());
                     }

@@ -84,7 +84,7 @@ public class BanCommand extends BaseCommand {
         if (bans.isEmpty()) {
             banListMsg = plugin.getTag() + "No one is currently banned from " + channel.getCName();
         } else {
-            banListMsg = "Currently banned from " + channel.getCName() + "§f: ";
+            banListMsg = "Currently banned from " + channel.getCName() + "Â§f: ";
             for (String s : bans) {
                 banListMsg += s + ",";
             }

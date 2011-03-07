@@ -25,7 +25,7 @@ public class CreateCommand extends BaseCommand {
         super(plugin);
         name = "Create";
         description = "Creates a channel. Type /ch help create for info";
-        usage = "Usage: /ch create <name> <nick> [color:#] [-options]";
+        usage = "Usage: /ch create <name> <nick> [color:#] [password:...] [-options]";
         minArgs = 2;
         maxArgs = 4;
         identifiers.add("ch create");
@@ -61,6 +61,7 @@ public class CreateCommand extends BaseCommand {
                     cm.addChannel(c);
                     cm.setActiveChannel(name, c.getName());
                     sender.sendMessage(plugin.getTag() + "Created channel " + c.getCName());
+
                     plugin.getConfigManager().save();
                 } else {
                     sender.sendMessage(plugin.getTag() + "Invalid syntax. Type /ch help create for info");
@@ -86,6 +87,12 @@ public class CreateCommand extends BaseCommand {
                     int color = Integer.parseInt(tmp.substring(6), 16);
                     c.setColor(ChatColor.values()[color]);
                 } catch (NumberFormatException e) {
+                    return null;
+                }
+            } else if (tmp.startsWith("password:")) {
+                try {
+                    c.setPassword(tmp.substring(9));
+                } catch (NullPointerException e) {
                     return null;
                 }
             } else if (tmp.startsWith("-")) {

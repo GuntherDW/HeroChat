@@ -49,7 +49,7 @@ public class ListCommand extends BaseCommand {
             try {
                 p = Integer.parseInt(args[0]);
             } catch (NumberFormatException e) {
-                sender.sendMessage("§c" + usage);
+                sender.sendMessage("Â§c" + usage);
                 return;
             }
         }

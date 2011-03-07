@@ -15,14 +15,14 @@ import com.herocraftonline.dthielke.herochat.command.BaseCommand;
 
 public class HelpCommand extends BaseCommand {
 
-    private static final String[] HELP_ONE = { "§eHeroChat Help <Page 1/2>:", "/ch help [page#] §7- displays this menu",
-                                              "/ch <channel> §7- sets your active channel", "/ch who §7- lists players in your active channel",
-                                              "/ch list §7- lists publicly available channels", "/join <channel> §7- joins a channel",
-                                              "/leave <channel> §7- leaves a channel", "/<channel> <msg> §7- sends a quick message to a channel",
-                                              "/ch ignore §7- displays your ignore list", "/ch ignore <player> §7- toggles ignoring a player" };
-    private static final String[] HELP_TWO = { "§eHeroChat Help <Page 2/2>:", "/ch create <name> <nick> [color:#] [-options]", "/ch remove <channel>",
-                                              "/ch mod <channel> <player> §7- grants mod privileges", "/ch kick <channel> <player> §7- kicks a player",
-                                              "/ch ban <channel> <player> §7- toggles banning a player", "/ch reload §7- reloads the config file" };
+    private static final String[] HELP_ONE = { "Â§eHeroChat Help <Page 1/2>:", "/ch help [page#] Â§7- displays this menu",
+                                              "/ch <channel> Â§7- sets your active channel", "/ch who Â§7- lists players in your active channel",
+                                              "/ch list Â§7- lists publicly available channels", "/join <channel> Â§7- joins a channel",
+                                              "/leave <channel> Â§7- leaves a channel", "/<channel> <msg> Â§7- sends a quick message to a channel",
+                                              "/ch ignore Â§7- displays your ignore list", "/ch ignore <player> Â§7- toggles ignoring a player" };
+    private static final String[] HELP_TWO = { "Â§eHeroChat Help <Page 2/2>:", "/ch create <name> <nick> [color:#] [-options]", "/ch remove <channel>",
+                                              "/ch mod <channel> <player> Â§7- grants mod privileges", "/ch kick <channel> <player> Â§7- kicks a player",
+                                              "/ch ban <channel> <player> Â§7- toggles banning a player", "/ch reload Â§7- reloads the config file" };
     private static final String[] HELP_CREATE = { "Usage: /ch create <name> <nick> [color:#] [-options]", "Options (combinable, ie. -hsqf):",
                                                  "-h   Hidden from /ch channels list", "-j   Show join and leave messages", "Admin-only options:",
                                                  "-a   Automatically joined by new users", "-q   Allow quick message shortcut",
@@ -53,11 +53,11 @@ public class HelpCommand extends BaseCommand {
 
         if (help != HELP_CREATE) {
             for (String s : help) {
-                sender.sendMessage("§a" + s.replace("HeroChat", plugin.getTag()));
+                sender.sendMessage("Â§a" + s.replace("HeroChat", plugin.getTag()));
             }
         } else {
             for (String s : help) {
-                sender.sendMessage("§c" + s);
+                sender.sendMessage("Â§c" + s);
             }
         }
     }

@@ -53,7 +53,7 @@ public class RemoveCommand extends BaseCommand {
                                 }
                             }
                             cm.removeChannel(c);
-                            sender.sendMessage(plugin.getTag() + "Channel " + c.getCName() + " §fremoved");
+                            sender.sendMessage(plugin.getTag() + "Channel " + c.getCName() + " Â§fremoved");
                             plugin.getConfigManager().save();
                         } else {
                             sender.sendMessage(plugin.getTag() + "You cannot delete the default channel");

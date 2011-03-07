@@ -27,7 +27,7 @@ import com.herocraftonline.dthielke.herochat.channels.Channel;
 public class Messaging {
     private static final String FONT_NAME = "minecraft.ttf";
     private static final int CHAT_LINE_LENGTH = 930;
-    private static final String[] HEALTH_COLORS = { "ง0", "ง4", "ง6", "งe", "ง2" };
+    private static final String[] HEALTH_COLORS = { "ยง0", "ยง4", "ยง6", "ยงe", "ยง2" };
     private static FontMetrics fontMetrics;
 
     public static List<String> formatWrapped(HeroChat plugin, Channel channel, String format, String name, String msg, boolean sentByPlayer) {
