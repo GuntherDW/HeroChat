@@ -24,7 +24,7 @@ public class FocusCommand extends BaseCommand {
         description = "Directs all future messages to a channel";
         usage = "Usage: /ch <channel>";
         minArgs = 1;
-        maxArgs = 1;
+        maxArgs = 2;
         identifiers.add("ch");
     }
 
@@ -35,6 +35,14 @@ public class FocusCommand extends BaseCommand {
             String name = player.getName();
             ChannelManager cm = plugin.getChannelManager();
             Channel c = cm.getChannel(args[0]);
+            String password = "";
+            if(args.length>1)
+                password = args[1];
+            if(plugin.getPermissions().isAdmin(player))
+            {
+                if(args.length>1 && args[1].equals("force"))
+                    password = c.getPassword();
+            }
             if (c != null) {
                 if (!c.getBlacklist().contains(name)) {
                     if (!c.getWhitelist().isEmpty()) {
@@ -44,13 +52,18 @@ public class FocusCommand extends BaseCommand {
                             return;
                         }
                     }
-
-                    if (!c.getPlayers().contains(name)) {
-                        c.addPlayer(name);
-                        sender.sendMessage(plugin.getTag() + "Joined channel " + c.getCName());
+                    if(c.getPassword() != null
+                            && !c.getPassword().equals("")
+                            && !c.getPassword().equals(password)) {
+                        sender.sendMessage(plugin.getTag() + "Incorrect password!");
+                    } else {
+                        if (!c.getPlayers().contains(name)) {
+                            c.addPlayer(name);
+                            sender.sendMessage(plugin.getTag() + "Joined channel " + c.getCName());
+                        }
+                        cm.setActiveChannel(name, c.getName());
+                        sender.sendMessage(plugin.getTag() + "Set focus on " + c.getCName());
                     }
-                    cm.setActiveChannel(name, c.getName());
-                    sender.sendMessage(plugin.getTag() + "Set focus on " + c.getCName());
                 } else {
                     sender.sendMessage(plugin.getTag() + "You are banned from " + c.getCName());
                 }
